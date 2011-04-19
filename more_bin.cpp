@@ -11,6 +11,10 @@
 #endif
 
 // use STDINT if possible, otherwise define the types here
+#ifdef _STDINT_H
+#define HAVE_STDINT_H
+#endif
+
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #else
