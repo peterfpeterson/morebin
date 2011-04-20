@@ -1,5 +1,8 @@
 //include <tclap/CmdLine.h>
 #include <algorithm>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/parsers.hpp>
+#include <boost/program_options/variables_map.hpp>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -22,10 +25,12 @@ typedef unsigned long int       uint64_t;
 
 using std::string;
 using std::vector;
+using std::cerr;
 using std::cout;
 using std::endl;
 using std::invalid_argument;
 //using namespace TCLAP; // REMOVE
+namespace po = boost::program_options;
 
 typedef uint32_t event_t;
 
@@ -538,6 +543,99 @@ void read_data(const vector<string> &files, const Config &config)
  */
 int main(int argc, char** argv)
 {
+  // ---------- Declare the supported options.
+  po::options_description generic_options("Generic options");
+  generic_options.add_options()
+    ("help,h", "produce this help message")
+    ("version,v", "print version string")
+    ;
+
+  po::options_description hidden_options;
+  hidden_options.add_options()
+    ("filename", po::value< vector<string> >(), "input files")
+    ;
+
+  // all options available on the command line
+  po::options_description cmdline_options;
+  cmdline_options.add(generic_options).add(hidden_options);
+
+  // all options visible to the user
+  po::options_description visible_options("Allowed options");
+  visible_options.add(generic_options);
+
+  // ---------- parse the command line
+  po::positional_options_description p;
+  p.add("filename", -1);
+  po::variables_map vm;
+  po::store(po::command_line_parser(argc, argv).options(cmdline_options)
+	    .positional(p).run(), vm);
+  po::notify(vm);
+
+  // ---------- get everything out of the options
+  // work with generic options
+  if (vm.count("help")) {
+    cout << visible_options << endl;
+    return 1;
+  }
+  if (vm.count("version")) {
+    cout << "morebin version UNSET" << endl;
+    return 0;
+  }
+  // hidden options
+  vector<string> files;
+  if (vm.count("filename"))
+  {
+    files = vm["filename"].as< vector<string> >();
+  }
+  else
+  {
+    cerr << "ERROR: failed to supply <filename>" << endl;
+    //cmd.getOutput()->usage(cmd);
+    return -1;
+  }
+  cout << "Number of files: " << files.size() << endl;
+  for (size_t i = 0; i < files.size(); i++)
+  {
+    cout << files[i] << endl;
+  }
+
+  // fill the config object
+  struct Config config;
+  /*
+  config.byte_swap=swapArg.getValue();
+  config.show_data=showDataArg.getValue();
+  config.show_line_num=showLineNumArg.getValue();
+  if(config.show_line_num)
+  {
+    config.show_data=true;
+  }
+  config.multi_file=(files.size()>1);
+  config.sum_data=sumDataArg.getValue();
+  config.sum_block=config.sum_data;
+  if(eventDataArg.getValue()){
+    config.is_event=true;
+  }else{
+    config.is_event=false;
+  }
+  if(integrateArg.getValue().size()>0){
+    vector<int> int_array=str_to_intArray(integrateArg.getValue());
+    config.integrate.assign(int_array.begin(), int_array.end());
+    config.show_data=false;
+    config.sum_block=true;
+  }
+  if(pixidRangeArg.getValue()){
+    config.get_pix_range = true;
+    config.is_event = true;
+  }
+  */
+
+  try {
+    
+  } catch(std::runtime_error &e) {
+    cerr << "RUNTIME ERROR:" << e.what() << endl;
+    return -1;
+  }
+
   /* REMOVE
   try
     {
