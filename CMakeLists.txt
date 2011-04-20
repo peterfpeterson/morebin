@@ -1,5 +1,6 @@
 # minimum version necessary for cmake to work
 cmake_minimum_required ( VERSION 2.6 )
+project ( morebin )
 
 ######################################################################
 # look for dependencies
@@ -9,12 +10,12 @@ check_include_files ( stdint.h stdint )
 if ( stdint )
   add_definitions ( -DHAVE_STDINT_H )
 endif ( stdint )
-# tclap needs to go
+# tclap - needs to go
 #find_path ( TCLAP_INCLUDE_DIR tclap/CmdLine.h )
 #include_directories ( ${TCLAP_INCLUDE_DIR} )
 #message ( STATUS "TCLAP: ${TCLAP_INCLUDE_DIR}" )
 # boost
-find_package ( Boost REQUIRED ) # add which bits of boost to use
+find_package ( Boost REQUIRED program_options )
 
 ######################################################################
 # files to use for building
@@ -22,12 +23,12 @@ set ( SRC_FILES
       byte_swap.h
       more_bin.cpp )
 
-add_executable( morebin ${SRC_FILES} ${Boost_LIBRARIES} )
+add_executable( morebin ${SRC_FILES} )
+target_link_libraries ( morebin ${Boost_LIBRARIES} )
 install ( TARGETS morebin RUNTIME DESTINATION bin )
 
 ######################################################################
 # generic project information
-project ( morebin )
 set ( CPACK_PACKAGE_DESCRIPTION_SUMMARY "More for binary files" )
 set ( CPACK_PACKAGE_VENDOR "Peter F. Peterson" )
 set ( CPACK_PACKAGE_URL "???" )
