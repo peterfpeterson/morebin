@@ -1,19 +1,11 @@
-#include <tclap/CmdLine.h>
+//include <tclap/CmdLine.h>
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <vector>
 #include "byte_swap.h"
-
-#ifdef _STDINT_H
-#define HAVE_STDINT_H
-#endif
-
-// use STDINT if possible, otherwise define the types here
-#ifdef _STDINT_H
-#define HAVE_STDINT_H
-#endif
 
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
@@ -33,7 +25,7 @@ using std::vector;
 using std::cout;
 using std::endl;
 using std::invalid_argument;
-using namespace TCLAP;
+//using namespace TCLAP; // REMOVE
 
 typedef uint32_t event_t;
 
@@ -118,7 +110,7 @@ static int str_to_int(const string &str){
     return -1*str_to_int(str.substr(1,str.size()));
 
   string::const_iterator it = str.begin();
-  it = find_if(it,str.end(),my_isnotdigit);
+  it = std::find_if(it,str.end(),my_isnotdigit);
 
   if(it!=str.end())
     throw invalid_argument("str_to_int(string) argument is not an integer");
@@ -546,6 +538,7 @@ void read_data(const vector<string> &files, const Config &config)
  */
 int main(int argc, char** argv)
 {
+  /* REMOVE
   try
     {
       // set up a parser
@@ -699,6 +692,7 @@ int main(int argc, char** argv)
       std::cerr << "RUNTIME ERROR:" << e.what() << endl;
       return -1;
     }
+  */
 
   return 0;
 }
