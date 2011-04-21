@@ -39,12 +39,6 @@ BinFile::~BinFile()
   this->handle = NULL;
 }
 
-BinFile::BinFile(const BinFile& other)
-{
-  this->filename = other.filename;
-  // TODO copy the handle correctly
-}
-
 size_t BinFile::size_in_bytes()
 {
   return this->size_bytes;
@@ -179,4 +173,14 @@ void BinFile::read(vector<NumT> & data, const size_t items)
   delete buffer;
 }
 
+// concrete instantiations to make the compiler happy
 template void BinFile::read<uint8_t>(vector<uint8_t> & data, const size_t items);
+template void BinFile::read<int8_t>(vector<int8_t> & data, const size_t items);
+template void BinFile::read<uint16_t>(vector<uint16_t> & data, const size_t items);
+template void BinFile::read<int16_t>(vector<int16_t> & data, const size_t items);
+template void BinFile::read<uint32_t>(vector<uint32_t> & data, const size_t items);
+template void BinFile::read<int32_t>(vector<int32_t> & data, const size_t items);
+template void BinFile::read<uint64_t>(vector<uint64_t> & data, const size_t items);
+template void BinFile::read<int64_t>(vector<int64_t> & data, const size_t items);
+template void BinFile::read<float>(vector<float> & data, const size_t items);
+template void BinFile::read<double>(vector<double> & data, const size_t items);

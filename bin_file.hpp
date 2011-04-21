@@ -24,7 +24,7 @@ class BinFile
 public:
   BinFile(const std::string &filename);
   virtual ~BinFile();
-  BinFile(const BinFile&);
+  // intentionally no copy constructor or assignment operator
 
   std::size_t size_in_bytes();
 
