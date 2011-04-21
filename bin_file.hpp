@@ -32,6 +32,9 @@ public:
   /// \param bytes The position in bytes.
   void seek(const std::size_t bytes);
 
+  /// Turn on/off byteswapping
+  void setByteSwap(const bool);
+
   /// Read a chunk of data from the current offset position
   /// \param items the number of elements to read. Zero means read all.
   template <typename NumT>
@@ -41,7 +44,7 @@ private:
   template <typename NumT>
   void read_block(NumT *buffer, const std::size_t buffer_size);
 
-  bool byte_swap;
+  bool byteSwap;
   std::string filename;
   std::ifstream *handle;
   std::size_t size_bytes;

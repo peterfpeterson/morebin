@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include "bin_file.hpp"
+#include "byte_swap.h"
 
 using std::ifstream;
 using std::runtime_error;
@@ -12,7 +13,7 @@ namespace {
   static const size_t BLOCK_SIZE = 1024;
 }
 
-BinFile::BinFile(const string &filename) : byte_swap(false)
+BinFile::BinFile(const string &filename) : byteSwap(false)
 {
   // this should never trip
   if (filename.empty())
@@ -54,7 +55,44 @@ void BinFile::seek(const size_t bytes)
   if (this->handle == NULL)
     throw runtime_error("File handle is null");
   this->handle->seekg(bytes, std::ios::beg);
-  
+}
+
+void BinFile::setByteSwap(const bool swap)
+{
+  this->byteSwap = swap;
+}
+
+namespace { // anonymous namespace hides from other files
+void byte_swap(int8_t &number){
+  // do nothing
+}
+void byte_swap(int16_t &number){
+  swap_bytes<2>(&number);
+}
+void byte_swap(int32_t &number){
+  swap_bytes<4>(&number);
+}
+void byte_swap(int64_t &number){
+  swap_bytes<8>(&number);
+}
+void byte_swap(uint8_t &number){
+  // do nothing
+}
+void byte_swap(uint16_t &number){
+  swap_bytes<2>(&number);
+}
+void byte_swap(uint32_t &number){
+  swap_bytes<4>(&number);
+}
+void byte_swap(uint64_t &number){
+  swap_bytes<8>(&number);
+}
+void byte_swap(float &number){
+  swap_bytes<4>(&number);
+}
+void byte_swap(double &number){
+  swap_bytes<8>(&number);
+}
 }
 
 template <typename NumT>
@@ -63,13 +101,13 @@ void BinFile::read_block(NumT *buffer, const std::size_t buffer_size) {
 
   this->handle->read(reinterpret_cast<char *>(buffer),buffer_size*data_size);
 
-  if(this->byte_swap) {
+  if(this->byteSwap) {
     for( size_t i=0 ; i<buffer_size ; ++i ) {
-      // byte_swap(buffer[i]); // TODO uncomment 
+      byte_swap(buffer[i]);
     }
   }
 
-  /*
+  /* REMOVE
   for( size_t i=0 ; i<buffer_size ; ++i ) {
     {
       if(config.show_data)

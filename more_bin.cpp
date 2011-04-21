@@ -8,7 +8,6 @@
 #include <sstream>
 #include <stdexcept>
 #include <vector>
-#include "byte_swap.h"
 #include "bin_file.hpp"
 
 using std::string;
@@ -36,46 +35,6 @@ struct Config{
 
 static const size_t BLOCK_SIZE=1024;
 static const event_t ERROR=0x80000000;
-
-/**
- * \file NXtranslate/binary/BinaryRetriever.cpp
- */
-
-void byte_swap(int8_t &number){
-  // do nothing
-}
-void byte_swap(int16_t &number){
-  swap_bytes<2>(&number);
-}
-void byte_swap(int32_t &number){
-  swap_bytes<4>(&number);
-}
-void byte_swap(int64_t &number){
-  swap_bytes<8>(&number);
-}
-void byte_swap(uint8_t &number){
-  // do nothing
-}
-void byte_swap(uint16_t &number){
-  swap_bytes<2>(&number);
-}
-void byte_swap(uint32_t &number){
-  swap_bytes<4>(&number);
-}
-void byte_swap(uint64_t &number){
-  swap_bytes<8>(&number);
-}
-void byte_swap(float &number){
-  swap_bytes<4>(&number);
-}
-void byte_swap(double &number){
-  swap_bytes<8>(&number);
-
-}
-
-//static void set_event(Config &config) {
-
-//}
 
 static string::size_type count_occur(const string &str, const string &ch){
   string::size_type count = 0;
@@ -477,14 +436,6 @@ void read_block(std::ifstream &file,
   file.seekg(offset*data_size,std::ios::beg);
   file.read(reinterpret_cast<char *>(buffer),buffer_size*data_size);
 
-  if(config.byte_swap)
-    {
-      for( size_t i=0 ; i<buffer_size ; ++i )
-        {
-          byte_swap(buffer[i]);
-        }
-    }
-
   for( size_t i=0 ; i<buffer_size ; ++i )
     {
       if(config.show_data)
@@ -542,6 +493,7 @@ int main(int argc, char** argv)
   config_options.add_options()
     ("offset", po::value<size_t>()->default_value(0), "Skip to this position (in bytes) in the file.")
     ("length", po::value<size_t>()->default_value(0), "Number of items to read (NOT in bytes). Zero means read to end of file.")
+    ("byteswap", "Perform byte swapping on the data")
     ;
 
   po::options_description hidden_options;
@@ -583,6 +535,7 @@ int main(int argc, char** argv)
   size_t length = 0;
   if (vm.count("length"))
     length = vm["length"].as<size_t>();
+  bool byteswap = (vm.count("byteswap") > 0);
 
   // hidden options
   vector<string> files;
@@ -632,6 +585,7 @@ int main(int argc, char** argv)
       BinFile file(files[i]);
       //cout << files[i] << " size:" << file.size_in_bytes() << endl;
       file.seek(offset);
+      file.setByteSwap(byteswap);
       vector<uint8_t> data;
       file.read(data, length);
       if (!(data.empty())) {
