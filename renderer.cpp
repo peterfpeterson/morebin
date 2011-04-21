@@ -127,8 +127,11 @@ void Renderer::showData(BinFile &file, size_t offset, size_t length)
 
   if (this->m_dataDescr->size() != 1)
     throw runtime_error("Do not know how to deal with multi-type data");
-
   string descr = this->m_dataDescr->at(0);
+
+  // TODO there was the ability to show integrated values
+  // TODO ? there was the ability to filter out tof error events
+  // TODO ? there was the ability to create statistics on events
 
   if (descr == "char")
     innerShowData<char>(file, offset, length);
