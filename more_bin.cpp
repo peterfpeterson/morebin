@@ -9,19 +9,7 @@
 #include <stdexcept>
 #include <vector>
 #include "byte_swap.h"
-
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
-#else
-typedef signed char             int8_t;
-typedef short int               int16_t;
-typedef int                     int32_t;
-typedef long int                int64_t;
-typedef unsigned char           uint8_t;
-typedef unsigned short int      uint16_t;
-typedef unsigned int            uint32_t;
-typedef unsigned long int       uint64_t;
-#endif
+#include "bin_file.hpp"
 
 using std::string;
 using std::vector;
@@ -546,8 +534,14 @@ int main(int argc, char** argv)
   // ---------- Declare the supported options.
   po::options_description generic_options("Generic options");
   generic_options.add_options()
-    ("help,h", "produce this help message")
-    ("version,v", "print version string")
+    ("help,h", "Produce this help message.")
+    ("version,v", "Print version string.")
+    ;
+
+  po::options_description config_options("Configuration");
+  config_options.add_options()
+    ("offset", po::value<size_t>()->default_value(0), "Skip to this position (in bytes) in the file.")
+    ("length", po::value<size_t>()->default_value(0), "Number of items to read (NOT in bytes). Zero means read to end of file.")
     ;
 
   po::options_description hidden_options;
@@ -557,11 +551,11 @@ int main(int argc, char** argv)
 
   // all options available on the command line
   po::options_description cmdline_options;
-  cmdline_options.add(generic_options).add(hidden_options);
+  cmdline_options.add(generic_options).add(config_options).add(hidden_options);
 
   // all options visible to the user
   po::options_description visible_options("Allowed options");
-  visible_options.add(generic_options);
+  visible_options.add(generic_options).add(config_options);
 
   // ---------- parse the command line
   po::positional_options_description p;
@@ -581,6 +575,15 @@ int main(int argc, char** argv)
     cout << "morebin version UNSET" << endl;
     return 0;
   }
+
+  // config options
+  size_t offset = 0;
+  if (vm.count("offset"))
+    offset = vm["offset"].as<size_t>();
+  size_t length = 0;
+  if (vm.count("length"))
+    length = vm["length"].as<size_t>();
+
   // hidden options
   vector<string> files;
   if (vm.count("filename"))
@@ -592,11 +595,6 @@ int main(int argc, char** argv)
     cerr << "ERROR: failed to supply <filename>" << endl;
     //cmd.getOutput()->usage(cmd);
     return -1;
-  }
-  cout << "Number of files: " << files.size() << endl;
-  for (size_t i = 0; i < files.size(); i++)
-  {
-    cout << files[i] << endl;
   }
 
   // fill the config object
@@ -630,6 +628,18 @@ int main(int argc, char** argv)
   */
 
   try {
+    for (std::size_t i = 0; i < files.size(); i++) {
+      BinFile file(files[i]);
+      //cout << files[i] << " size:" << file.size_in_bytes() << endl;
+      file.seek(offset);
+      vector<uint8_t> data;
+      file.read(data, length);
+      if (!(data.empty())) {
+	for (size_t i = 0; i < data.size(); i++)
+	  cout << data[i];
+	cout << endl;
+      }
+    }
     
   } catch(std::runtime_error &e) {
     cerr << "RUNTIME ERROR:" << e.what() << endl;
