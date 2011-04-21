@@ -65,6 +65,7 @@ void BinFile::setByteSwap(const bool swap)
 namespace { // anonymous namespace hides from other files
 void byte_swap(int8_t &number){
   // do nothing
+  (void)number;
 }
 void byte_swap(int16_t &number){
   swap_bytes<2>(&number);
@@ -77,6 +78,7 @@ void byte_swap(int64_t &number){
 }
 void byte_swap(uint8_t &number){
   // do nothing
+  (void)number;
 }
 void byte_swap(uint16_t &number){
   swap_bytes<2>(&number);
