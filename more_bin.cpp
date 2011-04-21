@@ -498,7 +498,7 @@ int main(int argc, char** argv)
     ("offset", po::value<size_t>()->default_value(0), "Skip to this position (in bytes) in the file.")
     ("length", po::value<size_t>()->default_value(0), "Number of items to read (NOT in bytes). Zero means read to end of file.")
     ("byteswap", "Perform byte swapping on the data")
-    ("type", po::value<string>()->default_value(DEFAULT_TYPE), typesHelp.str().c_str())
+    ("type,t", po::value<string>()->default_value(DEFAULT_TYPE), typesHelp.str().c_str())
     ;
 
   po::options_description hidden_options;
@@ -525,6 +525,8 @@ int main(int argc, char** argv)
   // ---------- get everything out of the options
   // work with generic options
   if (vm.count("help")) {
+    cout << "Usage: " << argv[0] << " [options] <filenames>" << endl;
+    cout << endl;
     cout << visible_options << endl;
     return 1;
   }
