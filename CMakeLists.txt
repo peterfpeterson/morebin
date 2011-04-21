@@ -20,6 +20,8 @@ find_package ( Boost REQUIRED program_options )
 ######################################################################
 # files to use for building
 set ( SRC_FILES
+      bin_file.cpp
+      bin_file.hpp
       byte_swap.h
       more_bin.cpp )
 
