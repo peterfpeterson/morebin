@@ -7,6 +7,7 @@ using std::ifstream;
 using std::runtime_error;
 using std::size_t;
 using std::string;
+using std::stringstream;
 using std::vector;
 
 namespace {
@@ -29,7 +30,6 @@ BinFile::BinFile(const string &filename) : byteSwap(false)
   this->handle->seekg(0,std::ios::end);
   this->size_bytes = this->handle->tellg();
   this->seek(0);
-
 }
 
 BinFile::~BinFile()
@@ -57,6 +57,9 @@ void BinFile::setByteSwap(const bool swap)
 }
 
 namespace { // anonymous namespace hides from other files
+void byte_swap(char &){
+  // do nothing
+}
 void byte_swap(int8_t &number){
   // do nothing
   (void)number;
@@ -163,6 +166,44 @@ void BinFile::read(vector<NumT> & data, const size_t items)
 #endif
     read_block(buffer, num_read);
     data.insert(data.end(), buffer, buffer+num_read);
+
+    // calculate the next chunk to read
+    pos += num_read;
+    if (pos + num_read > size)
+      num_read = size - pos;
+  }
+
+  delete buffer;
+}
+
+void BinFile::read(stringstream & data, const size_t items)
+{
+  data.clear();
+  
+  // cache the size of the fundamental data item
+  size_t data_size = sizeof(char);
+
+  //  determine how many items to read
+  size_t fileStartPos = this->handle->tellg();
+  size_t size = (this->size_bytes - fileStartPos) / data_size;
+  if ((items > 0) && (items < size))
+    size = items;
+
+  // set up the buffer for reading
+
+  // how many items to read
+  size_t num_read = BLOCK_SIZE;
+  if (size < num_read)
+    num_read = size;
+  char * buffer = new char[num_read];
+
+  // the current position in the file (in items)
+  size_t pos = 0;
+  // read in the data using the calculated blocks. Appending to the
+  // i/o vector along the way
+  while (pos < size) {
+    read_block(buffer, num_read);
+    data << string(buffer, buffer + num_read);
 
     // calculate the next chunk to read
     pos += num_read;

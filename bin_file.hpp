@@ -3,6 +3,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -39,15 +40,16 @@ public:
   /// \param items the number of elements to read. Zero means read all.
   template <typename NumT>
   void read(std::vector<NumT> &data, const std::size_t items = 0);
+  void read(std::stringstream & data, const size_t items = 0);
 
 private:
   template <typename NumT>
   void read_block(NumT *buffer, const std::size_t buffer_size);
 
   bool byteSwap;
-  std::string filename;
-  std::ifstream *handle;
   std::size_t size_bytes;
+  std::ifstream *handle;
+  std::string filename;
 };
 
 #endif

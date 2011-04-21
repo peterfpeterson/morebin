@@ -9,14 +9,15 @@
 #include <stdexcept>
 #include <vector>
 #include "bin_file.hpp"
+#include "renderer.hpp"
 
-using std::string;
-using std::vector;
 using std::cerr;
 using std::cout;
 using std::endl;
 using std::invalid_argument;
-//using namespace TCLAP; // REMOVE
+using std::string;
+using std::stringstream;
+using std::vector;
 namespace po = boost::program_options;
 
 typedef uint32_t event_t;
@@ -35,6 +36,7 @@ struct Config{
 
 static const size_t BLOCK_SIZE=1024;
 static const event_t ERROR=0x80000000;
+static const string DEFAULT_TYPE="char";
 
 static string::size_type count_occur(const string &str, const string &ch){
   string::size_type count = 0;
@@ -489,11 +491,14 @@ int main(int argc, char** argv)
     ("version,v", "Print version string.")
     ;
 
+  stringstream typesHelp;
+  typesHelp << "Set the type of the data. Allowed values are: " << render::getKnownDataDescr();
   po::options_description config_options("Configuration");
   config_options.add_options()
     ("offset", po::value<size_t>()->default_value(0), "Skip to this position (in bytes) in the file.")
     ("length", po::value<size_t>()->default_value(0), "Number of items to read (NOT in bytes). Zero means read to end of file.")
     ("byteswap", "Perform byte swapping on the data")
+    ("type", po::value<string>()->default_value(DEFAULT_TYPE), typesHelp.str().c_str())
     ;
 
   po::options_description hidden_options;
@@ -536,6 +541,9 @@ int main(int argc, char** argv)
   if (vm.count("length"))
     length = vm["length"].as<size_t>();
   bool byteswap = (vm.count("byteswap") > 0);
+  string dataType = DEFAULT_TYPE;
+  if (vm.count("type"))
+    dataType = vm["type"].as<string>();
 
   // hidden options
   vector<string> files;
@@ -581,18 +589,19 @@ int main(int argc, char** argv)
   */
 
   try {
+    bool multiFile = (files.size() > 1);
+    render::Renderer renderer;
+    renderer.setDataDescr(dataType);
+
     for (std::size_t i = 0; i < files.size(); i++) {
       BinFile file(files[i]);
-      //cout << files[i] << " size:" << file.size_in_bytes() << endl;
-      file.seek(offset);
       file.setByteSwap(byteswap);
-      vector<uint8_t> data;
-      file.read(data, length);
-      if (!(data.empty())) {
-	for (size_t i = 0; i < data.size(); i++)
-	  cout << data[i];
-	cout << endl;
+      if (multiFile) {
+	cout << "******************************" << endl;
+	cout << "* " << files[i] << " size:" << file.size_in_bytes() << endl;
+	cout << "******************************" << endl;
       }
+      renderer.showData(file, offset, length);
     }
     
   } catch(std::runtime_error &e) {
