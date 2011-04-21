@@ -23,7 +23,9 @@ set ( SRC_FILES
       bin_file.cpp
       bin_file.hpp
       byte_swap.h
-      more_bin.cpp )
+      more_bin.cpp
+      renderer.cpp
+      renderer.hpp )
 
 add_executable( morebin ${SRC_FILES} )
 target_link_libraries ( morebin ${Boost_LIBRARIES} )

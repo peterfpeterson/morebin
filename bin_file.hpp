@@ -1,5 +1,5 @@
-#ifndef __BIN_FILE_H
-#define __BIN_FILE_H 1
+#ifndef _BIN_FILE_HPP
+#define _BIN_FILE_HPP 1
 
 #include <boost/shared_ptr.hpp>
 #include <fstream>
