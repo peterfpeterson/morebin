@@ -16,8 +16,13 @@ public:
   virtual ~Renderer();
   void setDataDescr(const std::string &);
   void showData(BinFile &, std::size_t offset=0, std::size_t length=0);
+  void showLines(const bool showLines);
 private:
-  std::vector<std::string> * dataDescr;
+  template <typename NumT>
+  void innerShowData(BinFile &file, size_t offset, size_t length);
+
+  std::vector<std::string> * m_dataDescr;
+  bool m_showLines;
 };
 
 } // namespace render

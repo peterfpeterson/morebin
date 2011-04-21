@@ -495,10 +495,11 @@ int main(int argc, char** argv)
   typesHelp << "Set the type of the data. Allowed values are: " << render::getKnownDataDescr();
   po::options_description config_options("Configuration");
   config_options.add_options()
+    ("type,t", po::value<string>()->default_value(DEFAULT_TYPE), typesHelp.str().c_str())
     ("offset", po::value<size_t>()->default_value(0), "Skip to this position (in bytes) in the file.")
     ("length", po::value<size_t>()->default_value(0), "Number of items to read (NOT in bytes). Zero means read to end of file.")
     ("byteswap", "Perform byte swapping on the data")
-    ("type,t", po::value<string>()->default_value(DEFAULT_TYPE), typesHelp.str().c_str())
+    ("lines", "show line numbers")
     ;
 
   po::options_description hidden_options;
@@ -546,6 +547,7 @@ int main(int argc, char** argv)
   string dataType = DEFAULT_TYPE;
   if (vm.count("type"))
     dataType = vm["type"].as<string>();
+  bool showLines = (vm.count("lines") > 0);
 
   // hidden options
   vector<string> files;
@@ -594,6 +596,7 @@ int main(int argc, char** argv)
     bool multiFile = (files.size() > 1);
     render::Renderer renderer;
     renderer.setDataDescr(dataType);
+    renderer.showLines(showLines);
 
     for (std::size_t i = 0; i < files.size(); i++) {
       BinFile file(files[i]);

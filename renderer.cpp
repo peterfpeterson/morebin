@@ -14,6 +14,8 @@ using std::vector;
 
 namespace render {
 
+static const string EOL("\n");
+
 class AllowedTypes {
 public:
   AllowedTypes() {
@@ -61,14 +63,15 @@ private:
 
 Renderer::Renderer()
 {
-  this->dataDescr = new vector<string>();
+  this->m_showLines = false;
+  this->m_dataDescr = new vector<string>();
 }
 
 Renderer::~Renderer()
 {
-  if (this->dataDescr != NULL)
-    delete this->dataDescr;
-  this->dataDescr = NULL;
+  if (this->m_dataDescr != NULL)
+    delete this->m_dataDescr;
+  this->m_dataDescr = NULL;
 }
 
 void Renderer::setDataDescr(const std::string & descr)
@@ -80,25 +83,37 @@ void Renderer::setDataDescr(const std::string & descr)
 	<< allowed;
     throw runtime_error(msg.str());
   }
-  this->dataDescr->clear();
-  this->dataDescr->push_back(descr);
+  this->m_dataDescr->clear();
+  this->m_dataDescr->push_back(descr);
+}
+
+void Renderer::showLines(const bool showLines)
+{
+  this->m_showLines = showLines;
 }
 
 template <typename NumT>
-void innerShowData(BinFile &file, size_t offset, size_t length)
+void Renderer::innerShowData(BinFile &file, size_t offset, size_t length)
 {
+  // this calculation of offset is just wrong
+  size_t myOffset = 0;
+  if ((offset % sizeof(NumT)) == 0)
+    myOffset = offset / sizeof(NumT);
+
   vector<NumT> data;
   file.read(data, length);
   if (!(data.empty())) {
-    for (size_t i = 0; i < data.size(); i++)
-      cout << data[i];
-    cout << endl;
+    for (size_t i = 0; i < data.size(); i++) {
+      if (this->m_showLines)
+	cout << (myOffset + i + 1) << " "; // start counting with one
+      cout << data[i] << EOL;
+    }
   }
 }
 
 /// Special version for strings
 template <>
-void innerShowData<char>(BinFile &file, size_t offset, size_t length)
+void Renderer::innerShowData<char>(BinFile &file, size_t offset, size_t length)
 {
   stringstream data;
   file.read(data, length);
@@ -110,10 +125,10 @@ void Renderer::showData(BinFile &file, size_t offset, size_t length)
   cout << "Renderer.showData(file, " << offset << ", " << length << ")" << endl;
   file.seek(offset);
 
-  if (this->dataDescr->size() != 1)
+  if (this->m_dataDescr->size() != 1)
     throw runtime_error("Do not know how to deal with multi-type data");
 
-  string descr = this->dataDescr->at(0);
+  string descr = this->m_dataDescr->at(0);
 
   if (descr == "char")
     innerShowData<char>(file, offset, length);
