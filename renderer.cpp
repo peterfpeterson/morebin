@@ -1,9 +1,9 @@
 #include <algorithm>
-#include <limits>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include "renderer.hpp"
+#include "statistics.hpp"
 
 using std::cout;
 using std::endl;
@@ -94,47 +94,6 @@ void Renderer::showLines(const bool showLines)
 }
 
 template <typename NumT>
-void getMinMax(NumT &min, NumT &max)
-{
-  min = std::numeric_limits<NumT>::max();
-  max = std::numeric_limits<NumT>::min();
-}
-
-template <>
-void getMinMax<double>(double &min, double &max)
-{
-  min = std::numeric_limits<double>::max();
-  max = -1. * std::numeric_limits<double>::max();
-}
-
-template <>
-void getMinMax<float>(float &min, float &max)
-{
-  min = std::numeric_limits<float>::max();
-  max = -1. * std::numeric_limits<float>::max();
-}
-
-// TODO put this in a separate class
-// TODO add in mean value
-template <typename NumT>
-void Renderer::showStatistics(vector<NumT> &data)
-{
-  NumT min;
-  NumT max;
-  getMinMax(min, max);
-
-  size_t size = data.size();
-  for (size_t i = 0; i < size; i++) {
-    if (data[i] < min)
-      min = data[i];
-    if (data[i] > max)
-      max = data[i];
-  }
-
-  cout << "MIN " << min << " MAX: " << max << " TOTAL ELEMENTS: " << size << endl;
-}
-
-template <typename NumT>
 void Renderer::innerShowData(BinFile &file, size_t offset, size_t length)
 {
   // this calculation of offset is just wrong
@@ -142,17 +101,19 @@ void Renderer::innerShowData(BinFile &file, size_t offset, size_t length)
   if ((offset % sizeof(NumT)) == 0)
     myOffset = offset / sizeof(NumT);
 
+  Statistics<NumT> stats; // object for generating statistics
   vector<NumT> data;
   file.read(data, length);
   if (!(data.empty())) {
+    stats.parseData(data);
     for (size_t i = 0; i < data.size(); i++) {
       if (this->m_showLines)
 	cout << (myOffset + i + 1) << " "; // start counting with one
       cout << data[i] << EOL;
     }
 
-    this->showStatistics(data);
   }
+  cout << stats << endl;
 }
 
 /// Special version for strings

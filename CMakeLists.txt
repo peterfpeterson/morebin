@@ -7,9 +7,9 @@ project ( morebin )
 include ( CheckIncludeFiles )
 # stdint
 check_include_files ( stdint.h stdint )
-if ( stdint )
-  add_definitions ( -DHAVE_STDINT_H )
-endif ( stdint )
+if ( NOT stdint )
+  MESSAGE ( FATAL_ERROR "stdint.h required to build" )
+endif ( NOT stdint )
 # tclap - needs to go
 #find_path ( TCLAP_INCLUDE_DIR tclap/CmdLine.h )
 #include_directories ( ${TCLAP_INCLUDE_DIR} )
@@ -25,7 +25,9 @@ set ( SRC_FILES
       byte_swap.h
       more_bin.cpp
       renderer.cpp
-      renderer.hpp )
+      renderer.hpp
+      statistics.cpp
+      statistics.hpp )
 
 add_executable( morebin ${SRC_FILES} )
 target_link_libraries ( morebin ${Boost_LIBRARIES} )

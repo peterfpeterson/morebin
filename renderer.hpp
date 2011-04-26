@@ -20,8 +20,6 @@ public:
 private:
   template <typename NumT>
   void innerShowData(BinFile &file, size_t offset, size_t length);
-  template <typename NumT>
-  void showStatistics(std::vector<NumT> &data);
 
   std::vector<std::string> * m_dataDescr;
   bool m_showLines;
