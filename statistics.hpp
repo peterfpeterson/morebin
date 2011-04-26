@@ -2,7 +2,22 @@
 #define _STATISTICS_HPP 1
 
 #include <iostream>
+#include <sstream>
 #include <vector>
+
+class StringStatistics
+{
+friend std::ostream& operator<<(std::ostream &os,
+				const StringStatistics & thing);
+public:
+  StringStatistics();
+  virtual ~StringStatistics();
+
+  void parseData(std::stringstream &data);
+
+private:
+  std::size_t number;
+};
 
 template <typename NumT>
 class Statistics

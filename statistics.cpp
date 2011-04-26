@@ -5,6 +5,30 @@
 
 using std::ostream;
 using std::string;
+using std::stringstream;
+
+// ------------------------------ StringStatistics
+StringStatistics::StringStatistics()
+{
+  this->number = static_cast<std::size_t>(0);
+}
+
+StringStatistics::~StringStatistics()
+{
+}
+
+void StringStatistics::parseData(std::stringstream &data)
+{
+  this->number += data.str().size(); // TODO there is a faster way
+}
+
+ostream& operator<<(ostream &os, const StringStatistics & thing)
+{
+  os << "SIZE: " << thing.number << " characters";
+  return os;
+}
+
+// ------------------------------ Statistics<NumT>
 
 namespace { // anonymous namespace to hide from others
 
