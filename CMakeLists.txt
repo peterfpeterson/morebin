@@ -27,7 +27,9 @@ set ( SRC_FILES
       renderer.cpp
       renderer.hpp
       statistics.cpp
-      statistics.hpp )
+      statistics.hpp
+      string_util.cpp
+      string_util.hpp )
 
 add_executable( morebin ${SRC_FILES} )
 target_link_libraries ( morebin ${Boost_LIBRARIES} )
