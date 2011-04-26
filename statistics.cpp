@@ -1,8 +1,15 @@
 #include <limits>
 #include <stdint.h>
 #include "statistics.hpp"
+#include "string_util.hpp"
+
+using std::ostream;
+using std::string;
 
 namespace { // anonymous namespace to hide from others
+
+static const string MIN("MIN: ");
+static const string MAX(" MAX: ");
 
 template <typename NumT>
 void getMinMax(NumT &min, NumT &max)
@@ -53,20 +60,19 @@ void Statistics<NumT>::parseData(std::vector<NumT> & data)
       this->min = item;
     if (item > this->max)
       this->max = item;
-    this->total += item;
+    this->total += static_cast<double>(item);
   }
 }
 
 template <typename NumT>
-std::ostream& operator<<(std::ostream &os, const Statistics<NumT> & thing) {
-  if (thing.number > 0) {
-    double mean = static_cast<double>(thing.total);
-    mean = mean / static_cast<double>(thing.number);
-    os << "MEAN " << mean << " ";
-  }
+ostream& operator<<(ostream &os, const Statistics<NumT>& thing)
+{
+  if (thing.number > 0)
+    os << "MEAN: " << (thing.total / static_cast<double>(thing.number)) << " ";
 
-  os << "MIN " << thing.min << " MAX: " << thing.max
-     << " TOTAL ELEMENTS: " << thing.number;
+  os << MIN << toStr(thing.min) << MAX << toStr(thing.max) << "\n";
+  os << "SIZE: " << (thing.number*sizeof(thing.min)) << " bytes = "
+     << thing.number << " x " << sizeof(thing.min) << " bytes";
   return os;
 }
 

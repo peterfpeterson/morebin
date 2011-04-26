@@ -18,7 +18,7 @@ public:
   void parseData(std::vector<NumT> & data);
 
 private:
-  NumT total;
+  double total;
   NumT min;
   NumT max;
   std::size_t number;

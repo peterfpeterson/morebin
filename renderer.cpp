@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include "renderer.hpp"
 #include "statistics.hpp"
+#include "string_util.hpp"
 
 using std::cout;
 using std::endl;
@@ -109,7 +110,7 @@ void Renderer::innerShowData(BinFile &file, size_t offset, size_t length)
     for (size_t i = 0; i < data.size(); i++) {
       if (this->m_showLines)
 	cout << (myOffset + i + 1) << " "; // start counting with one
-      cout << data[i] << EOL;
+      cout << toStr(data[i]) << EOL;
     }
 
   }
@@ -123,6 +124,7 @@ void Renderer::innerShowData<char>(BinFile &file, size_t offset, size_t length)
   stringstream data;
   file.read(data, length);
   cout << data.str() << endl;
+  cout << "SIZE: " << data.str().size() << " characters" << endl;
 }
 
 void Renderer::showData(BinFile &file, size_t offset, size_t length)
