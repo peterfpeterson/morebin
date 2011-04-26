@@ -97,7 +97,7 @@ void Renderer::showLines(const bool showLines)
 template <typename NumT>
 void Renderer::innerShowData(BinFile &file, size_t offset, size_t length)
 {
-  // this calculation of offset is just wrong
+  // this is used for printing line numbers
   size_t myOffset = 0;
   if ((offset % sizeof(NumT)) == 0)
     myOffset = offset / sizeof(NumT);
@@ -124,7 +124,7 @@ void Renderer::innerShowData<char>(BinFile &file, size_t offset, size_t length)
   StringStatistics stats;
   stringstream data;
   file.read(data, length);
-  cout << data.str() << endl;
+  cout << data.str();
   stats.parseData(data);
   cout << stats << endl;
 }
