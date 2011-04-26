@@ -121,7 +121,6 @@ void Renderer::innerShowData(BinFile &file, size_t offset, size_t length)
 template <>
 void Renderer::innerShowData<char>(BinFile &file, size_t offset, size_t length)
 {
-  // TODO calculate information on the fly rather than reading in the whole file
   StringStatistics stats;
   stringstream data;
   file.read(data, length);
@@ -139,6 +138,7 @@ void Renderer::showData(BinFile &file, size_t offset, size_t length)
     throw runtime_error("Do not know how to deal with multi-type data");
   string descr = this->m_dataDescr->at(0);
 
+  // TODO calculate information on the fly rather than reading in the whole file
   // TODO there was the ability to show integrated values
   // TODO ? there was the ability to filter out tof error events
 
