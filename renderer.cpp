@@ -160,9 +160,9 @@ void Renderer::showData(BinFile &file, size_t offset, size_t length)
     innerShowData<uint64_t>(file, offset, length);
   else if (descr == "int64")
     innerShowData<int64_t>(file, offset, length);
-  else if (descr == "float")
+  else if (descr == "float32" || descr == "float")
     innerShowData<float>(file, offset, length);
-  else if (descr == "double")
+  else if (descr == "float64" || descr == "double")
     innerShowData<double>(file, offset, length);
   else
     throw runtime_error("The code should have never gotten to this place");
