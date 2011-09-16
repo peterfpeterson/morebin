@@ -1,0 +1,4 @@
+#include <string>
+
+static const std::string VERSION("@CPACK_PACKAGE_VERSION@");
+static const std::string DATE("@BUILD_DATE_TIME@");

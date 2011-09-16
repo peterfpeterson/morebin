@@ -10,6 +10,7 @@
 #include <vector>
 #include "bin_file.hpp"
 #include "renderer.hpp"
+#include "version.hpp"
 
 using std::cerr;
 using std::cout;
@@ -208,7 +209,7 @@ int main(int argc, char** argv)
     return 1;
   }
   if (vm.count("version")) {
-    cout << "morebin version UNSET" << endl;
+    cout << "morebin version " << VERSION << " built " << DATE << endl;
     return 0;
   }
 

@@ -17,6 +17,24 @@ endif ( NOT stdint )
 # boost
 find_package ( Boost REQUIRED program_options )
 
+find_program ( DATE_CMD date )
+if (DATE_CMD)
+   execute_process ( COMMAND ${DATE_CMD} --iso-8601=minutes
+   		   OUTPUT_VARIABLE BUILD_DATE_TIME
+		   OUTPUT_STRIP_TRAILING_WHITESPACE )
+else (DATE_CMD)
+   set ( BUILD_DATE_TIME "UNKNOWN" )
+endif (DATE_CMD)
+
+######################################################################
+set ( CPACK_PACKAGE_VERSION_MAJOR 2 )
+set ( CPACK_PACKAGE_VERSION_MINOR 0 )
+set ( CPACK_PACKAGE_VERSION_PATCH "SNAPSHOT" )
+set ( CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
+
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
+		${CMAKE_CURRENT_SOURCE_DIR}/version.hpp )
+
 ######################################################################
 # files to use for building
 set ( SRC_FILES
@@ -29,7 +47,8 @@ set ( SRC_FILES
       statistics.cpp
       statistics.hpp
       string_util.cpp
-      string_util.hpp )
+      string_util.hpp
+      version.hpp )
 
 add_executable( morebin ${SRC_FILES} )
 target_link_libraries ( morebin ${Boost_LIBRARIES} )
@@ -43,10 +62,6 @@ set ( CPACK_PACKAGE_URL "???" )
 set ( CPACK_PACKAGE_CONTACT peterfpeterson@gmail.com )
 #set ( CPACK_PACKAGE_ICON )
 #set ( CPACK_PACKAGE_NAME morebin )
-set ( CPACK_PACKAGE_VERSION_MAJOR 2 )
-set ( CPACK_PACKAGE_VERSION_MINOR 0 )
-set ( CPACK_PACKAGE_VERSION_PATCH "SNAPSHOT" )
-set ( CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 set ( CPACK_PACKAGING_INSTALL_PREFIX /usr/local/ )
 
 # cpack information
