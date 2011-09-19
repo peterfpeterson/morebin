@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "allowedtypes.hpp"
 #include "bin_file.hpp"
 
 namespace render {
@@ -20,8 +21,8 @@ public:
 private:
   template <typename NumT>
   void innerShowData(BinFile &file, size_t offset, size_t length);
-
   std::vector<std::string> * m_dataDescr;
+  allowed::AllowedTypes types;
   bool m_showLines;
 };
 

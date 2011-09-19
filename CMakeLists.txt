@@ -38,10 +38,14 @@ configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
 ######################################################################
 # files to use for building
 set ( SRC_FILES
+      allowedtypes.cpp
+      allowedtypes.hpp
       bin_file.cpp
       bin_file.hpp
       byte_swap.h
       more_bin.cpp
+      #prenexusrenderer.cpp
+      #prenexusrenderer.hpp
       renderer.cpp
       renderer.hpp
       statistics.cpp

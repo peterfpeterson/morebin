@@ -6,6 +6,7 @@
 #include "statistics.hpp"
 #include "string_util.hpp"
 
+using allowed::AllowedTypes;
 using std::cout;
 using std::endl;
 using std::runtime_error;
@@ -16,57 +17,36 @@ using std::vector;
 
 namespace render {
 
+namespace { // anonymous namespace
+
 static const string EOL("\n");
 
-class AllowedTypes {
-public:
-  AllowedTypes() {
-    this->allowed = new vector<string>();
-    this->allowed->push_back("char");
-    this->allowed->push_back("uint8");
-    this->allowed->push_back("uint16");
-    this->allowed->push_back("uint32");
-    this->allowed->push_back("uint64");
-    this->allowed->push_back("int8");
-    this->allowed->push_back("int16");
-    this->allowed->push_back("int32");
-    this->allowed->push_back("int64");
-    this->allowed->push_back("float32");
-    this->allowed->push_back("float64");
-  }
+AllowedTypes getTypes()
+{
+  AllowedTypes types;
+  types.append("char");
+  types.append("uint8");
+  types.append("uint16");
+  types.append("uint32");
+  types.append("uint64");
+  types.append("int8");
+  types.append("int16");
+  types.append("int32");
+  types.append("int64");
+  types.append("float32");
+  types.append("float64");
 
-  ~AllowedTypes() {
-    if (this->allowed != NULL)
-      delete this->allowed;
-    this->allowed = NULL;
-  }
+  return types;
+}
 
-  bool has(const string & descr) const {
-    vector<string>::const_iterator pos
-                    = std::find(this->allowed->begin(), this->allowed->end(), descr);
-    return (pos != this->allowed->end());
-  }
-
-  friend std::ostream& operator<<(std::ostream &os, const AllowedTypes & thing) {
-    size_t size = thing.allowed->size();
-    for (size_t i = 0; i < size; i++) {
-      os << thing.allowed->at(i);
-      if (i + 1 < size)
-	os << ", ";
-    }
-    return os;
-  }
-
-private:
-  vector<string> * allowed;
-};
-
+} // anonymous namespace
 
 
 Renderer::Renderer()
 {
   this->m_showLines = false;
   this->m_dataDescr = new vector<string>();
+  this->types = getTypes();
 }
 
 Renderer::~Renderer()
@@ -78,11 +58,10 @@ Renderer::~Renderer()
 
 void Renderer::setDataDescr(const std::string & descr)
 {
-  AllowedTypes allowed;
-  if (! allowed.has(descr)) {
+  if (! this->types.has(descr)) {
     stringstream msg;
     msg << "Encountered unknown type \"" << descr << "\". Allowed types are: "
-	<< allowed;
+	<< this->types;
     throw runtime_error(msg.str());
   }
   this->m_dataDescr->clear();
@@ -171,8 +150,8 @@ void Renderer::showData(BinFile &file, size_t offset, size_t length)
 const std::string getKnownDataDescr()
 {
   stringstream msg;
-  AllowedTypes types;
-  msg << types;
+  AllowedTypes types = getTypes();
+  msg << types; //getTypes();
   return msg.str();
 }
 
