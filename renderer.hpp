@@ -15,9 +15,10 @@ class Renderer
 public:
   Renderer();
   virtual ~Renderer();
-  void setDataDescr(const std::string &);
-  void showData(BinFile &, std::size_t offset=0, std::size_t length=0);
+  virtual void setDataDescr(const std::string &);
+  virtual void showData(BinFile &, std::size_t offset=0, std::size_t length=0);
   void showLines(const bool showLines);
+  bool showLines() const ;
 private:
   template <typename NumT>
   void innerShowData(BinFile &file, size_t offset, size_t length);

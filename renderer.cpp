@@ -73,6 +73,11 @@ void Renderer::showLines(const bool showLines)
   this->m_showLines = showLines;
 }
 
+bool Renderer::showLines() const
+{
+  return this->m_showLines;
+}
+
 template <typename NumT>
 void Renderer::innerShowData(BinFile &file, size_t offset, size_t length)
 {
@@ -110,7 +115,8 @@ void Renderer::innerShowData<char>(BinFile &file, size_t offset, size_t length)
 
 void Renderer::showData(BinFile &file, size_t offset, size_t length)
 {
-  cout << "Renderer.showData(file, " << offset << ", " << length << ")" << endl;
+  // TODO have debug mode for this print statement
+  // cout << "Renderer.showData(file, " << offset << ", " << length << ")" << endl;
   file.seek(offset);
 
   if (this->m_dataDescr->size() != 1)

@@ -21,16 +21,13 @@ class PrenexusRenderer: public render::Renderer
 public:
   PrenexusRenderer();
   virtual ~PrenexusRenderer();
-  void setDataDescr(const std::string &);
-  void showData(BinFile &, std::size_t offset=0, std::size_t length=0);
-  void showLines(const bool showLines);
+  virtual void setDataDescr(const std::string &);
+  virtual void showData(BinFile &, std::size_t offset=0, std::size_t length=0);
 private:
-  template <typename NumT>
+  template <typename ComplexT>
   void innerShowData(BinFile &file, size_t offset, size_t length);
-
-  std::vector<std::string> * m_dataDescr;
   allowed::AllowedTypes types;
-  bool m_showLines;
+  std::string m_dataDescr;
 };
 
 } // namespace prenexus
