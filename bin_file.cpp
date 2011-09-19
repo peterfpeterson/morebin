@@ -92,7 +92,8 @@ void byte_swap(float &number){
 void byte_swap(double &number){
   swap_bytes<8>(&number);
 }
-}
+
+} // namespace anonymous
 
 template <typename NumT>
 void BinFile::read_block(NumT *buffer, const std::size_t buffer_size) {
@@ -123,6 +124,27 @@ void BinFile::read_block(NumT *buffer, const std::size_t buffer_size) {
       sum_events(buffer, buffer_size, event_count);
     }
   */
+}
+
+template <>
+void BinFile::read_block<prenexus::DasEvent>(prenexus::DasEvent *buffer, const std::size_t buffer_size) {
+  size_t data_size=sizeof(prenexus::DasEvent);
+
+  this->handle->read(reinterpret_cast<char *>(buffer),buffer_size*data_size);
+}
+
+template <>
+void BinFile::read_block<prenexus::Pulse>(prenexus::Pulse *buffer, const std::size_t buffer_size) {
+  size_t data_size=sizeof(prenexus::Pulse);
+
+  this->handle->read(reinterpret_cast<char *>(buffer),buffer_size*data_size);
+}
+
+template <>
+void BinFile::read_block<prenexus::OldPulse>(prenexus::OldPulse *buffer, const std::size_t buffer_size) {
+  size_t data_size=sizeof(prenexus::OldPulse);
+
+  this->handle->read(reinterpret_cast<char *>(buffer),buffer_size*data_size);
 }
 
 template <typename NumT>
@@ -225,3 +247,7 @@ template void BinFile::read<uint64_t>(vector<uint64_t> & data, const size_t item
 template void BinFile::read<int64_t>(vector<int64_t> & data, const size_t items);
 template void BinFile::read<float>(vector<float> & data, const size_t items);
 template void BinFile::read<double>(vector<double> & data, const size_t items);
+
+template void BinFile::read<prenexus::DasEvent>(vector<prenexus::DasEvent> & data, const size_t items);
+template void BinFile::read<prenexus::Pulse>(vector<prenexus::Pulse> & data, const size_t items);
+template void BinFile::read<prenexus::OldPulse>(vector<prenexus::OldPulse> & data, const size_t items);
