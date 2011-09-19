@@ -44,8 +44,8 @@ set ( SRC_FILES
       bin_file.hpp
       byte_swap.h
       more_bin.cpp
-      #prenexusrenderer.cpp
-      #prenexusrenderer.hpp
+      prenexusrenderer.cpp
+      prenexusrenderer.hpp
       renderer.cpp
       renderer.hpp
       statistics.cpp

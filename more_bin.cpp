@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <vector>
 #include "bin_file.hpp"
+#include "prenexusrenderer.hpp"
 #include "renderer.hpp"
 #include "version.hpp"
 
@@ -169,7 +170,7 @@ int main(int argc, char** argv)
     ;
 
   stringstream typesHelp;
-  typesHelp << "Set the type of the data. Allowed values are: " << render::getKnownDataDescr();
+  typesHelp << "Set the type of the data. Allowed values are: " << render::getKnownDataDescr() << ", " << prenexus::getKnownDataDescr();
   po::options_description config_options("Configuration");
   config_options.add_options()
     ("type,t", po::value<string>()->default_value(DEFAULT_TYPE), typesHelp.str().c_str())

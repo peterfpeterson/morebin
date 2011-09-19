@@ -150,8 +150,7 @@ void Renderer::showData(BinFile &file, size_t offset, size_t length)
 const std::string getKnownDataDescr()
 {
   stringstream msg;
-  AllowedTypes types = getTypes();
-  msg << types; //getTypes();
+  msg << getTypes();
   return msg.str();
 }
 
