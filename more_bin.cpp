@@ -243,9 +243,16 @@ int main(int argc, char** argv)
   // ---------- push through the list of files
   try {
     bool multiFile = (files.size() > 1);
-    render::Renderer renderer;
-    renderer.setDataDescr(dataType);
-    renderer.showLines(showLines);
+    render::Renderer * renderer = NULL;
+    try {
+      renderer = new render::Renderer();
+      renderer->setDataDescr(dataType);
+    } catch (std::runtime_error &e) {
+      // TODO should print a warning
+      renderer = new prenexus::PrenexusRenderer();
+      renderer->setDataDescr(dataType);
+    }
+    renderer->showLines(showLines);
 
     for (std::size_t i = 0; i < files.size(); i++) {
       BinFile file(files[i]);
@@ -255,9 +262,10 @@ int main(int argc, char** argv)
 	cout << "* " << files[i] << " size:" << file.size_in_bytes() << endl;
 	cout << "******************************" << endl;
       }
-      renderer.showData(file, offset, length);
+      renderer->showData(file, offset, length);
     }
-    
+
+    delete renderer;
   } catch(std::runtime_error &e) {
     cerr << "RUNTIME ERROR:" << e.what() << endl;
     return -1;
