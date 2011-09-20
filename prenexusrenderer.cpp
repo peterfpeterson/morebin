@@ -88,12 +88,13 @@ void printValue(ostream & os, const DasEvent & value)
 
 void printValue(ostream & os, const Pulse & value)
 {
-  os << toStr(value.seconds, value.nanoseconds) << " \t" << value.event_index << " \t" << value.pCurrent;
+  os << toStr(value.seconds, value.nanoseconds) << " \t" 
+     << value.event_index << " \t" << value.pCurrent;
 }
 
 void printValue(ostream & os, const OldPulse & value)
 {
-  os << value.seconds << " \t" << value.nanoseconds << " \t" << value.event_index;
+  os << toStr(value.seconds, value.nanoseconds) << " \t" << value.event_index;
 }
 
 template <typename ComplexT>
