@@ -1,6 +1,9 @@
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
+#include <ctime>
+//include <time.h>
 #include "prenexusrenderer.hpp"
 
 using allowed::AllowedTypes;
@@ -54,6 +57,30 @@ void PrenexusRenderer::setDataDescr(const string &descr)
   this->m_dataDescr = descr;
 }
 
+/// Max allowed nanoseconds in the time; 2^62-1
+static int64_t MAX_NANOSECONDS = 4611686018427387903LL;
+
+/// Max allowed seconds in the time
+static int64_t MAX_SECONDS      = 4611686017LL;
+
+/// Min allowed nanoseconds in the time; -2^62+1
+static int64_t MIN_NANOSECONDS  = -4611686018427387903LL;
+
+/// Min allowed seconds in the time
+static int64_t MIN_SECONDS      = -4611686017LL;
+
+/// The epoch for GPS times.
+static const boost::posix_time::ptime GPS_EPOCH(boost::gregorian::date(1990, 1, 1));
+
+string toStr(const uint32_t seconds, const uint32_t nanoseconds)
+{
+  // turn it into a ptime
+  boost::posix_time::ptime ptime_version
+    = GPS_EPOCH + boost::posix_time::time_duration(0,0,seconds, nanoseconds);
+
+  return to_iso_extended_string(ptime_version);
+}
+
 void printValue(ostream & os, const DasEvent & value)
 {
   os << value.tof << " \t" << value.pid;
@@ -61,7 +88,7 @@ void printValue(ostream & os, const DasEvent & value)
 
 void printValue(ostream & os, const Pulse & value)
 {
-  os << value.seconds << " \t" << value.nanoseconds << " \t" << value.event_index << " \t" << value.pCurrent;
+  os << toStr(value.seconds, value.nanoseconds) << " \t" << value.event_index << " \t" << value.pCurrent;
 }
 
 void printValue(ostream & os, const OldPulse & value)

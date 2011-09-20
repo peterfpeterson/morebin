@@ -15,7 +15,7 @@ endif ( NOT stdint )
 #include_directories ( ${TCLAP_INCLUDE_DIR} )
 #message ( STATUS "TCLAP: ${TCLAP_INCLUDE_DIR}" )
 # boost
-find_package ( Boost REQUIRED program_options )
+find_package ( Boost REQUIRED program_options date_time )
 
 find_program ( DATE_CMD date )
 if (DATE_CMD)
