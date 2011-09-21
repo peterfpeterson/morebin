@@ -44,6 +44,15 @@ size_t BinFile::size_in_bytes()
   return this->size_bytes;
 }
 
+size_t BinFile::num_items(const size_t data_size, const std::size_t items)
+{
+  size_t fileStartPos = this->handle->tellg();
+  size_t size = (this->size_bytes - fileStartPos) / data_size;
+  if ((items > 0) && (items < size))
+    size = items;
+  return size;
+}
+
 void BinFile::seek(const size_t bytes)
 {
   if (this->handle == NULL)
@@ -156,10 +165,7 @@ void BinFile::read(vector<NumT> & data, const size_t items)
   size_t data_size = sizeof(NumT);
 
   //  determine how many items to read
-  size_t fileStartPos = this->handle->tellg();
-  size_t size = (this->size_bytes - fileStartPos) / data_size;
-  if ((items > 0) && (items < size))
-    size = items;
+  size_t size = this->num_items(data_size, items);
 
   // set up the buffer for reading
 
@@ -206,10 +212,7 @@ void BinFile::read(stringstream & data, const size_t items)
   size_t data_size = sizeof(char);
 
   //  determine how many items to read
-  size_t fileStartPos = this->handle->tellg();
-  size_t size = (this->size_bytes - fileStartPos) / data_size;
-  if ((items > 0) && (items < size))
-    size = items;
+  size_t size = this->num_items(data_size, items);
 
   // set up the buffer for reading
 
