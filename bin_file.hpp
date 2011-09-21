@@ -17,6 +17,9 @@ public:
 
   std::size_t size_in_bytes();
 
+  /// The number of data items that must be in the file for the supplied data size.
+  std::size_t num_items(const std::size_t data_size, const std::size_t items = 0);
+
   /// Seek to a position in the file relative to the beginning.
   /// \param bytes The position in bytes.
   void seek(const std::size_t bytes);

@@ -20,6 +20,8 @@ namespace { // anonymous namespace
 
 static const string EOL("\n");
 
+static const size_t BLOCK_SIZE = 1024;
+
 AllowedTypes getTypes() {
   AllowedTypes types;
   types.append("event");
@@ -108,17 +110,33 @@ void PrenexusRenderer::innerShowData(BinFile &file, size_t offset, size_t length
   if ((offset % sizeof(ComplexT)) == 0)
     myOffset = offset / sizeof(ComplexT);
 
+  // set up to do a streaming read
+  size_t size = file.num_items(sizeof(ComplexT));
+  size_t num_read = BLOCK_SIZE;
+  if (size < num_read)
+      num_read = size;
+
   // parse the file and print
+  size_t pos = 0;
   vector<ComplexT> data;
-  file.read(data, length);
-  if (!(data.empty())) {
-    for (size_t i = 0; i < data.size(); i++)
-    {
-      if (showLines)
-	std::cout << (myOffset + i + 1) << " ";
-      printValue(std::cout,  data[i]);
-      std::cout << EOL;
+  data.reserve(num_read);
+  while (pos < size) {
+    file.read(data, num_read);
+    if (!(data.empty())) {
+      for (size_t i = 0; i < num_read; i++)
+      {
+        if (showLines)
+          std::cout << (myOffset + i + 1) << " \t";
+        printValue(std::cout,  data[i]);
+        std::cout << EOL;
+      }
     }
+
+    // increment for the next time through the loop
+    myOffset += num_read;
+    pos += num_read;
+    if (pos + num_read > size)
+      num_read = size - pos;
   }
 }
 
