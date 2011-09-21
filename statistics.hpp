@@ -19,6 +19,22 @@ private:
   std::size_t number;
 };
 
+template <typename ComplexT>
+class PrenexusStatistics
+{
+template <typename TYPE>
+friend std::ostream& operator<<(std::ostream &os, const PrenexusStatistics<TYPE> &thing);
+
+public:
+  PrenexusStatistics();
+  virtual ~PrenexusStatistics();
+
+  void parseData(std::vector<ComplexT> & data);
+
+private:
+  std::size_t number;
+};
+
 template <typename NumT>
 class Statistics
 {

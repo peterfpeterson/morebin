@@ -1,5 +1,6 @@
 #include <limits>
 #include <stdint.h>
+#include "prenexustypes.hpp"
 #include "statistics.hpp"
 #include "string_util.hpp"
 
@@ -27,6 +28,9 @@ ostream& operator<<(ostream &os, const StringStatistics & thing)
   os << "SIZE: " << thing.number << " characters";
   return os;
 }
+
+// ------------------------------ PrenexusStatistics<ComplexT>
+
 
 // ------------------------------ Statistics<NumT>
 
