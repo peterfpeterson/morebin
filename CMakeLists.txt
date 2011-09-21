@@ -46,6 +46,7 @@ set ( SRC_FILES
       more_bin.cpp
       prenexusrenderer.cpp
       prenexusrenderer.hpp
+      prenexustypes.hpp
       renderer.cpp
       renderer.hpp
       statistics.cpp

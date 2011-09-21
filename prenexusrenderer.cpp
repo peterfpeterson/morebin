@@ -5,6 +5,7 @@
 #include <ctime>
 //include <time.h>
 #include "prenexusrenderer.hpp"
+#include "prenexustypes.hpp"
 
 using allowed::AllowedTypes;
 using std::ostream;

@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include "bin_file.hpp"
 #include "byte_swap.h"
+#include "prenexustypes.hpp"
 
 using std::ifstream;
 using std::runtime_error;
