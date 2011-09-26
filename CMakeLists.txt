@@ -62,16 +62,41 @@ install ( TARGETS morebin RUNTIME DESTINATION bin )
 # generic project information
 set ( CPACK_PACKAGE_DESCRIPTION_SUMMARY "More for binary files" )
 set ( CPACK_PACKAGE_VENDOR "Peter F. Peterson" )
-set ( CPACK_PACKAGE_URL "???" )
+set ( CPACK_PACKAGE_URL "http://github.com/peterfpeterson/morebin" )
 set ( CPACK_PACKAGE_CONTACT peterfpeterson@gmail.com )
 #set ( CPACK_PACKAGE_ICON )
-#set ( CPACK_PACKAGE_NAME morebin )
-set ( CPACK_PACKAGING_INSTALL_PREFIX /usr/local/ )
+set ( CPACK_PACKAGE_NAME morebin )
+set ( CPACK_PACKAGING_INSTALL_PREFIX /usr/local )
+set ( CPACK_RPM_PACKAGE_LICENSE "The MIT License" )
+set ( RELEASE_NUMBER "1" )
+
+set ( CPACK_GENERATOR "RPM" CACHE STRING "Set pakage type")
 
 # cpack information
-set ( CPACK_GENERATOR "DEB" )
+if ( ${CPACK_GENERATOR} MATCHES "RPM" )
+  find_program ( RPMBUILD_CMD rpmbuild )
+  set ( CPACK_RPM_PACKAGE_ARCHITECTURE "${CMAKE_SYSTEM_PROCESSOR}" )
+  set ( CPACK_RPM_PACKAGE_RELEASE "${RELEASE_NUMBER}.el6" CACHE STRING "Release name")
+  set ( CPACK_PACKAGE_FILE_NAME
+      "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${CPACK_RPM_PACKAGE_ARCHITECTURE}" )
+elseif ( ${CPACK_GENERATOR} MATCHES "DEB" )
+  set ( CPACK_DEBIAN_PACKAGE_RELEASE ${RELEASE_NUMBER} )
+  find_program (DPKG_CMD dpkg)
+  if ( DPKG_CMD )
+    execute_process( COMMAND ${DPKG_CMD} --print-architecture
+      OUTPUT_VARIABLE CPACK_DEBIAN_PACKAGE_ARCHITECTURE
+      OUTPUT_STRIP_TRAILING_WHITESPACE )
+  else ()
+    set ( CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i686" )
+  endif ( DPKG_CMD )
+  set( CPACK_PACKAGE_FILE_NAME
+      "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
+endif ( ${CPACK_GENERATOR} MATCHES "RPM" )
+
 set ( CPACK_SOURCE_GENERATOR "TGZ" )
-set ( CPACK_RPM_PACKAGE_REQUIRES "boost >= 1.34.1")
-set ( CPACK_DEBIAN_PACKAGE_DEPENDS "boost >= 1.34.1")
+#set ( CPACK_RPM_PACKAGE_REQUIRES "boost")
+#set ( CPACK_DEBIAN_PACKAGE_DEPENDS "boost")
+
+message (status " CPACK_PACKAGE_FILE_NAME = ${CPACK_PACKAGE_FILE_NAME}" )
 include (CPack) # have cpack do its thing
 
