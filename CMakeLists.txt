@@ -29,7 +29,7 @@ endif (DATE_CMD)
 ######################################################################
 set ( CPACK_PACKAGE_VERSION_MAJOR 2 )
 set ( CPACK_PACKAGE_VERSION_MINOR 0 )
-set ( CPACK_PACKAGE_VERSION_PATCH "SNAPSHOT" )
+set ( CPACK_PACKAGE_VERSION_PATCH "0SNAPSHOT" ) # dev versions are SNAPSHOT like java
 set ( CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
@@ -68,19 +68,18 @@ set ( CPACK_PACKAGE_CONTACT peterfpeterson@gmail.com )
 set ( CPACK_PACKAGE_NAME morebin )
 set ( CPACK_PACKAGING_INSTALL_PREFIX /usr/local )
 set ( CPACK_RPM_PACKAGE_LICENSE "The MIT License" )
-set ( RELEASE_NUMBER "1" )
 
 set ( CPACK_GENERATOR "RPM" CACHE STRING "Set pakage type")
-
+set ( CPACK_RPM_PACKAGE_RELEASE "1.el6" CACHE STRING "RPM release name" ) # should depend on host os
+set ( CPACK_DEBIAN_PACKAGE_RELEASE "1ubuntu10.10" CACHE STRING "DEB release name" ) # should depend on host os
+    
 # cpack information
 if ( ${CPACK_GENERATOR} MATCHES "RPM" )
   find_program ( RPMBUILD_CMD rpmbuild )
   set ( CPACK_RPM_PACKAGE_ARCHITECTURE "${CMAKE_SYSTEM_PROCESSOR}" )
-  set ( CPACK_RPM_PACKAGE_RELEASE "${RELEASE_NUMBER}.el6" CACHE STRING "Release name")
   set ( CPACK_PACKAGE_FILE_NAME
       "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${CPACK_RPM_PACKAGE_ARCHITECTURE}" )
 elseif ( ${CPACK_GENERATOR} MATCHES "DEB" )
-  set ( CPACK_DEBIAN_PACKAGE_RELEASE ${RELEASE_NUMBER} )
   find_program (DPKG_CMD dpkg)
   if ( DPKG_CMD )
     execute_process( COMMAND ${DPKG_CMD} --print-architecture
@@ -93,7 +92,7 @@ elseif ( ${CPACK_GENERATOR} MATCHES "DEB" )
       "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
 endif ( ${CPACK_GENERATOR} MATCHES "RPM" )
 
-set ( CPACK_SOURCE_GENERATOR "TGZ" )
+#set ( CPACK_SOURCE_GENERATOR "TGZ" )
 #set ( CPACK_RPM_PACKAGE_REQUIRES "boost")
 #set ( CPACK_DEBIAN_PACKAGE_DEPENDS "boost")
 
