@@ -29,11 +29,11 @@ endif (DATE_CMD)
 ######################################################################
 set ( CPACK_PACKAGE_VERSION_MAJOR 2 )
 set ( CPACK_PACKAGE_VERSION_MINOR 0 )
-set ( CPACK_PACKAGE_VERSION_PATCH "0SNAPSHOT" ) # dev versions are SNAPSHOT like java
+set ( CPACK_PACKAGE_VERSION_PATCH "1SNAPSHOT" ) # dev versions are SNAPSHOT like java
 set ( CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
-		${CMAKE_CURRENT_SOURCE_DIR}/version.hpp )
+		${CMAKE_CURRENT_BINARY_DIR}/version.hpp )
 
 ######################################################################
 # files to use for building
@@ -54,6 +54,7 @@ set ( SRC_FILES
       string_util.hpp
       version.hpp )
 
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_executable( morebin ${SRC_FILES} )
 target_link_libraries ( morebin ${Boost_LIBRARIES} )
 install ( TARGETS morebin RUNTIME DESTINATION bin )
