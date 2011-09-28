@@ -211,6 +211,11 @@ int main(int argc, char** argv)
   }
   if (vm.count("version")) {
     cout << "morebin version " << VERSION << " built " << DATE << endl;
+    cout << endl;
+    cout << "http://github.com/peterfpeterson/morebin/";
+    if (VERSION.find("SNAPSHOT") == string::npos)
+      cout << "tree/v" << VERSION;
+    cout << endl;
     return 0;
   }
 
