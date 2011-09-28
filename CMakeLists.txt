@@ -73,7 +73,7 @@ set ( CPACK_RPM_PACKAGE_LICENSE "The MIT License" )
 
 set ( CPACK_GENERATOR "RPM" CACHE STRING "Set pakage type")
 set ( CPACK_RPM_PACKAGE_RELEASE "1.el6" CACHE STRING "RPM release name" ) # should depend on host os
-set ( CPACK_DEBIAN_PACKAGE_RELEASE "1ubuntu10.10" CACHE STRING "DEB release name" ) # should depend on host os
+set ( CPACK_DEBIAN_PACKAGE_RELEASE "0" CACHE STRING "DEB release name" ) # should depend on host os
     
 # cpack information
 if ( ${CPACK_GENERATOR} MATCHES "RPM" )
