@@ -28,8 +28,8 @@ endif (DATE_CMD)
 
 ######################################################################
 set ( CPACK_PACKAGE_VERSION_MAJOR 2 )
-set ( CPACK_PACKAGE_VERSION_MINOR 1 )
-set ( CPACK_PACKAGE_VERSION_PATCH "0" ) # dev versions are SNAPSHOT like java
+set ( CPACK_PACKAGE_VERSION_MINOR 2 )
+set ( CPACK_PACKAGE_VERSION_PATCH "0SNAPSHOT" ) # dev versions are SNAPSHOT like java
 set ( CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
