@@ -42,9 +42,8 @@ AllowedTypes getTypes()
 } // anonymous namespace
 
 
-Renderer::Renderer()
+Renderer::Renderer(): m_showLines(false), m_quiet(false), m_numItemsPerLine(1)
 {
-  this->m_showLines = false;
   this->m_dataDescr = new vector<string>();
   this->types = getTypes();
 }
@@ -78,6 +77,29 @@ bool Renderer::showLines() const
   return this->m_showLines;
 }
 
+void Renderer::numItemsPerLine(const std::size_t numItems)
+{
+  if (numItems > 0)
+    m_numItemsPerLine = numItems;
+  else
+    throw std::runtime_error("Tried to set number of items per line to less than 1");
+}
+
+std::size_t Renderer::numItemsPerLine()
+{
+  return m_numItemsPerLine;
+}
+
+void Renderer::quiet(const bool value)
+{
+  m_quiet = value;
+}
+
+bool Renderer::quiet()
+{
+  return m_quiet;
+}
+
 template <typename NumT>
 void Renderer::innerShowData(BinFile &file, size_t offset, size_t length)
 {
@@ -88,13 +110,28 @@ void Renderer::innerShowData(BinFile &file, size_t offset, size_t length)
 
   Statistics<NumT> stats; // object for generating statistics
   vector<NumT> data;
+  size_t totalItems = this->numItemsPerLine() - 1;
+  size_t items = 0;
   file.read(data, length);
   if (!(data.empty())) {
     stats.parseData(data);
-    for (size_t i = 0; i < data.size(); i++) {
-      if (this->m_showLines)
-	cout << (myOffset + i + 1) << " "; // start counting with one
-      cout << toStr(data[i]) << EOL;
+    if (!m_quiet)
+    {
+      for (size_t i = 0; i < data.size(); i++) {
+        if (this->m_showLines)
+          cout << (myOffset + i + 1) << " "; // start counting with one
+        cout << toStr(data[i]);
+        if (items < totalItems)
+        {
+          cout << "\t";
+          items += 1;
+        }
+        else
+        {
+          cout << EOL;
+          items = 0;
+        }
+      }
     }
 
   }
@@ -108,7 +145,8 @@ void Renderer::innerShowData<char>(BinFile &file, size_t offset, size_t length)
   StringStatistics stats;
   stringstream data;
   file.read(data, length);
-  cout << data.str();
+  if (!m_quiet)
+    cout << data.str();
   stats.parseData(data);
   cout << stats << endl;
 }

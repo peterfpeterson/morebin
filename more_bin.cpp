@@ -176,7 +176,9 @@ int main(int argc, char** argv)
     ("type,t", po::value<string>()->default_value(DEFAULT_TYPE), typesHelp.str().c_str())
     ("offset", po::value<size_t>()->default_value(0), "Skip to this position (in bytes) in the file.")
     ("length", po::value<size_t>()->default_value(0), "Number of items to read (NOT in bytes). Zero means read to end of file.")
+    ("records", po::value<size_t>()->default_value(1), "Number of items to print per line")
     ("byteswap", "Perform byte swapping on the data")
+    ("quiet,q", "Do not print out values")
     ("lines", "show line numbers")
     ;
 
@@ -226,7 +228,11 @@ int main(int argc, char** argv)
   size_t length = 0;
   if (vm.count("length"))
     length = vm["length"].as<size_t>();
+  size_t numItemsPerLine = 1;
+  if (vm.count("records"))
+    numItemsPerLine = vm["records"].as<size_t>();
   bool byteswap = (vm.count("byteswap") > 0);
+  bool quiet = (vm.count("quiet") > 0);
   string dataType = DEFAULT_TYPE;
   if (vm.count("type"))
     dataType = vm["type"].as<string>();
@@ -257,7 +263,9 @@ int main(int argc, char** argv)
       renderer = new prenexus::PrenexusRenderer();
       renderer->setDataDescr(dataType);
     }
+    renderer->quiet(quiet);
     renderer->showLines(showLines);
+    renderer->numItemsPerLine(numItemsPerLine);
 
     for (std::size_t i = 0; i < files.size(); i++) {
       BinFile file(files[i]);

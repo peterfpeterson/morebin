@@ -124,12 +124,15 @@ void PrenexusRenderer::innerShowData(BinFile &file, size_t offset, size_t length
   while (pos < size) {
     file.read(data, num_read);
     if (!(data.empty())) {
-      for (size_t i = 0; i < num_read; i++)
+      if (!this->quiet())
       {
-        if (showLines)
-          std::cout << (myOffset + i + 1) << " \t";
-        printValue(std::cout,  data[i]);
-        std::cout << EOL;
+        for (size_t i = 0; i < num_read; i++)
+        {
+          if (showLines)
+            std::cout << (myOffset + i + 1) << " \t";
+          printValue(std::cout,  data[i]);
+          std::cout << EOL;
+        }
       }
     }
 
