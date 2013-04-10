@@ -1,8 +1,9 @@
 Building from source
 ====================
 
-Required libraries
-------------------
+Required packages and libraries
+-------------------------------
+* cmake
 * boost-program-options
 * boost-date-time
 
@@ -12,7 +13,7 @@ The three step dance
     make
     sudo make install
 
-To make the installer is just the extra
+To make the installer (rpm only for now) is just the extra
 
     make package
 
