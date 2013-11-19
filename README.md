@@ -22,3 +22,7 @@ with old boost and new CMake (like on RHEL6) that makes it impossible to link.
 To get around this just `cmake . -DBoost_NO_BOOST_CMAKE=ON` and make again.
 
 [![Build Status](https://travis-ci.org/peterfpeterson/morebin.png)](https://travis-ci.org/peterfpeterson/morebin)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/peterfpeterson/morebin/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
