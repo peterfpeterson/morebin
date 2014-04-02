@@ -234,7 +234,7 @@ int main(int argc, char** argv)
     cout << "\tvetoStatus(uint32_t)" << endl;
     cout << "\tpCurrent(uint32_t)      The proton charge for the pulse." << endl;
     cout << "\tspare(uint32_t)" << endl;
-    return 1;
+    return 0;
   }
   if (vm.count("version")) {
     cout << "morebin version " << VERSION << " built " << DATE << endl;
