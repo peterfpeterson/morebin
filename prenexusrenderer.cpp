@@ -104,8 +104,9 @@ void printValue(ostream & os, const OldPulse & value)
 void printValue(ostream & os, const Rtdl & value)
 {
   os << toStr(value.seconds, value.nanoseconds) << " \t" 
-     << value.pulseType << "\t" << value.vetoStatus << "\t"
-     << value.vetoStatus << "\t" << value.pulseCurrent << "\t"
+     << value.pulseType << "\t"
+     << value.vetoStatus << "\t"
+     << value.pulseCurrent << "\t"
      << value.spare;
 }
 
