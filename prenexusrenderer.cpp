@@ -28,6 +28,7 @@ AllowedTypes getTypes() {
   types.append("event");
   types.append("pulseid");
   types.append("oldpulseid");
+  types.append("rtdl");
   return types;
 }
 
@@ -100,6 +101,15 @@ void printValue(ostream & os, const OldPulse & value)
   os << toStr(value.seconds, value.nanoseconds) << " \t" << value.event_index;
 }
 
+void printValue(ostream & os, const Rtdl & value)
+{
+  os << toStr(value.seconds, value.nanoseconds) << " \t" 
+     << value.pulseType << "\t"
+     << value.vetoStatus << "\t"
+     << value.pulseCurrent << "\t"
+     << value.spare;
+}
+
 template <typename ComplexT>
 void PrenexusRenderer::innerShowData(BinFile &file, size_t offset, size_t length)
 {
@@ -157,6 +167,8 @@ void PrenexusRenderer::showData(BinFile & file, size_t offset, size_t length)
     this->innerShowData<Pulse>(file, offset, length);
   else if (this->m_dataDescr == "oldpulseid")
     this->innerShowData<OldPulse>(file, offset, length);
+  else if (this->m_dataDescr == "rtdl")
+    this->innerShowData<Rtdl>(file, offset, length);
   else
     throw runtime_error("The code should have never gotten to this place");
   

@@ -208,7 +208,32 @@ int main(int argc, char** argv)
   if (vm.count("help")) {
     cout << "Usage: " << argv[0] << " [options] <filenames>" << endl;
     cout << endl;
+
+    cout << "Source code located at http://github.com/peterfpeterson/morebin" << endl;
+    cout << endl;
+
     cout << visible_options << endl;
+    cout << endl;
+
+    cout << "Notes on complex types:" << endl;
+    cout << "  The following types are printed in colums (in order)" << endl;
+    cout <<  endl;
+    cout << "  event" << endl;
+    cout << "\ttof(uint32_t) Time of flight." << endl;
+    cout << "\tpid(uint32_t) Pixel identifier as published by the DAS/DAE/DAQ." << endl;
+    cout << "  oldpulseid" << endl;
+    cout << "\ttime(uint32_t,uint32_t) Time of the pulse" << endl;
+    cout << "\tevent_index(uint64_t)   The index of the first event for this pulse." << endl;
+    cout << "  pulseid" << endl;
+    cout << "\ttime(uint32_t,uint32_t) Time of the pulse" << endl;
+    cout << "\tevent_index(uint64_t)   The index of the first event for this pulse." << endl;
+    cout << "\tpCurrent(double)        The proton charge for the pulse." << endl;
+    cout << "  rtdl" << endl;
+    cout << "\ttime(uint32_t,uint32_t) Time of the pulse" << endl;
+    cout << "\tpulseType(uint32_t)" << endl;
+    cout << "\tvetoStatus(uint32_t)" << endl;
+    cout << "\tpCurrent(uint32_t)      The proton charge for the pulse." << endl;
+    cout << "\tspare(uint32_t)" << endl;
     return 1;
   }
   if (vm.count("version")) {
