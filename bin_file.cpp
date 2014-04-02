@@ -157,6 +157,14 @@ void BinFile::read_block<prenexus::OldPulse>(prenexus::OldPulse *buffer, const s
   this->handle->read(reinterpret_cast<char *>(buffer),buffer_size*data_size);
 }
 
+template <>
+void BinFile::read_block<prenexus::Rtdl>(prenexus::Rtdl *buffer, const std::size_t buffer_size) {
+  size_t data_size=sizeof(prenexus::Rtdl);
+
+  this->handle->read(reinterpret_cast<char *>(buffer),buffer_size*data_size);
+}
+
+
 template <typename NumT>
 void BinFile::read(vector<NumT> & data, const size_t items)
 {
@@ -255,3 +263,4 @@ template void BinFile::read<double>(vector<double> & data, const size_t items);
 template void BinFile::read<prenexus::DasEvent>(vector<prenexus::DasEvent> & data, const size_t items);
 template void BinFile::read<prenexus::Pulse>(vector<prenexus::Pulse> & data, const size_t items);
 template void BinFile::read<prenexus::OldPulse>(vector<prenexus::OldPulse> & data, const size_t items);
+template void BinFile::read<prenexus::Rtdl>(vector<prenexus::Rtdl> & data, const size_t items);

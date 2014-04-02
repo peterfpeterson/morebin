@@ -49,6 +49,23 @@ struct OldPulse
   uint64_t event_index;
 };
 #pragma pack(pop)
+
+#pragma pack(push, 4) //Make sure the structure is the correct number of bytes.
+struct Rtdl
+{
+  /// The number of nanoseconds since the seconds field. This is not necessarily less than one second.
+  uint32_t nanoseconds;
+
+  /// The number of seconds since January 1, 1990.
+  uint32_t seconds;
+
+  uint32_t pulseType;
+  uint32_t vetoStatus;
+  uint32_t pulseCurrent;
+  uint32_t spare;
+};
+#pragma pack(pop)
+
 } // namespace prenexus
 
 #endif
