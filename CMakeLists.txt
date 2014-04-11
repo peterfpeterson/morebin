@@ -61,6 +61,42 @@ target_link_libraries ( morebin ${Boost_LIBRARIES} )
 install ( TARGETS morebin RUNTIME DESTINATION bin )
 
 ######################################################################
+# deteremine the unix version
+find_program (LSB_CMD lsb_release)
+if ( LSB_CMD )
+  # get the distribution
+  execute_process ( COMMAND ${LSB_CMD} -i
+    OUTPUT_VARIABLE UNIX_DIST
+    OUTPUT_STRIP_TRAILING_WHITESPACE )
+  string ( REGEX REPLACE "Distributor ID:" "" UNIX_DIST ${UNIX_DIST} )
+  string ( STRIP ${UNIX_DIST} UNIX_DIST )
+  string ( REGEX REPLACE "RedHatEnterpriseClient" "RedHatEnterprise" UNIX_DIST ${UNIX_DIST} )
+  string ( REGEX REPLACE "RedHatEnterpriseWorkstation" "RedHatEnterprise" UNIX_DIST ${UNIX_DIST} )
+  # Make Scientific Linux and CentOS look like RHEL6
+  string ( REGEX REPLACE "Scientific" "RedHatEnterprise" UNIX_DIST ${UNIX_DIST} )
+  string ( REGEX REPLACE "CentOS" "RedHatEnterprise" UNIX_DIST ${UNIX_DIST} )
+  # get the codename
+  execute_process ( COMMAND ${LSB_CMD} -c
+    OUTPUT_VARIABLE UNIX_CODENAME
+    OUTPUT_STRIP_TRAILING_WHITESPACE )
+  string ( REGEX REPLACE "Codename:" "" UNIX_CODENAME ${UNIX_CODENAME} )
+  string ( STRIP ${UNIX_CODENAME} UNIX_CODENAME )
+  # Make Scientific Linux and CentOS look like RHEL6
+  string ( REGEX REPLACE "Carbon" "Santiago" UNIX_DIST ${UNIX_DIST} )
+  string ( REGEX REPLACE "Final" "Santiago" UNIX_DIST ${UNIX_DIST} )
+  # get the release
+  execute_process ( COMMAND ${LSB_CMD} -r
+    OUTPUT_VARIABLE UNIX_RELEASE
+    OUTPUT_STRIP_TRAILING_WHITESPACE )
+  string ( REGEX REPLACE "Release:" "" UNIX_RELEASE ${UNIX_RELEASE} )
+  string ( STRIP ${UNIX_RELEASE} UNIX_RELEASE )
+else ( LSB_CMD )
+  set ( UNIX_DIST "" )
+  set ( UNIX_CODENAME "" )
+  set ( UNIX_RELEASE "" )
+endif ( LSB_CMD )
+
+######################################################################
 # generic project information
 set ( CPACK_PACKAGE_DESCRIPTION_SUMMARY "More for binary files" )
 set ( CPACK_PACKAGE_VENDOR "Peter F. Peterson" )
@@ -72,12 +108,21 @@ set ( CPACK_PACKAGING_INSTALL_PREFIX /usr/local )
 set ( CPACK_RPM_PACKAGE_LICENSE "The MIT License" )
 
 set ( CPACK_GENERATOR "RPM" CACHE STRING "Set pakage type")
-set ( CPACK_RPM_PACKAGE_RELEASE "1.el6" CACHE STRING "RPM release name" ) # should depend on host os
+
 set ( CPACK_DEBIAN_PACKAGE_RELEASE "0" CACHE STRING "DEB release name" ) # should depend on host os
     
 # cpack information
 if ( ${CPACK_GENERATOR} MATCHES "RPM" )
   find_program ( RPMBUILD_CMD rpmbuild )
+  set ( CPACK_RPM_PACKAGE_URL "http://www.github.com/peterfpeterson/morebin" )
+
+  if ( ${UNIX_DIST} MATCHES "RedHatEnterprise" )
+    string ( REGEX REPLACE "^([0-9])\\.[0-9]+$" "\\1" TEMP ${UNIX_RELEASE} )
+    set ( CPACK_RPM_PACKAGE_RELEASE "1.el${TEMP}" )
+  elseif ( ${UNIX_DIST} MATCHES "Fedora" )
+    set ( CPACK_RPM_PACKAGE_RELEASE "1.fc${UNIX_RELEASE}" )
+  endif ( ${UNIX_DIST} MATCHES "RedHatEnterprise" )
+
   set ( CPACK_RPM_PACKAGE_ARCHITECTURE "${CMAKE_SYSTEM_PROCESSOR}" )
   set ( CPACK_PACKAGE_FILE_NAME
       "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${CPACK_RPM_PACKAGE_ARCHITECTURE}" )
