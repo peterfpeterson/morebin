@@ -21,6 +21,8 @@ There is a [weird bug](http://stackoverflow.com/questions/9948375/cmake-find-pac
 with old boost and new CMake (like on RHEL6) that makes it impossible to link.
 To get around this just `cmake . -DBoost_NO_BOOST_CMAKE=ON` and make again.
 
+Extra information
+-----------------
 [![Build Status](https://travis-ci.org/peterfpeterson/morebin.png)](https://travis-ci.org/peterfpeterson/morebin)
 
 
