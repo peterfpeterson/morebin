@@ -23,9 +23,6 @@ To get around this just `cmake . -DBoost_NO_BOOST_CMAKE=ON` and make again.
 
 Extra information
 -----------------
-[![Build Status](https://travis-ci.org/peterfpeterson/morebin.png)](https://travis-ci.org/peterfpeterson/morebin)
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/peterfpeterson/morebin/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
 [![DOI Badge](https://zenodo.org/badge/doi/10.5281/zenodo.10056.png)](http://dx.doi.org/10.5281/zenodo.10056)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/peterfpeterson/morebin/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Build Status](https://travis-ci.org/peterfpeterson/morebin.png)](https://travis-ci.org/peterfpeterson/morebin)
