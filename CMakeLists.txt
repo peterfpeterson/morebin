@@ -115,6 +115,7 @@ set ( CPACK_DEBIAN_PACKAGE_RELEASE "0" CACHE STRING "DEB release name" ) # shoul
 if ( ${CPACK_GENERATOR} MATCHES "RPM" )
   find_program ( RPMBUILD_CMD rpmbuild )
   set ( CPACK_RPM_PACKAGE_URL "http://www.github.com/peterfpeterson/morebin" )
+  # TODO CPACK_PACKAGE_DESCRIPTION_FILE
 
   if ( ${UNIX_DIST} MATCHES "RedHatEnterprise" )
     string ( REGEX REPLACE "^([0-9])\\.[0-9]+$" "\\1" TEMP ${UNIX_RELEASE} )
@@ -146,3 +147,7 @@ endif ( ${CPACK_GENERATOR} MATCHES "RPM" )
 message (status " CPACK_PACKAGE_FILE_NAME = ${CPACK_PACKAGE_FILE_NAME}" )
 include (CPack) # have cpack do its thing
 
+######################################################################
+# configure the spec file
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/morebin.spec.in
+    ${CMAKE_CURRENT_BINARY_DIR}/morebin.spec )
