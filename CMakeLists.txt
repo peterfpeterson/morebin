@@ -130,7 +130,7 @@ endif ( RPMBUILD_CMD )
 ######################################################################
 # cpack information - only for deb files and not proven to work
 if ( ${CPACK_GENERATOR} MATCHES "RPM" )
-  message ( WARNING " Use the target package_rpm instead")
+  message ( WARNING " Use the target 'package_rpm' instead of 'package' to generate rpms")
 elseif ( ${CPACK_GENERATOR} MATCHES "DEB" )
   find_program (DPKG_CMD dpkg)
   if ( DPKG_CMD )
