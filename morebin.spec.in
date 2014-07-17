@@ -8,19 +8,10 @@ Vendor:         @CPACK_PACKAGE_VENDOR@
 License:        @CPACK_RPM_PACKAGE_LICENSE@
 URL:            @CPACK_RPM_PACKAGE_URL@
 Source0:        %{name}-%{version}.tar.gz
-#Source0:        @CPACK_RPM_PACKAGE_URL@/archive/v%{version}.tar.gz
+#Source0:        @CPACK_RPM_PACKAGE_URL@/releases/download/v%{version}/morebin-%{version}.tar.gz
 
 BuildRequires:  boost-devel cmake gcc-c++
-#Requires:       boost-date-time boost-program-options
 Prefix:         @CPACK_PACKAGING_INSTALL_PREFIX@
-
-
-##### may need to configure/set these - morebin generated
-#BuildRoot:      /home/pf9/code/morebin/build/_CPack_Packages/Linux/RPM/morebin-2.4.0SNAPSHOT-1.fc20.x86_64
-
-##### from ninja
-#Source0: %{name}-%{version}-%{rel}.tar.gz
-#BuildRoot: %{_tmppath}/%{name}-%{version}-%{rel}
 
 %description
 @CPACK_RPM_PACKAGE_DESCRIPTION@
