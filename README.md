@@ -13,9 +13,9 @@ The three step dance
     make
     sudo make install
 
-To make the installer (rpm only for now) is just the extra
+To make the installer (rpm only for now) instead execute the target
 
-    make package
+    make package_rpm
 
 There is a [weird bug](http://stackoverflow.com/questions/9948375/cmake-find-package-succeeds-but-returns-wrong-path)
 with old boost and new CMake (like on RHEL6) that makes it impossible to link.

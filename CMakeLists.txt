@@ -104,29 +104,33 @@ set ( CPACK_PACKAGE_URL "http://github.com/peterfpeterson/morebin" )
 set ( CPACK_PACKAGE_CONTACT peterfpeterson@gmail.com )
 #set ( CPACK_PACKAGE_ICON )
 set ( CPACK_PACKAGE_NAME morebin )
-set ( CPACK_PACKAGING_INSTALL_PREFIX /usr/local )
+set ( CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} )
 set ( CPACK_RPM_PACKAGE_LICENSE "The MIT License" )
 
-set ( CPACK_GENERATOR "RPM" CACHE STRING "Set pakage type")
+set ( CPACK_GENERATOR "RPM" CACHE STRING "Set package type")
 
-set ( CPACK_DEBIAN_PACKAGE_RELEASE "0" CACHE STRING "DEB release name" ) # should depend on host os
-    
-# cpack information
-if ( ${CPACK_GENERATOR} MATCHES "RPM" )
-  find_program ( RPMBUILD_CMD rpmbuild )
+######################################################################
+# build an rpm
+find_program ( RPMBUILD_CMD rpmbuild )
+if ( RPMBUILD_CMD )
   set ( CPACK_RPM_PACKAGE_URL "http://www.github.com/peterfpeterson/morebin" )
   # TODO CPACK_PACKAGE_DESCRIPTION_FILE
+  configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/morebin.spec.in
+                 ${CMAKE_CURRENT_BINARY_DIR}/morebin.spec )
+  add_custom_command( OUTPUT morebin-${CPACK_PACKAGE_VERSION}.tar.gz
+                     COMMAND git archive --format=tar --prefix=morebin-${CPACK_PACKAGE_VERSION}/ HEAD | gzip -c > ${CMAKE_CURRENT_BINARY_DIR}/morebin-${CPACK_PACKAGE_VERSION}.tar.gz
+                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                      )
+  add_custom_target( package_rpm
+                    DEPENDS morebin-${CPACK_PACKAGE_VERSION}.tar.gz
+                            ${CMAKE_CURRENT_BINARY_DIR}/morebin.spec
+                    COMMAND rpmbuild -ba morebin.spec --define "_sourcedir ${CMAKE_CURRENT_BINARY_DIR}" --define "_topdir ${CMAKE_CURRENT_BINARY_DIR}/rpmbuild")
+endif ( RPMBUILD_CMD )
 
-  if ( ${UNIX_DIST} MATCHES "RedHatEnterprise" )
-    string ( REGEX REPLACE "^([0-9])\\.[0-9]+$" "\\1" TEMP ${UNIX_RELEASE} )
-    set ( CPACK_RPM_PACKAGE_RELEASE "1.el${TEMP}" )
-  elseif ( ${UNIX_DIST} MATCHES "Fedora" )
-    set ( CPACK_RPM_PACKAGE_RELEASE "1.fc${UNIX_RELEASE}" )
-  endif ( ${UNIX_DIST} MATCHES "RedHatEnterprise" )
-
-  set ( CPACK_RPM_PACKAGE_ARCHITECTURE "${CMAKE_SYSTEM_PROCESSOR}" )
-  set ( CPACK_PACKAGE_FILE_NAME
-      "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${CPACK_RPM_PACKAGE_ARCHITECTURE}" )
+######################################################################
+# cpack information - only for deb files and not proven to work
+if ( ${CPACK_GENERATOR} MATCHES "RPM" )
+  message ( WARNING " Use the target package_rpm instead")
 elseif ( ${CPACK_GENERATOR} MATCHES "DEB" )
   find_program (DPKG_CMD dpkg)
   if ( DPKG_CMD )
@@ -136,18 +140,9 @@ elseif ( ${CPACK_GENERATOR} MATCHES "DEB" )
   else ()
     set ( CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i686" )
   endif ( DPKG_CMD )
+  set ( CPACK_DEBIAN_PACKAGE_RELEASE "0" CACHE STRING "DEB release name" ) # should depend on host os
   set( CPACK_PACKAGE_FILE_NAME
       "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
+  message (status " CPACK_PACKAGE_FILE_NAME = ${CPACK_PACKAGE_FILE_NAME}" )
+  include (CPack) # have cpack do its thing
 endif ( ${CPACK_GENERATOR} MATCHES "RPM" )
-
-#set ( CPACK_SOURCE_GENERATOR "TGZ" )
-#set ( CPACK_RPM_PACKAGE_REQUIRES "boost")
-#set ( CPACK_DEBIAN_PACKAGE_DEPENDS "boost")
-
-message (status " CPACK_PACKAGE_FILE_NAME = ${CPACK_PACKAGE_FILE_NAME}" )
-include (CPack) # have cpack do its thing
-
-######################################################################
-# configure the spec file
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/morebin.spec.in
-    ${CMAKE_CURRENT_BINARY_DIR}/morebin.spec )
