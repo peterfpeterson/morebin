@@ -7,8 +7,16 @@ Required packages and libraries
 * boost-program-options
 * boost-date-time
 
-The three step dance
+Installing
+----------
+You can grab binary installer:
+* The [github releases](https://github.com/peterfpeterson/morebin/releases) page
+* rpms available at [copr](https://copr.fedoraproject.org/coprs/peterfpeterson/morebin/)
+
+Building from source
 --------------------
+Simply perform the normal 3-step dance (style points if you build with [ninja](https://github.com/martine/ninja))
+
     cmake .
     make
     sudo make install
