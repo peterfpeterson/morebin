@@ -28,13 +28,10 @@ Prefix:         @CPACK_PACKAGING_INSTALL_PREFIX@
 rm -rf $RPM_BUILD_ROOT
 %make_install
 
+%check
+morebin --help
+
 %files
 %defattr(-,root,root,-)
 %{_prefix}/bin/morebin
 %doc
-
-
-
-%changelog
-* Wed Jul 16 2014 Peter F. Peterson, 865-924-8549, 8600 MS-6475
-- 
