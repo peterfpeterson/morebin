@@ -21,15 +21,12 @@ Prefix:         @CPACK_PACKAGING_INSTALL_PREFIX@
 
 
 %build
-cmake -DCMAKE_SKIP_RPATH=ON \
-      -DCMAKE_INSTALL_PREFIX=%{_prefix}
-
-%{__make} %{?jobs:-j%jobs}
+%cmake
+%{__make} %{?_smp_flags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 %make_install
-
 
 %files
 %defattr(-,root,root,-)
