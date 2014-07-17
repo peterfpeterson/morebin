@@ -31,5 +31,6 @@ To get around this just `cmake . -DBoost_NO_BOOST_CMAKE=ON` and make again.
 
 Extra information
 -----------------
+[MIT License](http://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/peterfpeterson/morebin.png)](https://travis-ci.org/peterfpeterson/morebin)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/peterfpeterson/morebin/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
