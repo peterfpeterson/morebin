@@ -1,0 +1,16 @@
+Source: morebin
+Section: devel
+Priority: optional
+Maintainer: @CPACK_PACKAGE_VENDOR@ <@CPACK_PACKAGE_CONTACT@>
+Build-Depends: debhelper (>= 8.0.0), cmake
+Standards-Version: 3.9.3
+Homepage: @CPACK_RPM_PACKAGE_URL@
+Vcs-Git: https://github.com/peterfpeterson/morebin.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/morebin.git;a=summary
+
+Package: morebin
+Version: @CPACK_PACKAGE_VERSION@
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: @CPACK_PACKAGE_DESCRIPTION_SUMMARY@
+@CPACK_RPM_PACKAGE_DESCRIPTION@
