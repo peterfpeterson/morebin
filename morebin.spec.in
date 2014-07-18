@@ -4,6 +4,7 @@ Release:        1%{?dist}
 Summary:        @CPACK_PACKAGE_DESCRIPTION_SUMMARY@
 Group:          Development/Tools
 Vendor:         @CPACK_PACKAGE_VENDOR@
+Packager:       @CPACK_PACKAGE_VENDOR@ <@CPACK_PACKAGE_CONTACT@>
 
 License:        @CPACK_RPM_PACKAGE_LICENSE@
 URL:            @CPACK_RPM_PACKAGE_URL@
