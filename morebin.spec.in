@@ -29,7 +29,7 @@ rm -rf $RPM_BUILD_ROOT
 %make_install
 
 %check
-morebin --help
+./morebin --version
 
 %files
 %defattr(-,root,root,-)
