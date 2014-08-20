@@ -32,8 +32,8 @@ addons:
     # ** specific to your project **
     project:
       name: peterfpeterson/morebin
-      version: 1.0
-      description: 'more' for binary files
+      #version: 1.0
+      #description: 'more' for binary files
 
     # Where email notification of build analysis results will be sent
     #notification_email: scan_notifications@example.com
