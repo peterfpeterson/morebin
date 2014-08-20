@@ -23,7 +23,7 @@ notifications:
 env:
   global:
     # COVERITY_SCAN_TOKEN
-    - secure: "oeeUVljH6YiQXAE6hOE7mw"
+    - secure: oeeUVljH6YiQXAE6hOE7mw
 
 addons:
   coverity_scan:
