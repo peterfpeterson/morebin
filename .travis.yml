@@ -12,7 +12,7 @@ before_script:
   - cmake .
 
 script:
-  - make
+  - if [ ${COVERITY_SCAN_BRANCH} != 1 ]; then make ; fi
 #  - make package # doesn't work on ubuntu
 
 notifications:
