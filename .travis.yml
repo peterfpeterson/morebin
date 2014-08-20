@@ -20,33 +20,19 @@ notifications:
     on_success: change
     on_failure: always
 
+
 env:
   global:
-    # COVERITY_SCAN_TOKEN
-    - secure: oeeUVljH6YiQXAE6hOE7mw
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "VGO+YMWnF7ya6SoSyLYdOyXbqMFsY4Al22UQ+Wewf2BpoYNrBEUXvDNtdu54KjSmjASuDp4BTF0DD8NtzcOz+LLhkdBT8GfTcInJnxY8uYWIqciIqa1DZAuhp0pLHYfLQ2PBoKgthkMGRKg7VAcBNbXsTpwfcqcxZsX3KtYXFR8="
 
 addons:
   coverity_scan:
-
-    # GitHub project metadata
-    # ** specific to your project **
     project:
-      name: peterfpeterson/morebin
-      #version: 1.0
-      #description: 'more' for binary files
-
-    # Where email notification of build analysis results will be sent
-    #notification_email: scan_notifications@example.com
-
-    # Commands to prepare for build_command
-    # ** likely specific to your build **
-    build_command_prepend: cmake .
-
-    # The command that will be added as an argument to "cov-build" to compile your project for analysis,
-    # ** likely specific to your build **
-    build_command: make
-
-    # Pattern to match selecting branches that will run analysis. We recommend leaving this set to 'coverity_scan'.
-    # Take care in resource usage, and consider the build frequency allowances per
-    #   https://scan.coverity.com/faq#frequency
+      name: "peterfpeterson/morebin"
+      description: "Build submitted via Travis CI"
+    notification_email: peterfpeterson@gmail.com
+    build_command_prepend: "cmake .; make clean"
+    build_command:   "make -j 4"
     branch_pattern: coverity_scan
