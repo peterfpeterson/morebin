@@ -210,7 +210,7 @@ void BinFile::read(vector<NumT> & data, const size_t items)
       num_read = size - pos;
   }
 
-  delete buffer;
+  delete[] buffer;
 }
 
 void BinFile::read(stringstream & data, const size_t items)
