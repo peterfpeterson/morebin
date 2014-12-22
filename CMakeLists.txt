@@ -56,9 +56,12 @@ set ( SRC_FILES
       version.hpp )
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-add_executable( morebin ${SRC_FILES} )
+add_executable( morebin MACOSX_BUNDLE ${SRC_FILES} )
 target_link_libraries ( morebin ${Boost_LIBRARIES} )
-install ( TARGETS morebin RUNTIME DESTINATION bin )
+INSTALL(TARGETS morebin
+    BUNDLE DESTINATION . COMPONENT Runtime
+    RUNTIME DESTINATION bin COMPONENT Runtime
+    )
 
 ######################################################################
 # deteremine the unix version
@@ -107,7 +110,12 @@ set ( CPACK_PACKAGE_NAME morebin )
 set ( CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} )
 set ( CPACK_RPM_PACKAGE_LICENSE "The MIT License" )
 
-set ( CPACK_GENERATOR "RPM" CACHE STRING "Set package type")
+if (APPLE)
+  set ( CPACK_GENERATOR DragNDrop CACHE STRING "Set package type")
+else ()
+  set ( CPACK_GENERATOR "RPM" CACHE STRING "Set package type")
+endif ()
+
 
 ######################################################################
 # build an rpm
@@ -146,3 +154,25 @@ elseif ( ${CPACK_GENERATOR} MATCHES "DEB" )
   message (status " CPACK_PACKAGE_FILE_NAME = ${CPACK_PACKAGE_FILE_NAME}" )
   include (CPack) # have cpack do its thing
 endif ( ${CPACK_GENERATOR} MATCHES "RPM" )
+
+if (${CPACK_GENERATOR} MATCHES "DragNDrop")
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/morebin.app")  
+  SET(PACKAGED_LIBRARIES "\${CMAKE_INSTALL_PREFIX}/morebin.app/Contents/MacOS/libboost_date_time-mt.dylib;\${CMAKE_INSTALL_PREFIX}/morebin.app/Contents/MacOS/libboost_program_options-mt.dylib") 
+
+  execute_process( COMMAND readlink ${Boost_PROGRAM_OPTIONS_LIBRARY_RELEASE}
+      OUTPUT_VARIABLE PROGRAM_OPTIONS_LOCATION
+      OUTPUT_STRIP_TRAILING_WHITESPACE )
+  execute_process( COMMAND readlink ${Boost_DATE_TIME_LIBRARY_RELEASE}
+      OUTPUT_VARIABLE DATE_TIME_LOCATION
+      OUTPUT_STRIP_TRAILING_WHITESPACE )
+
+  INSTALL(FILES "${Boost_LIBRARY_DIR}/${PROGRAM_OPTIONS_LOCATION}" DESTINATION morebin.app/Contents/MacOS COMPONENT Runtime)
+  INSTALL(FILES "${Boost_LIBRARY_DIR}/${DATE_TIME_LOCATION}" DESTINATION morebin.app/Contents/MacOS COMPONENT Runtime)
+  INSTALL(CODE "
+    include(BundleUtilities)
+    fixup_bundle(\"${APPS}\" \"${PACKAGED_LIBRARIES}\" \"\")
+    " COMPONENT Runtime)
+
+  include (CPack)
+endif ()
+
