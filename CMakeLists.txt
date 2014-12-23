@@ -56,9 +56,12 @@ set ( SRC_FILES
       version.hpp )
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-add_executable( morebin ${SRC_FILES} )
+add_executable( morebin MACOSX_BUNDLE ${SRC_FILES} )
 target_link_libraries ( morebin ${Boost_LIBRARIES} )
-install ( TARGETS morebin RUNTIME DESTINATION bin )
+INSTALL(TARGETS morebin
+    BUNDLE DESTINATION . COMPONENT Runtime
+    RUNTIME DESTINATION bin COMPONENT Runtime
+    )
 
 ######################################################################
 # deteremine the unix version
@@ -104,10 +107,18 @@ set ( CPACK_PACKAGE_URL "http://github.com/peterfpeterson/morebin" )
 set ( CPACK_PACKAGE_CONTACT peterfpeterson@gmail.com )
 #set ( CPACK_PACKAGE_ICON )
 set ( CPACK_PACKAGE_NAME morebin )
-set ( CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} )
+# on Apple we don't want the packaging prefix to be /usr/local
+if (NOT APPLE)
+  set ( CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} )
+endif ()
 set ( CPACK_RPM_PACKAGE_LICENSE "The MIT License" )
 
-set ( CPACK_GENERATOR "RPM" CACHE STRING "Set package type")
+if (APPLE)
+  set ( CPACK_GENERATOR DragNDrop CACHE STRING "Set package type")
+else ()
+  set ( CPACK_GENERATOR "RPM" CACHE STRING "Set package type")
+endif ()
+
 
 ######################################################################
 # build an rpm
@@ -146,3 +157,14 @@ elseif ( ${CPACK_GENERATOR} MATCHES "DEB" )
   message (status " CPACK_PACKAGE_FILE_NAME = ${CPACK_PACKAGE_FILE_NAME}" )
   include (CPack) # have cpack do its thing
 endif ( ${CPACK_GENERATOR} MATCHES "RPM" )
+
+if (${CPACK_GENERATOR} MATCHES "DragNDrop")
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/morebin.app")  
+  INSTALL(CODE "
+    set(BU_CHMOD_BUNDLE_ITEMS ON)
+    include(BundleUtilities)
+    fixup_bundle(\"${APPS}\" \"\" \"${Boost_LIBRARY_DIR}\")
+    " COMPONENT Runtime)
+  include (CPack)
+endif ()
+
