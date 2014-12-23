@@ -107,7 +107,10 @@ set ( CPACK_PACKAGE_URL "http://github.com/peterfpeterson/morebin" )
 set ( CPACK_PACKAGE_CONTACT peterfpeterson@gmail.com )
 #set ( CPACK_PACKAGE_ICON )
 set ( CPACK_PACKAGE_NAME morebin )
-set ( CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} )
+# on Apple we don't want the packaging prefix to be /usr/local
+if (NOT APPLE)
+  set ( CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} )
+endif ()
 set ( CPACK_RPM_PACKAGE_LICENSE "The MIT License" )
 
 if (APPLE)
@@ -157,20 +160,11 @@ endif ( ${CPACK_GENERATOR} MATCHES "RPM" )
 
 if (${CPACK_GENERATOR} MATCHES "DragNDrop")
   set(APPS "\${CMAKE_INSTALL_PREFIX}/morebin.app")  
-  SET(PACKAGED_LIBRARIES "\${CMAKE_INSTALL_PREFIX}/morebin.app/Contents/MacOS/libboost_date_time-mt.dylib;\${CMAKE_INSTALL_PREFIX}/morebin.app/Contents/MacOS/libboost_program_options-mt.dylib") 
-  execute_process( COMMAND  python -c "import os,sys;print os.path.realpath(sys.argv[1])" ${Boost_PROGRAM_OPTIONS_LIBRARY_RELEASE}
-    OUTPUT_VARIABLE PROGRAM_OPTIONS_LOCATION
-    OUTPUT_STRIP_TRAILING_WHITESPACE )
-  execute_process( COMMAND  python -c "import os,sys;print os.path.realpath(sys.argv[1])" ${Boost_DATE_TIME_LIBRARY_RELEASE}
-    OUTPUT_VARIABLE DATE_TIME_LOCATION
-    OUTPUT_STRIP_TRAILING_WHITESPACE )
-  INSTALL(FILES "${PROGRAM_OPTIONS_LOCATION}" DESTINATION morebin.app/Contents/MacOS COMPONENT Runtime)
-  INSTALL(FILES "${DATE_TIME_LOCATION}" DESTINATION morebin.app/Contents/MacOS COMPONENT Runtime)
   INSTALL(CODE "
+    set(BU_CHMOD_BUNDLE_ITEMS ON)
     include(BundleUtilities)
-    fixup_bundle(\"${APPS}\" \"${PACKAGED_LIBRARIES}\" \"\")
+    fixup_bundle(\"${APPS}\" \"\" \"${Boost_LIBRARY_DIR}\")
     " COMPONENT Runtime)
-
   include (CPack)
 endif ()
 
