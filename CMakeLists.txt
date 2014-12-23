@@ -154,11 +154,9 @@ elseif ( ${CPACK_GENERATOR} MATCHES "DEB" )
   set ( CPACK_DEBIAN_PACKAGE_RELEASE "0" CACHE STRING "DEB release name" ) # should depend on host os
   set( CPACK_PACKAGE_FILE_NAME
       "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
-  message (status " CPACK_PACKAGE_FILE_NAME = ${CPACK_PACKAGE_FILE_NAME}" )
+  message (STATUS "CPACK_PACKAGE_FILE_NAME = ${CPACK_PACKAGE_FILE_NAME}" )
   include (CPack) # have cpack do its thing
-endif ( ${CPACK_GENERATOR} MATCHES "RPM" )
-
-if (${CPACK_GENERATOR} MATCHES "DragNDrop")
+elseif (${CPACK_GENERATOR} MATCHES "DragNDrop")
   set(APPS "\${CMAKE_INSTALL_PREFIX}/morebin.app")  
   INSTALL(CODE "
     set(BU_CHMOD_BUNDLE_ITEMS ON)
@@ -166,5 +164,7 @@ if (${CPACK_GENERATOR} MATCHES "DragNDrop")
     fixup_bundle(\"${APPS}\" \"\" \"${Boost_LIBRARY_DIR}\")
     " COMPONENT Runtime)
   include (CPack)
+else ()
+  message (STATUS "CPACK_GENERATOR = ${CPACK_GENERATOR} not configuring to package")
 endif ()
 
