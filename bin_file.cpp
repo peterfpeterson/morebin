@@ -245,7 +245,7 @@ void BinFile::read(stringstream & data, const size_t items)
       num_read = size - pos;
   }
 
-  delete buffer;
+  delete[] buffer;
 }
 
 // concrete instantiations to make the compiler happy
