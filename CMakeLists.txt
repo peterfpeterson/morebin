@@ -155,7 +155,6 @@ elseif ( ${CPACK_GENERATOR} MATCHES "DEB" )
   set( CPACK_PACKAGE_FILE_NAME
       "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
   message (STATUS "CPACK_PACKAGE_FILE_NAME = ${CPACK_PACKAGE_FILE_NAME}" )
-  include (CPack) # have cpack do its thing
 elseif (${CPACK_GENERATOR} MATCHES "DragNDrop")
   set(APPS "\${CMAKE_INSTALL_PREFIX}/morebin.app")  
   INSTALL(CODE "
@@ -163,8 +162,8 @@ elseif (${CPACK_GENERATOR} MATCHES "DragNDrop")
     include(BundleUtilities)
     fixup_bundle(\"${APPS}\" \"\" \"${Boost_LIBRARY_DIR}\")
     " COMPONENT Runtime)
-  include (CPack)
 else ()
   message (STATUS "CPACK_GENERATOR = ${CPACK_GENERATOR} not configuring to package")
 endif ()
 
+include (CPack) # have cpack do its thing
