@@ -105,6 +105,7 @@ set ( CPACK_PACKAGE_DESCRIPTION_SUMMARY "More for binary files" )
 set ( CPACK_PACKAGE_VENDOR "Peter F. Peterson" )
 set ( CPACK_PACKAGE_URL "http://github.com/peterfpeterson/morebin" )
 set ( CPACK_PACKAGE_CONTACT peterfpeterson@gmail.com )
+set ( CPACK_PACKAGE_URL "http://www.github.com/peterfpeterson/morebin" )
 #set ( CPACK_PACKAGE_ICON )
 set ( CPACK_PACKAGE_NAME morebin )
 # on Apple we don't want the packaging prefix to be /usr/local
@@ -112,6 +113,8 @@ if (NOT APPLE)
   set ( CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} )
 endif ()
 set ( CPACK_RPM_PACKAGE_LICENSE "The MIT License" )
+set ( CPACK_RPM_PACKAGE_RELEASE 1 )
+set ( CPACK_RPM_PACKAGE_GROUP "Development/Tools" )
 
 if (APPLE)
   set ( CPACK_GENERATOR DragNDrop CACHE STRING "Set package type")
@@ -124,7 +127,9 @@ endif ()
 # build an rpm
 find_program ( RPMBUILD_CMD rpmbuild )
 if ( RPMBUILD_CMD )
-  set ( CPACK_RPM_PACKAGE_URL "http://www.github.com/peterfpeterson/morebin" )
+  set ( CPACK_RPM_PACKAGE_URL "${CPACK_PACKAGE_URL}" )
+  set ( CPACK_RPM_PACKAGE_REQUIRES "boost-devel cmake >= 2.6 gcc-c++" )
+
   # TODO CPACK_PACKAGE_DESCRIPTION_FILE
   configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/morebin.spec.in
                  ${CMAKE_CURRENT_BINARY_DIR}/morebin.spec )
