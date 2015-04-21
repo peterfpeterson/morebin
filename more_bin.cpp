@@ -1,13 +1,21 @@
 //include <tclap/CmdLine.h>
-#include <algorithm>
+#include <boost/program_options/errors.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
+#include <boost/program_options/positional_options.hpp>
+#include <boost/program_options/value_semantic.hpp>
 #include <boost/program_options/variables_map.hpp>
-#include <fstream>
+#include <ctype.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <string>
 #include <vector>
+
 #include "bin_file.hpp"
 #include "prenexusrenderer.hpp"
 #include "renderer.hpp"

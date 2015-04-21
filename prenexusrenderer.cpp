@@ -1,8 +1,16 @@
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/date_time/gregorian/greg_date.hpp>
+#include <boost/date_time/posix_time/posix_time_config.hpp>
+#include <boost/date_time/posix_time/ptime.hpp>
+#include <boost/date_time/posix_time/time_formatters.hpp>
+#include <boost/date_time/time.hpp>
+#include <stdint.h>
+#include <sys/types.h>
 #include <iostream>
-#include <stdexcept>
 #include <sstream>
-#include <ctime>
+#include <stdexcept>
+
+#include "/home/pf9/code/morebin/allowedtypes.hpp"
+#include "/home/pf9/code/morebin/bin_file.hpp"
 //include <time.h>
 #include "prenexusrenderer.hpp"
 #include "prenexustypes.hpp"
