@@ -33,7 +33,7 @@ To get around this just `cmake . -DBoost_NO_BOOST_CMAKE=ON` and make again.
 
 Extra information
 -----------------
-[MIT License](http://opensource.org/licenses/MIT)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 [![Travis-CI Build Status](https://travis-ci.org/peterfpeterson/morebin.svg)](https://travis-ci.org/peterfpeterson/morebin)
 [![Drone.io Build Status](https://drone.io/github.com/peterfpeterson/morebin/status.png)](https://drone.io/github.com/peterfpeterson/morebin/latest)
 [![Build status](https://ci.appveyor.com/api/projects/status/aah5p1hjasigwes6?svg=true)](https://ci.appveyor.com/project/peterfpeterson/morebin)
