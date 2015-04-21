@@ -1,10 +1,14 @@
 #ifndef _RENDERER_HPP
 #define _RENDERER_HPP 1
 
+#include <cstddef>
 #include <string>
 #include <vector>
+
 #include "allowedtypes.hpp"
 #include "bin_file.hpp"
+
+class BinFile;
 
 namespace render {
 

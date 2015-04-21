@@ -1,5 +1,7 @@
-#include <iostream>
+#include <stdint.h>
+#include <sys/types.h>
 #include <stdexcept>
+
 #include "bin_file.hpp"
 #include "byte_swap.h"
 #include "prenexustypes.hpp"
@@ -245,7 +247,7 @@ void BinFile::read(stringstream & data, const size_t items)
       num_read = size - pos;
   }
 
-  delete buffer;
+  delete[] buffer;
 }
 
 // concrete instantiations to make the compiler happy

@@ -1,12 +1,16 @@
 #ifndef _PRENEXUSRENDERER_HPP
 #define _PRENEXUSRENDERER_HPP 1
 
-#include <string>
+#include <stddef.h>
 #include <sstream>
+#include <string>
 #include <vector>
+
 #include "allowedtypes.hpp"
 #include "bin_file.hpp"
 #include "renderer.hpp"
+
+class BinFile;
 
 using std::string;
 using std::stringstream;

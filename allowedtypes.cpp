@@ -1,4 +1,6 @@
+#include <stddef.h>
 #include <algorithm>
+
 #include "allowedtypes.hpp"
 
 using std::size_t;

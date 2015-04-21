@@ -1,6 +1,7 @@
 #ifndef _STATISTICS_HPP
 #define _STATISTICS_HPP 1
 
+#include <stdint.h>
 #include <iostream>
 #include <sstream>
 #include <vector>

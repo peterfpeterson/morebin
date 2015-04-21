@@ -1,7 +1,11 @@
-#include <algorithm>
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/types.h>
 #include <iostream>
-#include <sstream>
 #include <stdexcept>
+
+#include "/home/pf9/code/morebin/allowedtypes.hpp"
+#include "/home/pf9/code/morebin/bin_file.hpp"
 #include "renderer.hpp"
 #include "statistics.hpp"
 #include "string_util.hpp"
