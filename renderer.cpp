@@ -4,8 +4,8 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "/home/pf9/code/morebin/allowedtypes.hpp"
-#include "/home/pf9/code/morebin/bin_file.hpp"
+#include "allowedtypes.hpp"
+#include "bin_file.hpp"
 #include "renderer.hpp"
 #include "statistics.hpp"
 #include "string_util.hpp"

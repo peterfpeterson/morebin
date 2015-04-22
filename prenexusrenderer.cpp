@@ -9,8 +9,8 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "/home/pf9/code/morebin/allowedtypes.hpp"
-#include "/home/pf9/code/morebin/bin_file.hpp"
+#include "allowedtypes.hpp"
+#include "bin_file.hpp"
 //include <time.h>
 #include "prenexusrenderer.hpp"
 #include "prenexustypes.hpp"
