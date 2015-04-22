@@ -1,5 +1,4 @@
 #include <stdint.h>
-#include <sys/types.h>
 #include <stdexcept>
 
 #include "bin_file.hpp"
