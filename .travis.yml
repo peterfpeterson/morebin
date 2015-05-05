@@ -9,10 +9,28 @@ before_install:
   - sudo apt-get install -qq libboost-program-options-dev libboost-date-time-dev
 
 before_script:
-  - cmake .
+#ALWAYS analyze a project in its "debug" configuration
+  - if [ "$CXX" == "clang++" ];
+    then
+      cmake -DCMAKE_BUILD_TYPE=Debug .;
+    else
+      cmake .;
+    fi
 
 script:
-  - if [ ${COVERITY_SCAN_BRANCH} != 1 ]; then make ; fi
+#Run the clang static analyzer.
+  - if [ "$CXX" == "clang++" ];
+    then
+      if [ ${COVERITY_SCAN_BRANCH} != 1 ];
+      then
+        scan-build make;
+      fi
+    else
+      if [ ${COVERITY_SCAN_BRANCH} != 1 ];
+      then
+        make;
+      fi
+    fi
 #  - make package # doesn't work on ubuntu
 
 notifications:
