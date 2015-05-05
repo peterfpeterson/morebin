@@ -1,16 +1,16 @@
 sudo: false
 
+addons:
+  apt:
+    packages:
+      - libboost-program-options-dev
+      - libboost-date-time-dev
+
 language: cpp
 
 compiler:
   - gcc
   - clang
-
-addons:
-  apt:
-    packages:
-      - libboost-program-options-dev 
-      - libboost-date-time-dev
 
 before_install:
 
