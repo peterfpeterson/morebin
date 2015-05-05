@@ -12,6 +12,8 @@ addons:
       - libboost-program-options-dev 
       - libboost-date-time-dev
 
+before_install:
+
 before_script:
   - cmake .
 
