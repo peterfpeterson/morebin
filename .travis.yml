@@ -1,18 +1,10 @@
 sudo: false
 
-addons:
-  apt:
-    packages:
-      - libboost-program-options-dev
-      - libboost-date-time-dev
-
 language: cpp
 
 compiler:
   - gcc
   - clang
-
-before_install:
 
 before_script:
   - cmake .
@@ -34,6 +26,10 @@ env:
    - secure: "VGO+YMWnF7ya6SoSyLYdOyXbqMFsY4Al22UQ+Wewf2BpoYNrBEUXvDNtdu54KjSmjASuDp4BTF0DD8NtzcOz+LLhkdBT8GfTcInJnxY8uYWIqciIqa1DZAuhp0pLHYfLQ2PBoKgthkMGRKg7VAcBNbXsTpwfcqcxZsX3KtYXFR8="
 
 addons:
+  apt:
+    packages:
+      - libboost-program-options-dev
+      - libboost-date-time-dev
   coverity_scan:
     project:
       name: "peterfpeterson/morebin"
