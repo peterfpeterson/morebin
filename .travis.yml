@@ -32,7 +32,12 @@ notifications:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
       - clang-3.4
+      - gcc-4.8 
+      - g++-4.8 
+      - libstdc++-4.8-dev
       - libboost-program-options-dev
       - libboost-date-time-dev
