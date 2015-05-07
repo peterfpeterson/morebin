@@ -10,7 +10,7 @@ before_script:
 #ALWAYS analyze a project in its "debug" configuration
   - if [ "$CXX" == "clang++" ];
     then
-      cmake -DCMAKE_BUILD_TYPE=Debug .;
+      scan-build cmake -DCMAKE_BUILD_TYPE=Debug .;
     else
       cmake .;
     fi
@@ -46,6 +46,7 @@ env:
 addons:
   apt:
     packages:
+      - clang-3.4
       - libboost-program-options-dev
       - libboost-date-time-dev
   coverity_scan:
