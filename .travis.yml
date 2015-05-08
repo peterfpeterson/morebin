@@ -9,7 +9,7 @@ before_script:
 #ALWAYS analyze a project in its "debug" configuration
   - if [ "$CXX" == "clang++" ];
     then
-      cmake -DCMAKE_BUILD_TYPE=Debug .;
+      scan-build cmake -DCMAKE_BUILD_TYPE=Debug .;
     else
       cmake .;
     fi
@@ -18,15 +18,9 @@ script:
 #Run the clang static analyzer.
   - if [ "$CXX" == "clang++" ];
     then
-      if [ ${COVERITY_SCAN_BRANCH} != 1 ];
-      then
-        scan-build make;
-      fi
+      scan-build make;
     else
-      if [ ${COVERITY_SCAN_BRANCH} != 1 ];
-      then
-        make;
-      fi
+      make;
     fi
 #  - make package # doesn't work on ubuntu
 
@@ -35,23 +29,14 @@ notifications:
     on_success: change
     on_failure: always
 
-
-env:
-  global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: "VGO+YMWnF7ya6SoSyLYdOyXbqMFsY4Al22UQ+Wewf2BpoYNrBEUXvDNtdu54KjSmjASuDp4BTF0DD8NtzcOz+LLhkdBT8GfTcInJnxY8uYWIqciIqa1DZAuhp0pLHYfLQ2PBoKgthkMGRKg7VAcBNbXsTpwfcqcxZsX3KtYXFR8="
-
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
+      - clang-3.4
+      - gcc-4.8 
+      - g++-4.8 
+      - libstdc++-4.8-dev
       - libboost-program-options-dev
       - libboost-date-time-dev
-  coverity_scan:
-    project:
-      name: "peterfpeterson/morebin"
-      description: "Build submitted via Travis CI"
-    notification_email: peterfpeterson@gmail.com
-    build_command_prepend: "cmake .; make clean"
-    build_command:   "make -j 4"
-    branch_pattern: coverity_scan
