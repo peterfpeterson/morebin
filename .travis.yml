@@ -10,7 +10,7 @@ before_script:
 #ALWAYS analyze a project in its "debug" configuration
   - if [ "$CXX" == "clang++" ];
     then
-      scan-build cmake -DCMAKE_BUILD_TYPE=Debug .;
+      CC=clang-3.6 CXX=clang++-3.6 scan-build cmake -DCMAKE_BUILD_TYPE=Debug .;
     else
       cmake .;
     fi
@@ -19,7 +19,7 @@ script:
 #Run the clang static analyzer.
   - if [ "$CXX" == "clang++" ];
     then
-      scan-build make;
+      CC=clang-3.6 CXX=clang++-3.6 scan-build make;
     else
       make;
     fi
@@ -34,10 +34,8 @@ addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.6
     packages:
-      - clang-3.4
-      - gcc-4.8 
-      - g++-4.8 
-      - libstdc++-4.8-dev
+      - clang-3.6
       - libboost-program-options-dev
       - libboost-date-time-dev
