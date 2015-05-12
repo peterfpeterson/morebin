@@ -1,13 +1,15 @@
 version: 1.0.{build}
+
 branches:
   except:
   - coverity_scan
+
 os: Unstable
+
 configuration: Release
-environment:
-  BOOST_ROOT: c:\Libraries\boost
-  BOOST_LIBRARYDIR: c:\Libraries\boost\lib64-msvc-12.0
-install: []
+
+install: [boost]
+
 before_build:
 - ps: >-
     cd "${env:APPVEYOR_BUILD_FOLDER}"
@@ -19,6 +21,7 @@ before_build:
     cmake -G "Visual Studio 12 Win64"  ..
 
     dir
+
 build:
   project: C:\projects\morebin\build\morebin.sln
   parallel: true
