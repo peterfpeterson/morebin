@@ -8,7 +8,7 @@ os: Unstable
 
 configuration: Release
 
-install: [boost]
+install: [nuget install boost]
 
 before_build:
 - ps: >-
