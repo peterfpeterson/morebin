@@ -11,11 +11,11 @@ install:
 
 before_build:
 - ps: cd "${env:APPVEYOR_BUILD_FOLDER}"
-- cmd: dir boost.1.58.0.0
+- cmd: dir boost.1.58.0.0\lib
 - cmd: md build
 - cmd: cd build
 - cmd: cmake --version
-- ps: cmake -G "Visual Studio 12 Win64" -DBOOST_ROOT="${env:APPVEYOR_BUILD_FOLDER}\boost.1.58.0.0"  -DBOOST_LIBRARYDIR="${env:APPVEYOR_BUILD_FOLDER}\boost.1.58.0.0\lib64-msvc-12.0" ..
+- ps: cmake -G "Visual Studio 12 Win64" -DBOOST_ROOT="${env:APPVEYOR_BUILD_FOLDER}\boost.1.58.0.0\lib"  -DBOOST_LIBRARYDIR="${env:APPVEYOR_BUILD_FOLDER}\boost.1.58.0.0\lib" ..
 - cmd: dir
 
 build:
