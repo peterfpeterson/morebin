@@ -9,18 +9,18 @@ configuration: Release
 platform: x64
 
 install:
-- ps: nuget install boost
-- ps: nuget install boost_date_time
-- ps: nuget install boost_program_options
+- ps: nuget install boost -o "${env:APPVEYOR_BUILD_FOLDER}"
+- ps: nuget install boost_date_time -o "${env:APPVEYOR_BUILD_FOLDER}"
+- ps: nuget install boost_program_options -o "${env:APPVEYOR_BUILD_FOLDER}"
 
 before_build:
 - ps: cd "${env:APPVEYOR_BUILD_FOLDER}"
-- cmd: dir boost.1.58.0.0
+- cmd: dir
 - cmd: dir boost.1.58.0.0\lib\native
 - cmd: md build
 - cmd: cd build
 - cmd: cmake --version
-- ps: cmake -G "Visual Studio 12 Win64"  ..
+- ps: cmake -G "Visual Studio 12 Win64" -DBOOST_ROOT=C:\projects\morebin\boost.1.58.0.0\lib\native  -DBOOST_DATE_TIME_LIBRARY_RELEASE=C:\projects\morebin\boost.1.58.0.0\lib -DBOOST_PROGRAM_OPTIONS_LIBRARY_RELEASE=C:\projects\morebin\boost.1.58.0.0\lib ..
 
 build:
   project: C:\projects\morebin\build\morebin.sln
