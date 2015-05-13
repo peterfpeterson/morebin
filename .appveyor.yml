@@ -6,6 +6,10 @@ branches:
 
 configuration: Release
 
+environment:
+  PATH: "C:\projects\morebin\boost_date_time-vc120.1.58.0.0\lib\native\address-model-64\lib\;C:\projects\morebin\boost_program_options-vc120.1.58.0.0\lib\native\address-model-64\lib\;%PATH%"
+
+
 platform: x64
 
 install:
@@ -16,7 +20,6 @@ install:
 before_build:
 - ps: cd "${env:APPVEYOR_BUILD_FOLDER}"
 - cmd: dir
-- cmd: dir boost_date_time.1.58.0.0\lib\native
 - cmd: md build
 - cmd: cd build
 - cmd: cmake --version
