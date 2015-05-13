@@ -10,10 +10,13 @@ platform: x64
 
 install:
 - ps: nuget install boost -o "${env:APPVEYOR_BUILD_FOLDER}"
+- ps: nuget install boost_date_time -o "${env:APPVEYOR_BUILD_FOLDER}"
+- ps: nuget install boost_program_options -o "${env:APPVEYOR_BUILD_FOLDER}"
 
 before_build:
 - ps: cd "${env:APPVEYOR_BUILD_FOLDER}"
 - cmd: dir boost.1.58.0.0\lib
+- cmd: dir boost.1.58.0.0\lib\native
 - cmd: md build
 - cmd: cd build
 - cmd: cmake --version
