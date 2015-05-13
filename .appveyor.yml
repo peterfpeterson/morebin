@@ -6,12 +6,11 @@ branches:
 
 configuration: Release
 
-install:
-- nuget install boost
-
 before_build:
 - ps: >-
     cd "${env:APPVEYOR_BUILD_FOLDER}"
+    nuget install boost
+    dir
     md build
     cd build
     cmake --version
