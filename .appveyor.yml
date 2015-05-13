@@ -15,13 +15,12 @@ install:
 
 before_build:
 - ps: cd "${env:APPVEYOR_BUILD_FOLDER}"
-- cmd: dir boost.1.58.0.0\lib
+- cmd: dir boost.1.58.0.0
 - cmd: dir boost.1.58.0.0\lib\native
 - cmd: md build
 - cmd: cd build
 - cmd: cmake --version
-- ps: cmake -G "Visual Studio 12 Win64" -DBOOST_ROOT=C:\projects\morebin\boost.1.58.0.0\lib\native  -DBOOST_LIBRARYDIR=C:\projects\morebin\boost.1.58.0.0\lib\native ..
-- cmd: dir
+- ps: cmake -G "Visual Studio 12 Win64" -DBOOST_ROOT=C:\projects\morebin\boost.1.58.0.0\  ..
 
 build:
   project: C:\projects\morebin\build\morebin.sln
