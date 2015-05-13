@@ -4,22 +4,17 @@ branches:
   except:
   - coverity_scan
 
-os: Unstable
-
 configuration: Release
 
-install: [nuget install boost]
+install:
+- nuget install boost
 
 before_build:
 - ps: >-
     cd "${env:APPVEYOR_BUILD_FOLDER}"
-
     md build
-
     cd build
-
     cmake -G "Visual Studio 12 Win64"  ..
-
     dir
 
 build:
