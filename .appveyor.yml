@@ -6,10 +6,12 @@ branches:
 
 configuration: Release
 
+install:
+- nuget install boost -o "${env:APPVEYOR_BUILD_FOLDER}"
+
 before_build:
 - ps: >-
     cd "${env:APPVEYOR_BUILD_FOLDER}"
-    nuget install boost
     dir
     md build
     cd build
