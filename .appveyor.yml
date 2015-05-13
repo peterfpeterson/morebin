@@ -14,6 +14,7 @@ before_build:
     cd "${env:APPVEYOR_BUILD_FOLDER}"
     md build
     cd build
+    cmake --version
     cmake -G "Visual Studio 12 Win64"  ..
     dir
 
