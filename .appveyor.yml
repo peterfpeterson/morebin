@@ -15,7 +15,7 @@ before_build:
 - cmd: md build
 - cmd: cd build
 - cmd: cmake --version
-- ps: cmake -G "Visual Studio 12 Win64" -DBOOST_ROOT="${env:APPVEYOR_BUILD_FOLDER}\boost.1.58.0.0\lib"  -DBOOST_LIBRARYDIR="${env:APPVEYOR_BUILD_FOLDER}\boost.1.58.0.0\lib" ..
+- ps: cmake -G "Visual Studio 12 Win64" -DBOOST_ROOT=C:\projects\morebin\\boost.1.58.0.0\lib  -DBOOST_LIBRARYDIR=C:\projects\morebin\boost.1.58.0.0\lib ..
 - cmd: dir
 
 build:
