@@ -7,7 +7,8 @@ branches:
 configuration: Release
 
 install:
-- nuget install boost -o "${env:APPVEYOR_BUILD_FOLDER}"
+- ps: >-
+    nuget install boost -o "${env:APPVEYOR_BUILD_FOLDER}"
 
 before_build:
 - ps: >-
