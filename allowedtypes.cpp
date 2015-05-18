@@ -19,6 +19,18 @@ AllowedTypes::~AllowedTypes() {
   this->allowed = NULL;
 }
 
+ AllowedTypes::AllowedTypes(const AllowedTypes &rhs) {
+	 this->allowed = new std::vector<std::string>();
+	 if (!rhs.allowed->empty())
+	{
+		for (vector<string>::const_iterator it = rhs.allowed->begin();
+			it != rhs.allowed->end(); ++it)
+		{
+			this->allowed->push_back(*it);
+		}
+	}
+}
+
 AllowedTypes & AllowedTypes::operator=(const AllowedTypes &rhs) {
   if (!rhs.allowed->empty())
   {
