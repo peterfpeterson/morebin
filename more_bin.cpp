@@ -113,16 +113,6 @@ extern vector<string> split(const string &source,const string &split)
   return result;
 }
 
-static vector<int> str_to_intArray(const string & array){
-  vector<string> str_array = split(array, ",");
-  vector<int> result(0);
-  size_t length = str_array.size();
-  for (size_t i = 0; i < length; ++i) {
-    result.push_back(str_to_int(str_array[i]));
-  }
-  return result;
-}
-
 template <typename NumT>
 string thing_to_str(const NumT thing) {
   std::stringstream s;
@@ -292,7 +282,7 @@ int main(int argc, char** argv)
       renderer = new render::Renderer();
       renderer->setDataDescr(dataType);
     } catch (std::runtime_error &e) {
-      // TODO should print a warning
+      std::cerr << "RUNTIME ERROR:" << e.what() << "\n";
       renderer = new prenexus::PrenexusRenderer();
       renderer->setDataDescr(dataType);
     }
