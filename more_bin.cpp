@@ -53,8 +53,10 @@ static string::size_type count_occur(const string &str, const string &ch){
   string::size_type index = 0;
 
   // infinite loop to make sure that the entire string is parsed.
+  #pragma warning(disable: 4127)
   while(true)
     {
+      #pragma warning(default: 4127)
       index = str.find(ch,index+1);
       if(index==string::npos)
         {
@@ -96,8 +98,10 @@ extern vector<string> split(const string &source,const string &split)
   string::size_type start=0;
   string::size_type stop=0;
   string inner;
+  #pragma warning(disable: 4127)
   while(true)
     {
+      #pragma warning(default: 4127)
       stop=source.find(split,start);
       if(stop==string::npos)
         {
