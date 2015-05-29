@@ -100,7 +100,7 @@ void printValue(ostream & os, const DasEvent & value)
 
 void printValue(ostream & os, const Pulse & value)
 {
-  os << toStr(value.seconds, value.nanoseconds) << " \t" 
+  os << toStr(value.seconds, value.nanoseconds) << " \t"
      << value.event_index << " \t" << value.pCurrent;
 }
 
@@ -111,7 +111,7 @@ void printValue(ostream & os, const OldPulse & value)
 
 void printValue(ostream & os, const Rtdl & value)
 {
-  os << toStr(value.seconds, value.nanoseconds) << " \t" 
+  os << toStr(value.seconds, value.nanoseconds) << " \t"
      << value.pulseType << "\t"
      << value.vetoStatus << "\t"
      << value.pulseCurrent << "\t"
@@ -121,6 +121,9 @@ void printValue(ostream & os, const Rtdl & value)
 template <typename ComplexT>
 void PrenexusRenderer::innerShowData(BinFile &file, size_t offset, size_t length)
 {
+  // length is required by the interface but not used
+  (void)length;
+
   // cache whether or not to show the data
   bool showLines = this->showLines();
 
@@ -179,7 +182,7 @@ void PrenexusRenderer::showData(BinFile & file, size_t offset, size_t length)
     this->innerShowData<Rtdl>(file, offset, length);
   else
     throw runtime_error("The code should have never gotten to this place");
-  
+
 }
 
 } // namespace prenexus

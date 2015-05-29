@@ -53,8 +53,10 @@ static string::size_type count_occur(const string &str, const string &ch){
   string::size_type index = 0;
 
   // infinite loop to make sure that the entire string is parsed.
+  #pragma warning(disable: 4127)
   while(true)
     {
+      #pragma warning(default: 4127)
       index = str.find(ch,index+1);
       if(index==string::npos)
         {
@@ -96,8 +98,10 @@ extern vector<string> split(const string &source,const string &split)
   string::size_type start=0;
   string::size_type stop=0;
   string inner;
+  #pragma warning(disable: 4127)
   while(true)
     {
+      #pragma warning(default: 4127)
       stop=source.find(split,start);
       if(stop==string::npos)
         {
@@ -110,16 +114,6 @@ extern vector<string> split(const string &source,const string &split)
           start=stop+split.size();
         }
     }
-  return result;
-}
-
-static vector<int> str_to_intArray(const string & array){
-  vector<string> str_array = split(array, ",");
-  vector<int> result(0);
-  size_t length = str_array.size();
-  for (size_t i = 0; i < length; ++i) {
-    result.push_back(str_to_int(str_array[i]));
-  }
   return result;
 }
 
@@ -292,7 +286,7 @@ int main(int argc, char** argv)
       renderer = new render::Renderer();
       renderer->setDataDescr(dataType);
     } catch (std::runtime_error &e) {
-      // TODO should print a warning
+      std::cerr << "RUNTIME ERROR:" << e.what() << "\n";
       renderer = new prenexus::PrenexusRenderer();
       renderer->setDataDescr(dataType);
     }

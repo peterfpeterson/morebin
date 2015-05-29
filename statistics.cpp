@@ -60,7 +60,7 @@ template <>
 void getMinMax<float>(float &min, float &max)
 {
   min = std::numeric_limits<float>::max();
-  max = -1. * std::numeric_limits<float>::max();
+  max = -1.f * std::numeric_limits<float>::max();
 }
 
 }

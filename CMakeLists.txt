@@ -55,7 +55,11 @@ set ( SRC_FILES
       string_util.hpp
       version.hpp )
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+if (WIN32)
+  add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK )
+  set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4" )
+endif()
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${Boost_INCLUDE_DIR})
 add_executable( morebin MACOSX_BUNDLE ${SRC_FILES} )
 target_link_libraries ( morebin ${Boost_LIBRARIES} )
 INSTALL(TARGETS morebin

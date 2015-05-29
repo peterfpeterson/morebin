@@ -11,6 +11,7 @@ class AllowedTypes {
 
 public:
   AllowedTypes();
+  AllowedTypes(const AllowedTypes &rhs);
   ~AllowedTypes();
   AllowedTypes & operator=(const AllowedTypes &rhs);
   void append(const std::string & name);
