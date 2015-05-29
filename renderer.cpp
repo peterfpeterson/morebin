@@ -144,6 +144,9 @@ void Renderer::innerShowData(BinFile &file, size_t offset, size_t length)
 template <>
 void Renderer::innerShowData<char>(BinFile &file, size_t offset, size_t length)
 {
+  //offset is required by interface but not needed
+  (void)offset;
+
   StringStatistics stats;
   stringstream data;
   file.read(data, length);
