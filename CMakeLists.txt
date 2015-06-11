@@ -128,7 +128,6 @@ if (COVERALLS)
     # this can be grabbed via
     get_property(COVERAGE_SRCS GLOBAL PROPERTY COVERAGE_SRCS)
 
-    message(STATUS "${COVERAGE_SRCS}")
     # Create the coveralls target.
     coveralls_setup(
         "${COVERAGE_SRCS}"
