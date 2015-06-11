@@ -91,16 +91,6 @@ set_target_properties(libgmock PROPERTIES
 include_directories("${source_dir}/include")
 
 ######################################################################
-# configure coveralls
-option(COVERALLS "Generate coveralls data" OFF)
-
-if (COVERALLS)
-    message (STATUS "Coveralls build enabled")
-    include(Coveralls)
-    coveralls_turn_on_coverage()
-endif()
-
-######################################################################
 # files to use for building
 set ( SRC_FILES
       allowedtypes.cpp
@@ -123,6 +113,31 @@ set ( SRC_FILES
 set ( TEST_FILES
       testmain.cpp )
 
+######################################################################
+# configure coveralls
+option(COVERALLS "Generate coveralls data" OFF)
+
+if (COVERALLS)
+    message (STATUS "Coveralls build enabled")
+    include(Coveralls)
+    coveralls_turn_on_coverage()
+
+    foreach(loop_var ${SRC_FILES} ${INC_FILES} )
+      set_property(GLOBAL APPEND PROPERTY COVERAGE_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/${loop_var}")
+    endforeach(loop_var)
+    # this can be grabbed via
+    get_property(COVERAGE_SRCS GLOBAL PROPERTY COVERAGE_SRCS)
+
+    message(STATUS "${COVERAGE_SRCS}")
+    # Create the coveralls target.
+    coveralls_setup(
+        "${COVERAGE_SRCS}"
+        ON                 # If we should upload.
+        )
+
+endif()
+
+######################################################################
 if (WIN32)
   add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK )
   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4" )
