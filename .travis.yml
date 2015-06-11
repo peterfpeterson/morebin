@@ -23,6 +23,7 @@ script:
     else
       make;
     fi
+  - ctest --output-on-failure;
 #  - make package # doesn't work on ubuntu
 
 notifications:
