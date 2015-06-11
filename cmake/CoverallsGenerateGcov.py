@@ -143,6 +143,7 @@ def main(argv):
     if parseCmakeBoolean(TRAVISCI):
         print "Generating for travis-ci"
         coverallsOutput['service_name'] = 'travis-ci'
+        coverallsOutput['service_job_id'] = ''
     else:
         print "Generating for other"
         coverallsOutput['repo_token'] = os.environ.get('COVERALLS_REPO_TOKEN')
