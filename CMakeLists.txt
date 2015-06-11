@@ -2,6 +2,8 @@
 cmake_minimum_required ( VERSION 2.6 )
 project ( morebin )
 
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
 ######################################################################
 # look for dependencies
 include ( CheckIncludeFiles )
@@ -89,6 +91,16 @@ set_target_properties(libgmock PROPERTIES
 include_directories("${source_dir}/include")
 
 ######################################################################
+# configure coveralls
+option(COVERALLS "Generate coveralls data" OFF)
+
+if (COVERALLS)
+    message (STATUS "Coveralls build enabled")
+    include(Coveralls)
+    coveralls_turn_on_coverage()
+endif()
+
+######################################################################
 # files to use for building
 set ( SRC_FILES
       allowedtypes.cpp
@@ -108,6 +120,9 @@ set ( SRC_FILES
       string_util.hpp
       version.hpp )
 
+set ( TEST_FILES
+      testmain.cpp )
+
 if (WIN32)
   add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK )
   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4" )
@@ -117,8 +132,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${Boost_INCLUDE_DIR})
 add_executable( morebin MACOSX_BUNDLE ${SRC_FILES} )
 target_link_libraries ( morebin ${Boost_LIBRARIES} )
 
-add_executable( runUnitTests testmain.cpp )
-message(STATUS "GTEST: ${GTEST_LIBRARIES} GMOCK: ${GMOCK_LIBRARIES}")
+add_executable( runUnitTests ${TEST_FILES} )
 target_link_libraries ( runUnitTests
                         ${Boost_LIBRARIES}
                         libgtest
