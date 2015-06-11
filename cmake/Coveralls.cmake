@@ -76,7 +76,7 @@ function(coveralls_setup _COVERAGE_SRCS _COVERALLS_UPLOAD _TRAVISCI)
                                 --COVERALLS_OUTPUT_FILE="${COVERALLS_FILE}"
                                 --COV_PATH="${PROJECT_BINARY_DIR}"
                                 --PROJECT_ROOT="${PROJECT_ROOT}"
-                                --TRAVISCI="$TRAVISCI"
+                                --TRAVISCI="${TRAVISCI}"
 
 		WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
 		COMMENT "Generating coveralls output..."

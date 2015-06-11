@@ -141,8 +141,10 @@ def main(argv):
     coverallsOutput['source_files'] = coverageList
 
     if parseCmakeBoolean(TRAVISCI):
+        print "Generating for travis-ci"
         coverallsOutput['service_name'] = 'travis-ci'
     else:
+        print "Generating for other"
         coverallsOutput['repo_token'] = os.environ.get('COVERALLS_REPO_TOKEN')
 
         head = {'id':gitLogValue('H',PROJECT_ROOT),'author_name':gitLogValue('an',PROJECT_ROOT), \
