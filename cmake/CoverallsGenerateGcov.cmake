@@ -388,6 +388,10 @@ endforeach()
 # as well, and generate JSON for those as well with 0% coverage.
 foreach(NOT_COVERED_SRC ${COVERAGE_SRCS_REMAINING})
 
+        file(MD5 "${NOT_COVERED_SRC}" GCOV_CONTENTS_MD5)
+        file(RELATIVE_PATH GCOV_SRC_REL_PATH "${PROJECT_ROOT}" "${NOT_COVERED_SRC}")
+
+
 	# Loads the source file as a list of lines.
 	file(STRINGS ${NOT_COVERED_SRC} SRC_LINES)
 
