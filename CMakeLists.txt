@@ -36,6 +36,59 @@ configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
 		${CMAKE_CURRENT_BINARY_DIR}/version.hpp )
 
 ######################################################################
+# grab gmock and gtest for testing
+# We need thread support
+find_package(Threads REQUIRED)
+
+include(ExternalProject)
+
+# Download and install GoogleTest
+ExternalProject_Add(
+    gtest
+    URL https://googletest.googlecode.com/files/gtest-1.7.0.zip
+    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
+    # Disable install step
+    INSTALL_COMMAND ""
+)
+
+# Create a libgtest target to be used as a dependency by test programs
+add_library(libgtest IMPORTED STATIC GLOBAL)
+add_dependencies(libgtest gtest)
+
+# Set gtest properties
+ExternalProject_Get_Property(gtest source_dir binary_dir)
+set_target_properties(libgtest PROPERTIES
+    "IMPORTED_LOCATION" "${binary_dir}/libgtest.a"
+    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+#    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
+)
+# I couldn't make it work with INTERFACE_INCLUDE_DIRECTORIES
+include_directories("${source_dir}/include")
+
+# Download and install GoogleMock
+ExternalProject_Add(
+    gmock
+    URL https://googlemock.googlecode.com/files/gmock-1.7.0.zip
+    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gmock
+    # Disable install step
+    INSTALL_COMMAND ""
+)
+
+# Create a libgmock target to be used as a dependency by test programs
+add_library(libgmock IMPORTED STATIC GLOBAL)
+add_dependencies(libgmock gmock)
+
+# Set gmock properties
+ExternalProject_Get_Property(gmock source_dir binary_dir)
+set_target_properties(libgmock PROPERTIES
+    "IMPORTED_LOCATION" "${binary_dir}/libgmock.a"
+    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+#    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
+)
+# I couldn't make it work with INTERFACE_INCLUDE_DIRECTORIES
+include_directories("${source_dir}/include")
+
+######################################################################
 # files to use for building
 set ( SRC_FILES
       allowedtypes.cpp
@@ -59,9 +112,21 @@ if (WIN32)
   add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK )
   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4" )
 endif()
+
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${Boost_INCLUDE_DIR})
 add_executable( morebin MACOSX_BUNDLE ${SRC_FILES} )
 target_link_libraries ( morebin ${Boost_LIBRARIES} )
+
+add_executable( runUnitTests testmain.cpp )
+message(STATUS "GTEST: ${GTEST_LIBRARIES} GMOCK: ${GMOCK_LIBRARIES}")
+target_link_libraries ( runUnitTests
+                        ${Boost_LIBRARIES}
+                        libgtest
+                        libgmock
+                        )
+enable_testing()
+add_test( runUnitTests runUnitTests )
+
 INSTALL(TARGETS morebin
     BUNDLE DESTINATION . COMPONENT Runtime
     RUNTIME DESTINATION bin COMPONENT Runtime
@@ -129,7 +194,7 @@ elseif ( ${CPACK_GENERATOR} MATCHES "DEB" )
       "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
   message (STATUS "CPACK_PACKAGE_FILE_NAME = ${CPACK_PACKAGE_FILE_NAME}" )
 elseif (${CPACK_GENERATOR} MATCHES "DragNDrop")
-  set(APPS "\${CMAKE_INSTALL_PREFIX}/morebin.app")  
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/morebin.app")
   INSTALL(CODE "
     set(BU_CHMOD_BUNDLE_ITEMS ON)
     include(BundleUtilities)
