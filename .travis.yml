@@ -2,15 +2,25 @@ sudo: false
 
 language: cpp
 
-compiler:
-  - gcc
-  - clang
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+    - os: linux
+      compiler: clang
+    - os: linux
+      compiler: gcc
+      env: COVERALLS=true
 
 before_script:
 #ALWAYS analyze a project in its "debug" configuration
   - if [ "$CXX" == "clang++" ];
     then
       CC=clang-3.6 CXX=clang++-3.6 scan-build-3.6 cmake -DCMAKE_BUILD_TYPE=Debug .;
+    elif [ "$COVERALLS" == "true" ];
+    then
+      echo "CHECKING CODE COVERAGE, $COVERALLS";
+      cmake -Ccoveralls.cmake .;
     else
       cmake .;
     fi
@@ -23,7 +33,12 @@ script:
     else
       make;
     fi
-  - ctest --output-on-failure;
+  - if [ "$COVERALLS" == "true" ];
+    then
+      make coveralls;
+    else
+      ctest --output-on-failure;
+    fi
 #  - make package # doesn't work on ubuntu
 
 notifications:
