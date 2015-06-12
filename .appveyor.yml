@@ -32,4 +32,8 @@ build:
   verbosity: normal
 
 test_script:
- - ctest -C Release --output-on-failure
+ - ps: dir ${env:PROJECT_BASE}/boost_date_time-vc120.1.58.0.0/lib/native/address-model-64/lib
+ - ps: dir ${env:PROJECT_BASE}/boost_program_options-vc120.1.58.0.0/lib/native/address-model-64/lib
+ - ps: dir ${env:PROJECT_BASE}/build/gmock/src/gmock-build/Release
+ - ps: dir ${env:PROJECT_BASE}/build/gtest/src/gtest-build/Release
+ - cmd: ctest -C Release --output-on-failure
