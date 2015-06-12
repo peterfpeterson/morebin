@@ -35,7 +35,7 @@ set ( CPACK_PACKAGE_VERSION_PATCH 0 )
 set ( CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
-		${CMAKE_CURRENT_BINARY_DIR}/version.hpp )
+		${CMAKE_CURRENT_SOURCE_DIR}/version.hpp )
 
 ######################################################################
 # grab gmock and gtest for testing
@@ -116,6 +116,8 @@ set ( TEST_FILES
 ######################################################################
 # configure coveralls
 option(COVERALLS "Generate coveralls data" OFF)
+option(COVERALLS_TRAVISCI "Generate coveralls data for travis-ci" OFF)
+option(COVERALLS_UPLOAD "Automatically upload coveralls data" OFF)
 
 if (COVERALLS)
     message (STATUS "Coveralls build enabled")
@@ -123,17 +125,18 @@ if (COVERALLS)
     coveralls_turn_on_coverage()
 
     foreach(loop_var ${SRC_FILES} ${INC_FILES} )
-      set_property(GLOBAL APPEND PROPERTY COVERAGE_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/${loop_var}")
+      set(COVERAGE_SRCS "${COVERAGE_SRCS}\n${CMAKE_CURRENT_SOURCE_DIR}/${loop_var}")
     endforeach(loop_var)
-    # this can be grabbed via
-    get_property(COVERAGE_SRCS GLOBAL PROPERTY COVERAGE_SRCS)
+    string(SUBSTRING ${COVERAGE_SRCS} 1 -1 SRCS_FILE)
+    set( SRCS_FILENAME "${CMAKE_CURRENT_BINARY_DIR}/sources.txt") 
+    file(WRITE ${SRCS_FILENAME} ${SRCS_FILE})
 
     # Create the coveralls target.
     coveralls_setup(
-        "${COVERAGE_SRCS}"
-        ON                 # If we should upload.
+        ${SRCS_FILENAME}
+        ${COVERALLS_UPLOAD}    # If we should upload.
+        ${COVERALLS_TRAVISCI}  # building on travis-ci
         )
-
 endif()
 
 ######################################################################
