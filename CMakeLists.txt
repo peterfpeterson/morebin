@@ -92,13 +92,15 @@ include_directories("${source_dir}/include")
 
 ######################################################################
 # files to use for building
-set ( SRC_FILES
+
+# since the result is a static executable, need another variable
+# for all the sources that don't contain main
+set ( SRC_FILES_NO_MAIN
       allowedtypes.cpp
       allowedtypes.hpp
       bin_file.cpp
       bin_file.hpp
       byte_swap.h
-      more_bin.cpp
       prenexusrenderer.cpp
       prenexusrenderer.hpp
       prenexustypes.hpp
@@ -110,8 +112,13 @@ set ( SRC_FILES
       string_util.hpp
       version.hpp )
 
+set ( SRC_FILES
+      more_bin.cpp
+      ${SRC_FILES_NO_MAIN})
+
 set ( TEST_FILES
-      testmain.cpp )
+      testmain.cpp
+      testallowedtypes.cpp )
 
 ######################################################################
 # configure coveralls
@@ -128,7 +135,7 @@ if (COVERALLS)
       set(COVERAGE_SRCS "${COVERAGE_SRCS}\n${CMAKE_CURRENT_SOURCE_DIR}/${loop_var}")
     endforeach(loop_var)
     string(SUBSTRING ${COVERAGE_SRCS} 1 -1 SRCS_FILE)
-    set( SRCS_FILENAME "${CMAKE_CURRENT_BINARY_DIR}/sources.txt") 
+    set( SRCS_FILENAME "${CMAKE_CURRENT_BINARY_DIR}/sources.txt")
     file(WRITE ${SRCS_FILENAME} ${SRCS_FILE})
 
     # Create the coveralls target.
@@ -149,7 +156,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${Boost_INCLUDE_DIR})
 add_executable( morebin MACOSX_BUNDLE ${SRC_FILES} )
 target_link_libraries ( morebin ${Boost_LIBRARIES} )
 
-add_executable( runUnitTests ${TEST_FILES} )
+add_executable( runUnitTests ${TEST_FILES} ${SRC_FILES_NO_MAIN})
 target_link_libraries ( runUnitTests
                         ${Boost_LIBRARIES}
                         libgtest
