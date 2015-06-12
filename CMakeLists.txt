@@ -163,6 +163,7 @@ target_link_libraries ( runUnitTests
                         libgmock
                         )
 enable_testing()
+add_test( morebin_exe morebin --version)
 add_test( AllowedTypes runUnitTests AllowedTypes)
 
 INSTALL(TARGETS morebin
