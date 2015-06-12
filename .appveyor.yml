@@ -30,3 +30,6 @@ build:
   project: C:\projects\morebin\build\morebin.sln
   parallel: true
   verbosity: normal
+
+test_script:
+ - ctest -C Release --output-on-failure
