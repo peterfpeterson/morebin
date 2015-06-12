@@ -22,7 +22,7 @@ def getRemotes(directory):
     """Returns list of remote git repositories"""
     gitRemoteOutput = subprocess.check_output(['git','remote','-v'],cwd=directory)
     remotes = []
-    for line in gitRemoteOutput.splitlines(): 
+    for line in gitRemoteOutput.splitlines():
         if '(fetch)' in line:
             splitLine = line.split();
             remotes.append({'name': splitLine[0].strip(), 'url': splitLine[1].strip()})
@@ -44,11 +44,11 @@ def getAllFilesWithExtension(directory,extension):
 def getSourcePathFromGcovFile(gcovFilename):
     """Return the source path corresponding to a .gcov file"""
     gcovPath,gcovFilenameWithExtension = os.path.split(gcovFilename)
-    srcFilename = re.sub(".gcov$","",gcovFilenameWithExtension)  
+    srcFilename = re.sub(".gcov$","",gcovFilenameWithExtension)
     return re.sub("#","/",srcFilename)
 
 def main(argv):
-    arguments = ['COVERAGE_SRCS_FILE=','COVERALLS_OUTPUT_FILE=','COV_PATH=','PROJECT_ROOT=','TRAVISCI='] 
+    arguments = ['COVERAGE_SRCS_FILE=','COVERALLS_OUTPUT_FILE=','COV_PATH=','PROJECT_ROOT=','TRAVISCI=']
     COVERAGE_SRCS_FILE=None
     COVERALLS_OUTPUT_FILE=None
     COV_PATH=None
@@ -105,7 +105,7 @@ def main(argv):
         #get name for json file
         sourceWithPath = getSourcePathFromGcovFile(gcovFilename)
         fileCoverage['name'] = os.path.relpath(sourceWithPath,PROJECT_ROOT)
-        print "Generating JSON file for "+fileCoverage['name']    
+        print "Generating JSON file for "+fileCoverage['name']
         fileCoverage['source_digest'] = hashlib.md5(open(sourceWithPath, 'rb').read()).hexdigest()
         lineCoverage = []
         gcovFile = open(gcovFilename,'r')
@@ -115,9 +115,11 @@ def main(argv):
             if lineNumber != 0:
                 if line[0] == '#####':
                     lineCoverage.append(0)
+                elif line[0] == '=====':
+                    lineCoverage.append(0)
                 elif line[0] == '-':
                     lineCoverage.append(None)
-                else: 
+                else:
                     lineCoverage.append(int(line[0]))
                 if lineNumber != len(lineCoverage):
                     raise RuntimeError['line_number does not match len(array)']
@@ -150,7 +152,7 @@ def main(argv):
 
         head = {'id':gitLogValue('H',PROJECT_ROOT),'author_name':gitLogValue('an',PROJECT_ROOT), \
                 'author_email':gitLogValue('ae',PROJECT_ROOT),'committer_name':gitLogValue('cn',PROJECT_ROOT), \
-                'committer_email':gitLogValue('ce',PROJECT_ROOT), 'message':gitLogValue('B',PROJECT_ROOT)} 
+                'committer_email':gitLogValue('ce',PROJECT_ROOT), 'message':gitLogValue('B',PROJECT_ROOT)}
 
         gitDict = {'head':head,'branch':getBranchName(PROJECT_ROOT),'remotes':getRemotes(COV_PATH)}
         coverallsOutput['git'] = gitDict
