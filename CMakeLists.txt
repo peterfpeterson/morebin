@@ -44,11 +44,18 @@ find_package(Threads REQUIRED)
 
 include(ExternalProject)
 
+if(MSVC)
+    set(GTEST_ARGS "-DBUILD_SHARED_LIBS=ON")
+else()
+    set(GTEST_ARGS "")
+endif()
+
 # Download and install GoogleTest
 ExternalProject_Add(
     gtest
     URL https://googletest.googlecode.com/files/gtest-1.7.0.zip
     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
+    CMAKE_ARGS ${GTEST_ARGS}
     # Disable install step
     INSTALL_COMMAND ""
 )
@@ -59,11 +66,18 @@ add_dependencies(libgtest gtest)
 
 # Set gtest properties
 ExternalProject_Get_Property(gtest source_dir binary_dir)
-set_target_properties(libgtest PROPERTIES
-    "IMPORTED_LOCATION" "${binary_dir}/libgtest.a"
-    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-#    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
-)
+if(MSVC)
+    set_target_properties(libgtest PROPERTIES
+        "IMPORTED_LOCATION_DEBUG" "${binary_dir}/Debug/gtest.lib"
+		"IMPORTED_LOCATION_RELEASE" "${binary_dir}/Release/gtest.lib"
+        "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+    )
+else()
+    set_target_properties(libgmock PROPERTIES
+        "IMPORTED_LOCATION" "${binary_dir}/libtest.a"
+        "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+    )
+endif()
 # I couldn't make it work with INTERFACE_INCLUDE_DIRECTORIES
 include_directories("${source_dir}/include")
 
@@ -82,11 +96,18 @@ add_dependencies(libgmock gmock)
 
 # Set gmock properties
 ExternalProject_Get_Property(gmock source_dir binary_dir)
-set_target_properties(libgmock PROPERTIES
-    "IMPORTED_LOCATION" "${binary_dir}/libgmock.a"
-    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-#    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
-)
+if(MSVC)
+    set_target_properties(libgmock PROPERTIES
+        "IMPORTED_LOCATION_DEBUG" "${binary_dir}/Debug/gmock.lib"
+		"IMPORTED_LOCATION_RELEASE" "${binary_dir}/Release/gmock.lib"
+        "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+    )
+else()
+    set_target_properties(libgmock PROPERTIES
+        "IMPORTED_LOCATION" "${binary_dir}/libgmock.a"
+        "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+    )
+endif()
 # I couldn't make it work with INTERFACE_INCLUDE_DIRECTORIES
 include_directories("${source_dir}/include")
 

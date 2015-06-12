@@ -8,7 +8,7 @@ configuration: Release
 
 environment:
   PROJECT_BASE: "C:/projects/morebin"
-  PATH: "%PROJECT_BASE%/boost_date_time-vc120.1.58.0.0/lib/native/address-model-64/lib;%PROJECT_BASE%/boost_program_options-vc120.1.58.0.0/lib/native/address-model-64/lib;%PATH%"
+  PATH: "%PROJECT_BASE%/boost_date_time-vc120.1.58.0.0/lib/native/address-model-64/lib;%PROJECT_BASE%/boost_program_options-vc120.1.58.0.0/lib/native/address-model-64/lib;%PROJECT_BASE%/gtest/src/gtest-build/Release;%PROJECT_BASE%/gmock/src/gmock-build/Release;%PATH%"
 
 
 platform: x64
