@@ -163,7 +163,7 @@ target_link_libraries ( runUnitTests
                         libgmock
                         )
 enable_testing()
-add_test( runUnitTests runUnitTests )
+add_test( AllowedTypes runUnitTests AllowedTypes)
 
 INSTALL(TARGETS morebin
     BUNDLE DESTINATION . COMPONENT Runtime
