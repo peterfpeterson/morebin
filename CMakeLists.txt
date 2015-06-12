@@ -118,7 +118,8 @@ set ( SRC_FILES
 
 set ( TEST_FILES
       testmain.cpp
-      testallowedtypes.cpp )
+      testallowedtypes.cpp
+      teststring_util.cpp)
 
 ######################################################################
 # configure coveralls
@@ -163,8 +164,9 @@ target_link_libraries ( runUnitTests
                         libgmock
                         )
 enable_testing()
-add_test( morebin_exe morebin --version)
-add_test( AllowedTypes runUnitTests AllowedTypes)
+add_test(morebin_version morebin --version)
+add_test(AllowedTypes runUnitTests --gtest_filter=AllowedTypes.*)
+add_test(string_util runUnitTests --gtest_filter=string_util.*)
 
 INSTALL(TARGETS morebin
     BUNDLE DESTINATION . COMPONENT Runtime
