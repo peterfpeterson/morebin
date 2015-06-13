@@ -288,7 +288,7 @@ int main(int argc, char** argv)
       renderer = new render::Renderer();
       renderer->setDataDescr(dataType);
     } catch (std::runtime_error &e) {
-      std::cerr << "RUNTIME ERROR:" << e.what() << "\n";
+      //std::cerr << "RUNTIME ERROR:" << e.what() << "\n";
       renderer = new prenexus::PrenexusRenderer();
       renderer->setDataDescr(dataType);
     }
