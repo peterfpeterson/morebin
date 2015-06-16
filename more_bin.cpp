@@ -284,13 +284,17 @@ int main(int argc, char** argv)
   try {
     bool multiFile = (files.size() > 1);
     render::Renderer * renderer = NULL;
-    try {
+    if (render::hasDataDescr(dataType)) {
       renderer = new render::Renderer();
       renderer->setDataDescr(dataType);
-    } catch (std::runtime_error &e) {
-      //std::cerr << "RUNTIME ERROR:" << e.what() << "\n";
+    } else if (prenexus::hasDataDescr(dataType)) {
       renderer = new prenexus::PrenexusRenderer();
       renderer->setDataDescr(dataType);
+    } else {
+      std::cout << "Unknown type \"" << dataType << "\". Allowed values are: "
+      		<< render::getKnownDataDescr() << ", "
+		<< prenexus::getKnownDataDescr() << std::endl;
+      return -1;
     }
     renderer->quiet(quiet);
     renderer->showLines(showLines);

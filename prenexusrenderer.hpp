@@ -20,6 +20,8 @@ namespace prenexus {
 
 const std::string getKnownDataDescr();
 
+const bool hasDataDescr(const std::string &);
+
 class PrenexusRenderer: public render::Renderer
 {
 public:

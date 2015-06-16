@@ -14,6 +14,8 @@ namespace render {
 
 const std::string getKnownDataDescr();
 
+const bool hasDataDescr(const std::string &);
+
 class Renderer
 {
 public:
