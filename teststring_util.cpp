@@ -4,6 +4,8 @@
 
 TEST(string_util, Zero)
 {
+  EXPECT_EQ(toStr(static_cast<int8_t>(0.)), "0");
+  EXPECT_EQ(toStr(static_cast<uint8_t>(0.)), "0");
   EXPECT_EQ(toStr(static_cast<int16_t>(0.)), "0");
   EXPECT_EQ(toStr(static_cast<uint16_t>(0.)), "0");
   EXPECT_EQ(toStr(static_cast<int32_t>(0.)), "0");
@@ -16,6 +18,8 @@ TEST(string_util, Zero)
 
 TEST(string_util, One)
 {
+  EXPECT_EQ(toStr(static_cast<int8_t>(1.)), "1");
+  EXPECT_EQ(toStr(static_cast<uint8_t>(1.)), "1");
   EXPECT_EQ(toStr(static_cast<int16_t>(1.)), "1");
   EXPECT_EQ(toStr(static_cast<uint16_t>(1.)), "1");
   EXPECT_EQ(toStr(static_cast<int32_t>(1.)), "1");
