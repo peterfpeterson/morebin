@@ -8,7 +8,7 @@ configuration: Release
 
 environment:
   PROJECT_BASE: "C:/projects/morebin"
-  PATH: "%PROJECT_BASE%/boost_date_time-vc120.1.58.0.0/lib/native/address-model-64/lib;%PROJECT_BASE%/boost_program_options-vc120.1.58.0.0/lib/native/address-model-64/lib;%PATH%"
+  PATH: "%PROJECT_BASE%/boost_date_time-vc120.1.58.0.0/lib/native/address-model-64/lib;%PROJECT_BASE%/boost_program_options-vc120.1.58.0.0/lib/native/address-model-64/lib;%PROJECT_BASE%/build/gtest/src/gtest-build/Release;%PROJECT_BASE%/build/gmock/src/gmock-build/Release;%PATH%"
 
 
 platform: x64
@@ -30,3 +30,10 @@ build:
   project: C:\projects\morebin\build\morebin.sln
   parallel: true
   verbosity: normal
+
+test_script:
+ - ps: dir ${env:PROJECT_BASE}/boost_date_time-vc120.1.58.0.0/lib/native/address-model-64/lib
+ - ps: dir ${env:PROJECT_BASE}/boost_program_options-vc120.1.58.0.0/lib/native/address-model-64/lib
+ - ps: dir ${env:PROJECT_BASE}/build/gmock/src/gmock-build/Release
+ - ps: dir ${env:PROJECT_BASE}/build/gtest/src/gtest-build/Release
+ - cmd: ctest -C Release --output-on-failure
