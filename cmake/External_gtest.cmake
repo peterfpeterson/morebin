@@ -26,9 +26,15 @@ add_dependencies(libgtest_main gtest)
 # Set gtest properties
 ExternalProject_Get_Property(gtest source_dir binary_dir)
 set_target_properties(libgtest PROPERTIES
-    "IMPORTED_LOCATION" "${binary_dir}/libgtest.a"
+    "IMPORTED_LOCATION" "${binary_dir}/libgtest.so"
     "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
 #    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
 )
+set_target_properties(libgtest_main PROPERTIES
+    "IMPORTED_LOCATION" "${binary_dir}/libgtest_main.so"
+    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+#    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
+)
+
 # I couldn't make it work with INTERFACE_INCLUDE_DIRECTORIES
 include_directories("${source_dir}/include")
