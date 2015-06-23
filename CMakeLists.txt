@@ -38,57 +38,22 @@ configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
 		${CMAKE_CURRENT_SOURCE_DIR}/version.hpp )
 
 ######################################################################
-# grab gmock and gtest for testing
-# We need thread support
-find_package(Threads REQUIRED)
-
 include(ExternalProject)
 
-# Download and install GoogleTest
-ExternalProject_Add(
-    gtest
-    URL https://googletest.googlecode.com/files/gtest-1.7.0.zip
-    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
-    # Disable install step
-    INSTALL_COMMAND ""
-)
+######################################################################
+set(gtest_version "1.7.0")
+set(gtest_md5 "2d6ec8ccdf5c46b05ba54a9fd1d130d7")
 
-# Create a libgtest target to be used as a dependency by test programs
-add_library(libgtest IMPORTED STATIC GLOBAL)
-add_dependencies(libgtest gtest)
+option(USE_SYSTEM_GTEST "Should we use the system GTest - v${gtest_version}?" OFF)
 
-# Set gtest properties
-ExternalProject_Get_Property(gtest source_dir binary_dir)
-set_target_properties(libgtest PROPERTIES
-    "IMPORTED_LOCATION" "${binary_dir}/libgtest.a"
-    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-#    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
-)
-# I couldn't make it work with INTERFACE_INCLUDE_DIRECTORIES
-include_directories("${source_dir}/include")
-
-# Download and install GoogleMock
-ExternalProject_Add(
-    gmock
-    URL https://googlemock.googlecode.com/files/gmock-1.7.0.zip
-    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gmock
-    # Disable install step
-    INSTALL_COMMAND ""
-)
-
-# Create a libgmock target to be used as a dependency by test programs
-add_library(libgmock IMPORTED STATIC GLOBAL)
-add_dependencies(libgmock gmock)
-
-# Set gmock properties
-ExternalProject_Get_Property(gmock source_dir binary_dir)
-set_target_properties(libgmock PROPERTIES
-    "IMPORTED_LOCATION" "${binary_dir}/libgmock.a"
-    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-#    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
-)
-# I couldn't make it work with INTERFACE_INCLUDE_DIRECTORIES
-include_directories("${source_dir}/include")
+if(USE_SYSTEM_GTEST)
+  find_package(GTest REQUIRED)
+else()
+  include(External_gtest)
+  set( GTEST_BOTH_LIBRARIES "libgtest.so;libgtest_main.so" )
+#  ExternalProject_Get_Property(gtest GTEST_BOTH_LIBRARIES ) #libgtest.so libgtest_main.so )source_dir binary_dir)
+endif()
+message (STATUS "GTEST_LIBS=${GTEST_BOTH_LIBRARIES}")
 
 ######################################################################
 # files to use for building
@@ -160,8 +125,9 @@ target_link_libraries ( morebin ${Boost_LIBRARIES} )
 add_executable( runUnitTests ${TEST_FILES} ${SRC_FILES_NO_MAIN})
 target_link_libraries ( runUnitTests
                         ${Boost_LIBRARIES}
-                        libgtest
-                        libgmock
+#                        libgtest
+#                        libgmock
+                        ${GTEST_BOTH_LIBRARIES}
                         )
 enable_testing()
 add_test(morebin_version morebin --version)
