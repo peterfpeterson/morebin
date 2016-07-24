@@ -10,10 +10,6 @@ namespace allowed {
 class AllowedTypes {
 
 public:
-  AllowedTypes();
-  AllowedTypes(const AllowedTypes &rhs);
-  ~AllowedTypes();
-  AllowedTypes & operator=(const AllowedTypes &rhs);
   void append(const std::string & name);
   bool has(const std::string & descr) const;
   bool empty() const;
@@ -21,7 +17,7 @@ public:
   friend std::ostream& operator<<(std::ostream &os, const AllowedTypes & thing);
 
 private:
-  std::vector<std::string> * allowed;
+  std::vector<std::string> allowed;
 };
 
 }
