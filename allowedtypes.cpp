@@ -29,7 +29,7 @@ bool AllowedTypes::empty() const {
 std::ostream& operator<<(std::ostream &os, const AllowedTypes & thing) {
   if (thing.empty())
     return os;
-  os << boost::algorithm::join(thing.allowed,", ");
+  os << boost::algorithm::join(thing.allowed, ", ");
   return os;
 }
 

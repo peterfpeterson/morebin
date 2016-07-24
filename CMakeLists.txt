@@ -122,6 +122,12 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${Boost_INCLUDE_DIR})
 add_executable( morebin MACOSX_BUNDLE ${SRC_FILES} )
 target_link_libraries ( morebin ${Boost_LIBRARIES} )
 
+if(APPLE)
+ set(MOREBIN_EXECUTABLE "morebin.app/Contents/MacOS/morebin")
+else()
+ set(MOREBIN_EXECUTABLE "morebin")
+endif()
+
 add_executable( runUnitTests ${TEST_FILES} ${SRC_FILES_NO_MAIN})
 target_link_libraries ( runUnitTests
                         ${Boost_LIBRARIES}
@@ -130,7 +136,7 @@ target_link_libraries ( runUnitTests
                         ${GTEST_BOTH_LIBRARIES}
                         )
 enable_testing()
-add_test(morebin_version morebin --version)
+add_test(morebin_version ${MOREBIN_EXECUTABLE} --version)
 add_test(AllowedTypes runUnitTests --gtest_filter=AllowedTypes.*)
 add_test(string_util runUnitTests --gtest_filter=string_util.*)
 
