@@ -62,3 +62,6 @@ set_target_properties(gtest_main PROPERTIES
     IMPORTED_LINK_INTERFACE_LIBRARIES "${CMAKE_THREAD_LIBS_INIT}"
     ${GTEST_IMPORTED_LOCATION}
 )
+
+# I couldn't make it work with INTERFACE_INCLUDE_DIRECTORIES
+include_directories("${source_dir}/include")
