@@ -53,7 +53,8 @@ else()
   message(STATUS "Using gtest in ExternalProject")
   include(External_gtest)
   # there should be a better way to get these
-  set( GTEST_BOTH_LIBRARIES "gtest;gtest_main" )
+  set( GTEST_BOTH_LIBRARIES
+    "${CMAKE_SHARED_LIBRARY_PREFIX}gtest${CMAKE_SHARED_LIBRARY_SUFFIX};${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main${CMAKE_SHARED_LIBRARY_SUFFIX}" )
 endif()
 message (STATUS "GTEST_LIBS=${GTEST_BOTH_LIBRARIES}")
 
