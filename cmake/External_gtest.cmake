@@ -6,6 +6,8 @@ include(ExternalProject)
 
 set(GTEST_PREFIX "googletest")
 set(GTEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/${GTEST_PREFIX}")
+set(GTEST_INCLUDES "${GTEST_DIR}/src/googletest-${gtest_version}/include")
+
 ExternalProject_Add(
     googletest-${gtest_version}
     DOWNLOAD_DIR "${GTEST_DIR}/src" # The only dir option which is required
@@ -69,24 +71,29 @@ else()
         IMPORTED_LOCATION           "${GTEST_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main${CMAKE_STATIC_LIBRARY_SUFFIX}")
 endif()
 
+# the gtest include directory exists only after it is build, but it is used/needed
+# for the set_target_properties call below, so make it to avoid an error
+file(MAKE_DIRECTORY ${GTEST_INCLUDES})
+
 # Create a libgtest target to be used as a dependency by test programs
-add_library(libgtest IMPORTED SHARED GLOBAL)
-add_dependencies(libgtest gtest)
-add_library(libgtest_main IMPORTED SHARED GLOBAL)
-add_dependencies(libgtest_main gtest)
+if (CMAKE_SHARED_LIBRARY_PREFIX)
+  add_library("${CMAKE_SHARED_LIBRARY_PREFIX}gtest" IMPORTED SHARED GLOBAL)
+  add_dependencies("${CMAKE_SHARED_LIBRARY_PREFIX}gtest" gtest)
+else()
+  set_target_properties("${CMAKE_SHARED_LIBRARY_PREFIX}gtest" IMPORTED SHARED GLOBAL)
+endif()
+add_library(${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main IMPORTED SHARED GLOBAL)
+add_dependencies(${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main gtest)
 
 # Set gtest properties
 ExternalProject_Get_Property(gtest source_dir binary_dir)
-set_target_properties(libgtest PROPERTIES
+set_target_properties(${CMAKE_SHARED_LIBRARY_PREFIX}gtest PROPERTIES
     "IMPORTED_LOCATION" "${binary_dir}/${CMAKE_SHARED_LIBRARY_PREFIX}gtest${CMAKE_SHARED_LIBRARY_SUFFIX}"
     "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-#    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
+    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
 )
-set_target_properties(libgtest_main PROPERTIES
+set_target_properties(${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main PROPERTIES
     "IMPORTED_LOCATION" "${binary_dir}/${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main${CMAKE_SHARED_LIBRARY_SUFFIX}"
     "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-#    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
+    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
 )
-
-# I couldn't make it work with INTERFACE_INCLUDE_DIRECTORIES
-include_directories("${source_dir}/include")
