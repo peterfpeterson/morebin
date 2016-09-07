@@ -51,6 +51,24 @@ ExternalProject_Add(
 
 add_dependencies(gmock googletest-${gtest_version})
 
+# variables defining the import location properties for the generated gtest and
+# gtestmain libraries
+if (MSVC)
+    set(GTEST_IMPORTED_LOCATION
+        IMPORTED_LOCATION_DEBUG     "${GTEST_DIR}/Debug/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}"
+        IMPORTED_LOCATION_RELEASE   "${GTEST_DIR}/Release/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}"
+        )
+    set(GTESTMAIN_IMPORTED_LOCATION
+        IMPORTED_LOCATION_DEBUG     "${GTEST_DIR}/Debug/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main${CMAKE_STATIC_LIBRARY_SUFFIX}"
+        IMPORTED_LOCATION_RELEASE   "${GTEST_DIR}/Release/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main${CMAKE_STATIC_LIBRARY_SUFFIX}"
+        )
+else()
+    set(GTEST_IMPORTED_LOCATION
+        IMPORTED_LOCATION           "${GTEST_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    set(GTESTMAIN_IMPORTED_LOCATION
+        IMPORTED_LOCATION           "${GTEST_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main${CMAKE_STATIC_LIBRARY_SUFFIX}")
+endif()
+
 # Create a libgtest target to be used as a dependency by test programs
 add_library(libgtest IMPORTED SHARED GLOBAL)
 add_dependencies(libgtest gtest)
