@@ -42,16 +42,17 @@ include(ExternalProject)
 
 ######################################################################
 set(gtest_version "1.7.0")
-set(gtest_md5 "2d6ec8ccdf5c46b05ba54a9fd1d130d7")
 
 option(USE_SYSTEM_GTEST "Should we use the system GTest - v${gtest_version}?" OFF)
 
 if(USE_SYSTEM_GTEST)
+  message(STATUS "Using system gtest")
   find_package(GTest REQUIRED)
 else()
+  message(STATUS "Using gtest in ExternalProject")
   include(External_gtest)
+  # there should be a better way to get these
   set( GTEST_BOTH_LIBRARIES "libgtest;libgtest_main" )
-#  ExternalProject_Get_Property(gtest GTEST_BOTH_LIBRARIES ) #libgtest.so libgtest_main.so )source_dir binary_dir)
 endif()
 message (STATUS "GTEST_LIBS=${GTEST_BOTH_LIBRARIES}")
 
@@ -135,6 +136,7 @@ target_link_libraries ( runUnitTests
 #                        libgmock
                         ${GTEST_BOTH_LIBRARIES}
                         )
+
 enable_testing()
 add_test(morebin_version ${MOREBIN_EXECUTABLE} --version)
 add_test(AllowedTypes runUnitTests --gtest_filter=AllowedTypes.*)
