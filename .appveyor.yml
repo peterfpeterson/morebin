@@ -10,8 +10,6 @@ environment:
   PROJECT_BASE: "C:/projects/morebin"
   PATH: "C:\Libraries\boost_1_60_0;%PATH%"
 
-os: Visual Studio 2015
-
 platform: x64
 
 before_build:
@@ -20,7 +18,7 @@ before_build:
 - cmd: md build
 - cmd: cd build
 - cmd: cmake --version
-- cmd: cmake -G"Visual Studio 14 2015 Win64" -C"../appveyor.cmake" -H.. -B.
+- cmd: cmake -G"Visual Studio 12 2013 Win64" -C"../appveyor.cmake" -H.. -B.
 
 build:
   project: C:\projects\morebin\build\morebin.sln
