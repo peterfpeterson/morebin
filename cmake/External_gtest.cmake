@@ -26,6 +26,24 @@ ExternalProject_Add(
 # for the set_target_properties call below, so make it to avoid an error
 file(MAKE_DIRECTORY ${GTEST_INCLUDES})
 
+# variables defining the import location properties for the generated gtest and
+# gtestmain libraries
+if (MSVC)
+    set(GTEST_IMPORTED_LOCATION
+        IMPORTED_LOCATION_DEBUG     "${GTEST_DIR}/Debug/${CMAKE_SHARED_LIBRARY_PREFIX}gtest${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        IMPORTED_LOCATION_RELEASE   "${GTEST_DIR}/Release/${CMAKE_SHARED_LIBRARY_PREFIX}gtest${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        )
+    set(GTESTMAIN_IMPORTED_LOCATION
+        IMPORTED_LOCATION_DEBUG     "${GTEST_DIR}/Debug/${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        IMPORTED_LOCATION_RELEASE   "${GTEST_DIR}/Release/${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        )
+else()
+    set(GTEST_IMPORTED_LOCATION
+        IMPORTED_LOCATION           "${GTEST_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}gtest${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    set(GTESTMAIN_IMPORTED_LOCATION
+        IMPORTED_LOCATION           "${GTEST_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main${CMAKE_SHARED_LIBRARY_SUFFIX}")
+endif()
+
 # Create a libgtest target to be used as a dependency by test programs
 add_library(${CMAKE_SHARED_LIBRARY_PREFIX}gtest IMPORTED SHARED GLOBAL)
 add_dependencies(${CMAKE_SHARED_LIBRARY_PREFIX}gtest googletest-${gtest_version})
