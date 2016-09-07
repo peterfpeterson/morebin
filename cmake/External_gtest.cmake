@@ -39,26 +39,26 @@ if (MSVC)
         )
 else()
     set(GTEST_IMPORTED_LOCATION
-        IMPORTED_LOCATION           "${GTEST_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}gtest${CMAKE_SHARED_LIBRARY_SUFFIX}")
+        IMPORTED_LOCATION           "${GTEST_DIR}/src/googletest-${gtest_version}-build/${CMAKE_SHARED_LIBRARY_PREFIX}gtest${CMAKE_SHARED_LIBRARY_SUFFIX}")
     set(GTESTMAIN_IMPORTED_LOCATION
-        IMPORTED_LOCATION           "${GTEST_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main${CMAKE_SHARED_LIBRARY_SUFFIX}")
+        IMPORTED_LOCATION           "${GTEST_DIR}/src/googletest-${gtest_version}-build/${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main${CMAKE_SHARED_LIBRARY_SUFFIX}")
 endif()
 
 # Create a libgtest target to be used as a dependency by test programs
-add_library(${CMAKE_SHARED_LIBRARY_PREFIX}gtest IMPORTED SHARED GLOBAL)
-add_dependencies(${CMAKE_SHARED_LIBRARY_PREFIX}gtest googletest-${gtest_version})
-add_library(${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main IMPORTED SHARED GLOBAL)
-add_dependencies(${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main ${CMAKE_SHARED_LIBRARY_PREFIX}gtest googletest-${gtest_version})
+add_library(gtest IMPORTED SHARED GLOBAL)
+add_dependencies(gtest googletest-${gtest_version})
+add_library(gtest_main IMPORTED SHARED GLOBAL)
+add_dependencies(gtest_main googletest-${gtest_version})
 
 # Set gtest properties
 ExternalProject_Get_Property(googletest-${gtest_version} source_dir binary_dir)
-set_target_properties(${CMAKE_SHARED_LIBRARY_PREFIX}gtest PROPERTIES
-    "IMPORTED_LOCATION" "${binary_dir}/${CMAKE_SHARED_LIBRARY_PREFIX}gtest${CMAKE_SHARED_LIBRARY_SUFFIX}"
-    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
+set_target_properties(gtest PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES     "${GTEST_INCLUDES}"
+    IMPORTED_LINK_INTERFACE_LIBRARIES "${CMAKE_THREAD_LIBS_INIT}"
+    ${GTEST_IMPORTED_LOCATION}
 )
-set_target_properties(${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main PROPERTIES
-    "IMPORTED_LOCATION" "${binary_dir}/${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main${CMAKE_SHARED_LIBRARY_SUFFIX}"
-    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
+set_target_properties(gtest_main PROPERTIES
+   INTERFACE_INCLUDE_DIRECTORIES     "${GTEST_INCLUDES}"
+    IMPORTED_LINK_INTERFACE_LIBRARIES "${CMAKE_THREAD_LIBS_INIT}"
+    ${GTEST_IMPORTED_LOCATION}
 )
