@@ -25,9 +25,9 @@
 # Param _COVERAGE_SRCS	A list of source files that coverage should be collected for.
 # Param _COVERALLS_UPLOAD Upload the result to coveralls?
 #
-function(coveralls_setup _COVERAGE_SRCS _COVERALLS_UPLOAD)
+function(coveralls_setup _COVERAGE_SRCS _COVERALLS_UPLOAD _TRAVISCI)
 
-	if (ARGC GREATER 2)
+	if (ARGC GREATER 3)
 		set(_CMAKE_SCRIPT_PATH ${ARGN})
 		message("Coveralls: Using alternate CMake script dir: ${_CMAKE_SCRIPT_PATH}")
 	else()
@@ -46,6 +46,8 @@ function(coveralls_setup _COVERAGE_SRCS _COVERALLS_UPLOAD)
 	set(COVERAGE_SRCS ${_COVERAGE_SRCS})
 
 	set(COVERALLS_FILE ${PROJECT_BINARY_DIR}/coveralls.json)
+
+        set(TRAVISCI ${_TRAVISCI})
 
         find_package(Git)
         execute_process(
@@ -70,10 +72,11 @@ function(coveralls_setup _COVERAGE_SRCS _COVERALLS_UPLOAD)
 		# (We don't want this to run at CMake generation time, but after compilation and everything has run).
 		COMMAND ${PYTHON_EXECUTABLE} 
                                 ${_CMAKE_SCRIPT_PATH}/CoverallsGenerateGcov.py
-				--COVERAGE_SRCS_FILE="${COVERAGE_SRCS}"
-				--COVERALLS_OUTPUT_FILE="${COVERALLS_FILE}"
-				--COV_PATH="${PROJECT_BINARY_DIR}"
-				--PROJECT_ROOT="${PROJECT_ROOT}"
+                                --COVERAGE_SRCS_FILE="${COVERAGE_SRCS}"
+                                --COVERALLS_OUTPUT_FILE="${COVERALLS_FILE}"
+                                --COV_PATH="${PROJECT_BINARY_DIR}"
+                                --PROJECT_ROOT="${PROJECT_ROOT}"
+                                --TRAVISCI="${TRAVISCI}"
 
 		WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
 		COMMENT "Generating coveralls output..."
@@ -109,7 +112,7 @@ endfunction()
 
 macro(coveralls_turn_on_coverage)
 	if(NOT (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-		AND (NOT "${CMAKE_C_COMPILER_ID}" MATCHES "Clang"))
+		AND (NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang"))
 		message(FATAL_ERROR "Coveralls: Compiler ${CMAKE_C_COMPILER_ID} is not GNU gcc! Aborting... You can set this on the command line using CC=/usr/bin/gcc CXX=/usr/bin/g++ cmake <options> ..")
 	endif()
 

@@ -7,6 +7,13 @@ import re
 import copy
 import hashlib
 
+def parseCmakeBoolean(var):
+    rejected_strings = ['false','off','no']
+    if var.lower() in rejected_strings:
+        return False;
+    else:
+        return True;
+
 def getBranchName(directory):
     """Returns the name of the current git branch"""
     return subprocess.check_output(["git","rev-parse","--abbrev-ref","HEAD"],cwd=directory).strip()
@@ -36,16 +43,18 @@ def getAllFilesWithExtension(directory,extension):
 
 def getSourcePathFromGcovFile(gcovFilename):
     """Return the source path corresponding to a .gcov file"""
+    print "filename: " +gcovFilename
     gcovPath,gcovFilenameWithExtension = os.path.split(gcovFilename)
     srcFilename = re.sub(".gcov$","",gcovFilenameWithExtension)
     return re.sub("#","/",srcFilename)
 
 def main(argv):
-    arguments = ['COVERAGE_SRCS_FILE=','COVERALLS_OUTPUT_FILE=','COV_PATH=','PROJECT_ROOT=']
+    arguments = ['COVERAGE_SRCS_FILE=','COVERALLS_OUTPUT_FILE=','COV_PATH=','PROJECT_ROOT=','TRAVISCI=']
     COVERAGE_SRCS_FILE=None
     COVERALLS_OUTPUT_FILE=None
     COV_PATH=None
     PROJECT_ROOT=None
+    TRAVISCI=None
     optlist, args = getopt.getopt(argv,'',arguments)
 
     for o, a in optlist:
@@ -57,6 +66,8 @@ def main(argv):
             COV_PATH=a
         elif o == "--PROJECT_ROOT":
             PROJECT_ROOT=a
+        elif o == "--TRAVISCI":
+            TRAVISCI=a
         else:
             assert False, "unhandled option"
 
@@ -105,6 +116,8 @@ def main(argv):
             if lineNumber != 0:
                 if line[0] == '#####':
                     lineCoverage.append(0)
+                elif line[0] == '=====':
+                    lineCoverage.append(0)
                 elif line[0] == '-':
                     lineCoverage.append(None)
                 else:
@@ -122,21 +135,31 @@ def main(argv):
         lineCoverage =  []
         uncheckedFile = open(uncheckedFilename,'r')
         for line in uncheckedFile:
-            lineCoverage.append(0)
+            if line.strip() == "":
+              lineCoverage.append(None)
+            else:
+              lineCoverage.append(0)
         uncheckedFile.close()
         fileCoverage['coverage'] = lineCoverage
         coverageList.append(copy.deepcopy(fileCoverage))
 
     coverallsOutput = {}
-    coverallsOutput['repo_token'] = os.environ.get('COVERALLS_REPO_TOKEN')
     coverallsOutput['source_files'] = coverageList
 
-    head = {'id':gitLogValue('H',PROJECT_ROOT),'author_name':gitLogValue('an',PROJECT_ROOT), \
-            'author_email':gitLogValue('ae',PROJECT_ROOT),'committer_name':gitLogValue('cn',PROJECT_ROOT), \
-            'committer_email':gitLogValue('ce',PROJECT_ROOT), 'message':gitLogValue('B',PROJECT_ROOT)}
+    if parseCmakeBoolean(TRAVISCI):
+        print "Generating for travis-ci"
+        coverallsOutput['service_name'] = 'travis-ci'
+        coverallsOutput['service_job_id'] = os.environ.get('TRAVIS_JOB_ID')
+    else:
+        print "Generating for other"
+        coverallsOutput['repo_token'] = os.environ.get('COVERALLS_REPO_TOKEN')
 
-    gitDict = {'head':head,'branch':getBranchName(PROJECT_ROOT),'remotes':getRemotes(COV_PATH)}
-    coverallsOutput['git'] = gitDict
+        head = {'id':gitLogValue('H',PROJECT_ROOT),'author_name':gitLogValue('an',PROJECT_ROOT), \
+                'author_email':gitLogValue('ae',PROJECT_ROOT),'committer_name':gitLogValue('cn',PROJECT_ROOT), \
+                'committer_email':gitLogValue('ce',PROJECT_ROOT), 'message':gitLogValue('B',PROJECT_ROOT)}
+
+        gitDict = {'head':head,'branch':getBranchName(PROJECT_ROOT),'remotes':getRemotes(COV_PATH)}
+        coverallsOutput['git'] = gitDict
 
     with open(COVERALLS_OUTPUT_FILE, 'w') as outfile:
         json.dump(coverallsOutput,outfile,indent=4)
