@@ -7,13 +7,6 @@ import re
 import copy
 import hashlib
 
-def parseCmakeBoolean(var):
-    rejected_strings = ['false','off','no']
-    if var.lower() in rejected_strings:
-        return False;
-    else:
-        return True;
-
 def getBranchName(directory):
     """Returns the name of the current git branch"""
     return subprocess.check_output(["git","rev-parse","--abbrev-ref","HEAD"],cwd=directory).strip()
@@ -48,12 +41,11 @@ def getSourcePathFromGcovFile(gcovFilename):
     return re.sub("#","/",srcFilename)
 
 def main(argv):
-    arguments = ['COVERAGE_SRCS_FILE=','COVERALLS_OUTPUT_FILE=','COV_PATH=','PROJECT_ROOT=','TRAVISCI=']
+    arguments = ['COVERAGE_SRCS_FILE=','COVERALLS_OUTPUT_FILE=','COV_PATH=','PROJECT_ROOT=']
     COVERAGE_SRCS_FILE=None
     COVERALLS_OUTPUT_FILE=None
     COV_PATH=None
     PROJECT_ROOT=None
-    TRAVISCI=None
     optlist, args = getopt.getopt(argv,'',arguments)
 
     for o, a in optlist:
@@ -65,8 +57,6 @@ def main(argv):
             COV_PATH=a
         elif o == "--PROJECT_ROOT":
             PROJECT_ROOT=a
-        elif o == "--TRAVISCI":
-            TRAVISCI=a
         else:
             assert False, "unhandled option"
 
@@ -115,8 +105,6 @@ def main(argv):
             if lineNumber != 0:
                 if line[0] == '#####':
                     lineCoverage.append(0)
-                elif line[0] == '=====':
-                    lineCoverage.append(0)
                 elif line[0] == '-':
                     lineCoverage.append(None)
                 else:
@@ -140,22 +128,15 @@ def main(argv):
         coverageList.append(copy.deepcopy(fileCoverage))
 
     coverallsOutput = {}
+    coverallsOutput['repo_token'] = os.environ.get('COVERALLS_REPO_TOKEN')
     coverallsOutput['source_files'] = coverageList
 
-    if parseCmakeBoolean(TRAVISCI):
-        print "Generating for travis-ci"
-        coverallsOutput['service_name'] = 'travis-ci'
-        coverallsOutput['service_job_id'] = os.environ.get('TRAVIS_JOB_ID')
-    else:
-        print "Generating for other"
-        coverallsOutput['repo_token'] = os.environ.get('COVERALLS_REPO_TOKEN')
+    head = {'id':gitLogValue('H',PROJECT_ROOT),'author_name':gitLogValue('an',PROJECT_ROOT), \
+            'author_email':gitLogValue('ae',PROJECT_ROOT),'committer_name':gitLogValue('cn',PROJECT_ROOT), \
+            'committer_email':gitLogValue('ce',PROJECT_ROOT), 'message':gitLogValue('B',PROJECT_ROOT)}
 
-        head = {'id':gitLogValue('H',PROJECT_ROOT),'author_name':gitLogValue('an',PROJECT_ROOT), \
-                'author_email':gitLogValue('ae',PROJECT_ROOT),'committer_name':gitLogValue('cn',PROJECT_ROOT), \
-                'committer_email':gitLogValue('ce',PROJECT_ROOT), 'message':gitLogValue('B',PROJECT_ROOT)}
-
-        gitDict = {'head':head,'branch':getBranchName(PROJECT_ROOT),'remotes':getRemotes(COV_PATH)}
-        coverallsOutput['git'] = gitDict
+    gitDict = {'head':head,'branch':getBranchName(PROJECT_ROOT),'remotes':getRemotes(COV_PATH)}
+    coverallsOutput['git'] = gitDict
 
     with open(COVERALLS_OUTPUT_FILE, 'w') as outfile:
         json.dump(coverallsOutput,outfile,indent=4)
