@@ -76,13 +76,8 @@ endif()
 file(MAKE_DIRECTORY ${GTEST_INCLUDES})
 
 # Create a libgtest target to be used as a dependency by test programs
-if (CMAKE_SHARED_LIBRARY_PREFIX)
-  add_library("${CMAKE_SHARED_LIBRARY_PREFIX}gtest" IMPORTED SHARED GLOBAL)
-  add_dependencies("${CMAKE_SHARED_LIBRARY_PREFIX}gtest" gtest)
-else()
-  set_target_properties("${CMAKE_SHARED_LIBRARY_PREFIX}gtest"
-    PROPERTIES IMPORTED SHARED GLOBAL)
-endif()
+add_library("${CMAKE_SHARED_LIBRARY_PREFIX}gtest" IMPORTED SHARED GLOBAL)
+add_dependencies("${CMAKE_SHARED_LIBRARY_PREFIX}gtest" gtest)
 add_library(${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main IMPORTED SHARED GLOBAL)
 add_dependencies(${CMAKE_SHARED_LIBRARY_PREFIX}gtest_main gtest)
 
