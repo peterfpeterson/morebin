@@ -48,6 +48,7 @@ option(USE_SYSTEM_GTEST "Should we use the system GTest - v${gtest_version}?" OF
 if(USE_SYSTEM_GTEST)
   message(STATUS "Using system gtest")
   find_package(GTest REQUIRED)
+  set( GTEST_BOTH_LIBRARIES "${GTEST_LIBRARIES};${GTEST_MAIN_LIBRARIES}")
 else()
   message(STATUS "Using gtest in ExternalProject")
   include(External_gtest)
@@ -132,8 +133,6 @@ endif()
 add_executable( runUnitTests ${TEST_FILES} ${SRC_FILES_NO_MAIN})
 target_link_libraries ( runUnitTests
                         ${Boost_LIBRARIES}
-#                        libgtest
-#                        libgmock
                         ${GTEST_BOTH_LIBRARIES}
                         )
 
