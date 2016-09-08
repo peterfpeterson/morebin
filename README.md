@@ -37,9 +37,5 @@ Extra information
 [![Travis-CI Build Status](https://travis-ci.org/peterfpeterson/morebin.svg)](https://travis-ci.org/peterfpeterson/morebin)
 [![Drone.io Build Status](https://drone.io/github.com/peterfpeterson/morebin/status.png)](https://drone.io/github.com/peterfpeterson/morebin/latest)
 [![Build status](https://ci.appveyor.com/api/projects/status/aah5p1hjasigwes6?svg=true)](https://ci.appveyor.com/project/peterfpeterson/morebin)
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/peterfpeterson/morebin/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/2832/badge.svg)](https://scan.coverity.com/projects/2832)
 [![Coverage Status](https://coveralls.io/repos/peterfpeterson/morebin/badge.svg?branch=master)](https://coveralls.io/r/peterfpeterson/morebin?branch=master)
-
-[![Pull Request Stats](http://www.issuestats.com/github/peterfpeterson/morebin/badge/pr)](http://www.issuestats.com/github/peterfpeterson/morebin)
-[![Issue Stats](http://www.issuestats.com/github/peterfpeterson/morebin/badge/issue)](http://www.issuestats.com/github/peterfpeterson/morebin)
