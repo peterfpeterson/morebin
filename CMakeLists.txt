@@ -1,5 +1,5 @@
 # minimum version necessary for cmake to work
-cmake_minimum_required ( VERSION 2.8.11 )
+cmake_minimum_required ( VERSION 2.8.7 )
 project ( morebin )
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
