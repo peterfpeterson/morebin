@@ -8,7 +8,6 @@ configuration: Release
 
 environment:
   PROJECT_BASE: "C:/projects/morebin"
-  PATH: "C:\Libraries\boost_1_60_0;%PATH%"
 
 platform: x64
 
