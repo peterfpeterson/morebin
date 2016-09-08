@@ -8,27 +8,14 @@ configuration: Release
 
 environment:
   PROJECT_BASE: "C:/projects/morebin"
-  BOOST_ROOT: 'C:/Libraries/boost_1_60_0'
-  BOOST_LIBRARYDIR: 'C:/Libraries/boost_1_60_0/lib64-msvc-14.0'
-  PATH: '%BOOST_LIBRARYDIR%;%PATH%'
+  BOOST_ROOT: C:\Libraries\boost_1_60_0
+  BOOST_LIBRARYDIR: C:\Libraries\boost_1_60_0\lib64-msvc-14.0
 
 platform: x64
 
-before_build:
-- cmd: dir C:\Libraries\boost_1_60_0\libs
-- cmd: dir C:\Libraries\boost_1_60_0\lib64-msvc-14.0
-- ps: cd "${env:APPVEYOR_BUILD_FOLDER}"
-- cmd: dir
-- cmd: md build
-- cmd: cd build
-- cmd: cmake --version
-- cmd: cmake -G"Visual Studio 12 2013 Win64" "-DCMAKE_BUILD_TYPE=Release" "-DBoost_ADDITIONAL_VERSIONS=1.6.0" -H.. -B.
-
-build:
-  project: C:\projects\morebin\build\morebin.sln
-  parallel: true
-  verbosity: normal
-
-artifacts:
-  - path: 'build/googletest/src/googletest-1.7.0-stamp/*.log'
-    name: gtest build logs
+build_script:
+  - md build
+  - cd build
+  - cmake -G"Visual Studio 12 2013 Win64" ..
+  - cmake --build . --config Release
+  - ctest
