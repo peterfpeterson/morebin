@@ -26,5 +26,5 @@ build:
   verbosity: normal
 
 artifacts:
-  - path: **/googletest*log
+  - path: **/*log
     name: gtest build logs
