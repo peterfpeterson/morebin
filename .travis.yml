@@ -31,11 +31,11 @@ script:
     then
       CC=clang-3.6 CXX=clang++-3.6 scan-build-3.6 cmake --build .;
     else
-      cmake --build .;
+      cmake --build . -- -j 2;
     fi
   - if [ "$COVERALLS" == "true" ];
     then
-      make coveralls;
+      make coveralls -j 2;
     else
       ctest --output-on-failure;
     fi
