@@ -45,9 +45,12 @@ set(gtest_version "1.7.0")
 
 option(USE_SYSTEM_GTEST "Should we use the system GTest - v${gtest_version}?" OFF)
 
+message(STATUS "MSVC=${MSVC}" )
+
+
 if(USE_SYSTEM_GTEST)
   message(STATUS "Using system gtest")
-  find_package(GTest REQUIRED)
+  find_package(GTest ${gtest_version} EXACT REQUIRED)
   set( GTEST_BOTH_LIBRARIES "${GTEST_LIBRARIES};${GTEST_MAIN_LIBRARIES}")
 else()
   message(STATUS "Using gtest in ExternalProject")
