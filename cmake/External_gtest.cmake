@@ -29,7 +29,7 @@ ExternalProject_Add(
     LOG_DOWNLOAD ON
     LOG_CONFIGURE ON
     LOG_BUILD ON
-    CMAKE_ARGS -DBUILD_SHARED_LIBS:BOOL=ON
+    CMAKE_ARGS -DBUILD_SHARED_LIBS:BOOL=ON -Dgtest_force_shared_crt=ON
     # Disable all other steps
     INSTALL_COMMAND ""
     ${GTEST_SOURCE_DOWNLOAD}
