@@ -27,6 +27,8 @@ ExternalProject_Add(
     PREFIX "${GTEST_PREFIX}"
     TIMEOUT 10
     LOG_DOWNLOAD ON
+    LOG_CONFIGURE ON
+    LOG_BUILD ON
     CMAKE_ARGS -DBUILD_SHARED_LIBS:BOOL=ON
     # Disable all other steps
     INSTALL_COMMAND ""
