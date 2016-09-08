@@ -1,5 +1,5 @@
 # minimum version necessary for cmake to work
-cmake_minimum_required ( VERSION 2.6 )
+cmake_minimum_required ( VERSION 2.8.7 )
 project ( morebin )
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
@@ -35,70 +35,60 @@ set ( CPACK_PACKAGE_VERSION_PATCH 0 )
 set ( CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
-		${CMAKE_CURRENT_BINARY_DIR}/version.hpp )
+		${CMAKE_CURRENT_SOURCE_DIR}/version.hpp )
 
 ######################################################################
-# grab gmock and gtest for testing
-# We need thread support
-find_package(Threads REQUIRED)
-
 include(ExternalProject)
 
-# Download and install GoogleTest
-ExternalProject_Add(
-    gtest
-    URL https://googletest.googlecode.com/files/gtest-1.7.0.zip
-    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
-    # Disable install step
-    INSTALL_COMMAND ""
-)
+######################################################################
+# configure gtest to use the right version
+set(gtest_version "1.7.0")
 
-# Create a libgtest target to be used as a dependency by test programs
-add_library(libgtest IMPORTED STATIC GLOBAL)
-add_dependencies(libgtest gtest)
+option(USE_SYSTEM_GTEST "Use the system installed GTest - v${gtest_version}?" OFF)
 
-# Set gtest properties
-ExternalProject_Get_Property(gtest source_dir binary_dir)
-set_target_properties(libgtest PROPERTIES
-    "IMPORTED_LOCATION" "${binary_dir}/libgtest.a"
-    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-#    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
-)
-# I couldn't make it work with INTERFACE_INCLUDE_DIRECTORIES
-include_directories("${source_dir}/include")
+if(USE_SYSTEM_GTEST)
+  message(STATUS "Using system gtest")
+  find_package(GTest ${gtest_version} EXACT REQUIRED)
+else()
+  message(STATUS "Using gtest in ExternalProject")
 
-# Download and install GoogleMock
-ExternalProject_Add(
-    gmock
-    URL https://googlemock.googlecode.com/files/gmock-1.7.0.zip
-    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gmock
-    # Disable install step
-    INSTALL_COMMAND ""
-)
+  # Download and unpack googletest at configure time
+  configure_file(cmake/CMakeLists.txt.gtest.in
+    googletest-download/CMakeLists.txt)
+  execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+  execute_process(COMMAND ${CMAKE_COMMAND} --build .
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
 
-# Create a libgmock target to be used as a dependency by test programs
-add_library(libgmock IMPORTED STATIC GLOBAL)
-add_dependencies(libgmock gmock)
+  # Prevent GoogleTest from overriding our compiler/linker options
+  # when building with Visual Studio
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-# Set gmock properties
-ExternalProject_Get_Property(gmock source_dir binary_dir)
-set_target_properties(libgmock PROPERTIES
-    "IMPORTED_LOCATION" "${binary_dir}/libgmock.a"
-    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-#    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
-)
-# I couldn't make it work with INTERFACE_INCLUDE_DIRECTORIES
-include_directories("${source_dir}/include")
+  # Add googletest directly to our build. This adds the following
+  # targets: gtest, gtest_main, gmock and gmock_main
+  add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
+    ${CMAKE_BINARY_DIR}/googletest-build)
+
+  # The gtest/gmock targets carry header search path dependencies
+  # automatically when using CMake 2.8.11 or later. Otherwise we have
+  # to add them here ourselves.
+  #if (CMAKE_VERSION VERSION_LESS 2.8.11)
+  include_directories("${gtest_SOURCE_DIR}/include"
+    "${gmock_SOURCE_DIR}/include")
+  #endif()
+endif()
 
 ######################################################################
 # files to use for building
-set ( SRC_FILES
+
+# since the result is a static executable, need another variable
+# for all the sources that don't contain main
+set ( SRC_FILES_NO_MAIN
       allowedtypes.cpp
       allowedtypes.hpp
       bin_file.cpp
       bin_file.hpp
       byte_swap.h
-      more_bin.cpp
       prenexusrenderer.cpp
       prenexusrenderer.hpp
       prenexustypes.hpp
@@ -110,8 +100,14 @@ set ( SRC_FILES
       string_util.hpp
       version.hpp )
 
+set ( SRC_FILES
+      more_bin.cpp
+      ${SRC_FILES_NO_MAIN})
+
 set ( TEST_FILES
-      testmain.cpp )
+      testmain.cpp
+      testallowedtypes.cpp
+      teststring_util.cpp)
 
 ######################################################################
 # configure coveralls
@@ -119,21 +115,24 @@ option(COVERALLS "Generate coveralls data" OFF)
 
 if (COVERALLS)
     message (STATUS "Coveralls build enabled")
+    option(COVERALLS_TRAVISCI "Generate coveralls data for travis-ci" ON)
+    option(COVERALLS_UPLOAD "Automatically upload coveralls data" ON)
     include(Coveralls)
     coveralls_turn_on_coverage()
 
     foreach(loop_var ${SRC_FILES} ${INC_FILES} )
-      set_property(GLOBAL APPEND PROPERTY COVERAGE_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/${loop_var}")
+      set(COVERAGE_SRCS "${COVERAGE_SRCS}\n${CMAKE_CURRENT_SOURCE_DIR}/${loop_var}")
     endforeach(loop_var)
-    # this can be grabbed via
-    get_property(COVERAGE_SRCS GLOBAL PROPERTY COVERAGE_SRCS)
+    string(SUBSTRING ${COVERAGE_SRCS} 1 -1 SRCS_FILE)
+    set( SRCS_FILENAME "${CMAKE_CURRENT_BINARY_DIR}/sources.txt")
+    file(WRITE ${SRCS_FILENAME} ${SRCS_FILE})
 
     # Create the coveralls target.
     coveralls_setup(
-        "${COVERAGE_SRCS}"
-        ON                 # If we should upload.
+        ${SRCS_FILENAME}
+        ${COVERALLS_UPLOAD}    # If we should upload.
+        ${COVERALLS_TRAVISCI}  # building on travis-ci
         )
-
 endif()
 
 ######################################################################
@@ -146,14 +145,23 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${Boost_INCLUDE_DIR})
 add_executable( morebin MACOSX_BUNDLE ${SRC_FILES} )
 target_link_libraries ( morebin ${Boost_LIBRARIES} )
 
-add_executable( runUnitTests ${TEST_FILES} )
+if(APPLE)
+ set(MOREBIN_EXECUTABLE "morebin.app/Contents/MacOS/morebin")
+else()
+ set(MOREBIN_EXECUTABLE "morebin")
+endif()
+
+add_executable( runUnitTests ${TEST_FILES} ${SRC_FILES_NO_MAIN})
 target_link_libraries ( runUnitTests
                         ${Boost_LIBRARIES}
-                        libgtest
-                        libgmock
+                        gtest
+                        gtest_main
                         )
+
 enable_testing()
-add_test( runUnitTests runUnitTests )
+add_test(morebin_version ${MOREBIN_EXECUTABLE} --version)
+add_test(AllowedTypes runUnitTests --gtest_filter=AllowedTypes.*)
+add_test(string_util runUnitTests --gtest_filter=string_util.*)
 
 INSTALL(TARGETS morebin
     BUNDLE DESTINATION . COMPONENT Runtime

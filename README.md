@@ -33,13 +33,9 @@ To get around this just `cmake . -DBoost_NO_BOOST_CMAKE=ON` and make again.
 
 Extra information
 -----------------
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
+[![license](https://img.shields.io/github/license/peterfpeterson/morebin.svg?maxAge=2592000)](LICENSE.txt)
 [![Travis-CI Build Status](https://travis-ci.org/peterfpeterson/morebin.svg)](https://travis-ci.org/peterfpeterson/morebin)
 [![Drone.io Build Status](https://drone.io/github.com/peterfpeterson/morebin/status.png)](https://drone.io/github.com/peterfpeterson/morebin/latest)
 [![Build status](https://ci.appveyor.com/api/projects/status/aah5p1hjasigwes6?svg=true)](https://ci.appveyor.com/project/peterfpeterson/morebin)
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/peterfpeterson/morebin/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/2832/badge.svg)](https://scan.coverity.com/projects/2832)
-[![Coverage Status](https://coveralls.io/repos/peterfpeterson/morebin/badge.svg?branch=enable_coveralls)](https://coveralls.io/r/peterfpeterson/morebin?branch=enable_coveralls)
-
-[![Pull Request Stats](http://www.issuestats.com/github/peterfpeterson/morebin/badge/pr)](http://www.issuestats.com/github/peterfpeterson/morebin)
-[![Issue Stats](http://www.issuestats.com/github/peterfpeterson/morebin/badge/issue)](http://www.issuestats.com/github/peterfpeterson/morebin)
+[![Coverage Status](https://coveralls.io/repos/peterfpeterson/morebin/badge.svg?branch=master)](https://coveralls.io/r/peterfpeterson/morebin?branch=master)

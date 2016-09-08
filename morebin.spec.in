@@ -31,7 +31,7 @@ rm -rf $RPM_BUILD_ROOT
 %make_install
 
 %check
-./morebin --version
+ctest
 
 %files
 %defattr(-,root,root,-)

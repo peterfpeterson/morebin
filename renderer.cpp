@@ -203,4 +203,8 @@ const std::string getKnownDataDescr()
   return msg.str();
 }
 
+const bool hasDataDescr(const std::string & descr) {
+  return (getTypes().has(descr));
+}
+
 } // namespace render
