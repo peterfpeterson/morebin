@@ -13,6 +13,7 @@ platform: x64
 
 before_build:
 - cmd: dir C:\Libraries\boost_1_60_0\
+- cmd: dir C:\Libraries\boost_1_59_0\
 - ps: cd "${env:APPVEYOR_BUILD_FOLDER}"
 - cmd: dir
 - cmd: md build
