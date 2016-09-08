@@ -1,5 +1,5 @@
 set(BUILD_DIR C:/projects/morebin CACHE PATH "")
 set(Boost_DIR C:/Libraries/boost_1_60_0 CACHE_PATH "")
 set(Boost_ROOT "${BOOST_DIR}" CACHE_PATH "")
-#set(Boost_INCLUDE_DIR "${Boost_DIR}/include" CACHE PATH "")
-#set(Boost_LIBRARY_DIR "${Boost_DIR}/lib" CACHE PATH "")
+set(Boost_INCLUDE_DIR "${Boost_DIR}/include" CACHE PATH "")
+set(Boost_LIBRARY_DIR "${Boost_DIR}/lib" CACHE PATH "")
