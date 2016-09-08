@@ -35,7 +35,7 @@ script:
     fi
   - if [ "$COVERALLS" == "true" ];
     then
-      cmake --build . --target coveralls;
+      make coveralls;
     else
       ctest --output-on-failure;
     fi
