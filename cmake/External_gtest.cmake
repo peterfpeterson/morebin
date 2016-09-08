@@ -9,17 +9,28 @@ set(GTEST_PREFIX "googletest")
 set(GTEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/${GTEST_PREFIX}")
 set(GTEST_INCLUDES "${GTEST_DIR}/src/googletest-${gtest_version}/include")
 
+if (MSVC)
+  # appveyor doesn't understand git
+  set( GTEST_SOURCE_DOWNLOAD
+       URL https://github.com/google/googletest/archive/release-${gtest_version}.tar.gz
+       URL_MD5 4ff6353b2560df0afecfbda3b2763847 )
+else()
+  # location that works on linux
+  set( GTEST_SOURCE_DOWNLOAD
+       GIT_REPOSITORY https://github.com/google/googletest.git
+       GIT_TAG "release-${gtest_version}" )
+endif()
+
 ExternalProject_Add(
     googletest-${gtest_version}
     DOWNLOAD_DIR "${GTEST_DIR}/src" # The only dir option which is required
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG "release-${gtest_version}"
     PREFIX "${GTEST_PREFIX}"
     TIMEOUT 10
     LOG_DOWNLOAD ON
     CMAKE_ARGS -DBUILD_SHARED_LIBS:BOOL=ON
     # Disable all other steps
     INSTALL_COMMAND ""
+    ${GTEST_SOURCE_DOWNLOAD}
 )
 
 # the gtest include directory exists only after it is build, but it is used/needed
