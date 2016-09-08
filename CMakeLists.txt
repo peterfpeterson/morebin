@@ -12,12 +12,15 @@ check_include_files ( stdint.h stdint )
 if ( NOT stdint )
   MESSAGE ( FATAL_ERROR "stdint.h required to build" )
 endif ( NOT stdint )
-# tclap - needs to go
-#find_path ( TCLAP_INCLUDE_DIR tclap/CmdLine.h )
-#include_directories ( ${TCLAP_INCLUDE_DIR} )
-#message ( STATUS "TCLAP: ${TCLAP_INCLUDE_DIR}" )
+
 # boost
-find_package ( Boost REQUIRED program_options date_time )
+if (MSVC)
+  find_package ( Boost REQUIRED program_options date_time
+    PATH ${Boost_ROOT})
+else()
+  find_package ( Boost REQUIRED program_options date_time )
+endif()
+
 
 find_program ( DATE_CMD date )
 if (DATE_CMD)
