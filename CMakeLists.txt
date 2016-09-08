@@ -14,13 +14,7 @@ if ( NOT stdint )
 endif ( NOT stdint )
 
 # boost
-if (MSVC)
-  find_package ( Boost REQUIRED program_options date_time
-    PATH ${Boost_ROOT})
-else()
-  find_package ( Boost REQUIRED program_options date_time )
-endif()
-
+find_package ( Boost REQUIRED program_options date_time )
 
 find_program ( DATE_CMD date )
 if (DATE_CMD)
