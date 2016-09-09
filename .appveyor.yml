@@ -8,6 +8,7 @@ configuration: Release
 
 environment:
   PROJECT_BASE: "C:/projects/morebin"
+  PATH: '%PROJECT_BASE%/Release;%PATH%'
   BOOST_ROOT: C:\Libraries\boost_1_60_0
   BOOST_LIBRARYDIR: C:\Libraries\boost_1_60_0\lib64-msvc-14.0
 
@@ -21,5 +22,5 @@ build_script:
 
 test_script:
   - dir Release
-  - "%PROJECT_BASE%\Release\morebin.exe --version"
+  - "%PROJECT_BASE%/Release/morebin.exe --version"
   - "ctest --build-config Release --output-on-failure"
