@@ -14,12 +14,15 @@ environment:
 
 platform: x64
 
-build_script:
+before_build:
   - md build
   - cd build
   - cmake -G"Visual Studio 12 2013 Win64" ..
-  - echo "***hi there***"
-  - cmake --build . --config Release
+
+build:
+  project: C:\projects\morebin\build\morebin.sln
+  parallel: true
+  verbosity: normal
 
 test_script:
   - dir Release
