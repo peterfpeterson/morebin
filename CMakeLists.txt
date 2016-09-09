@@ -149,6 +149,7 @@ if(APPLE)
 else()
  set(MOREBIN_EXECUTABLE morebin)
 endif()
+message( STATUS "MOREBIN_EXECUTABLE ${MOREBIN_EXECUTABLE}")
 
 add_executable( runUnitTests ${TEST_FILES} ${SRC_FILES_NO_MAIN})
 target_link_libraries ( runUnitTests
