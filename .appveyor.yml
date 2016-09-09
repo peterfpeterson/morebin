@@ -19,10 +19,8 @@ before_build:
   - cd build
   - cmake -G"Visual Studio 12 2013 Win64" ..
 
-build:
-  project: C:\projects\morebin\build\morebin.sln
-  parallel: true
-  verbosity: normal
+build_script:
+  - cmake -C Release --build .
 
 test_script:
   - dir Release
