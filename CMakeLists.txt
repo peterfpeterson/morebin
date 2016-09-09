@@ -159,8 +159,9 @@ target_link_libraries ( runUnitTests
 enable_testing()
 add_test(morebin_version ${MOREBIN_EXECUTABLE} --version)
 set_tests_properties(morebin_version PROPERTIES LABELS "morebin")
-add_test(AllowedTypes runUnitTests --gtest_filter=AllowedTypes.*)
-add_test(string_util runUnitTests --gtest_filter=string_util.*)
+add_test(AllowedTypes runUnitTests )
+#add_test(AllowedTypes runUnitTests --gtest_filter=AllowedTypes.*)
+#add_test(string_util runUnitTests --gtest_filter=string_util.*)
 set_tests_properties(AllowedTypes string_util PROPERTIES LABELS "unit")
 
 INSTALL(TARGETS morebin
