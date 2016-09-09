@@ -18,8 +18,8 @@ build_script:
   - cd build
   - cmake -G"Visual Studio 12 2013 Win64" ..
   - cmake --build . --config Release
-  - dir
 
 test_script:
-  - ./morebin --version
+  - dir Release
+  - Release\morebin --version
   - ctest -C Release --output-on-failure
