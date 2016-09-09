@@ -8,19 +8,16 @@ configuration: Release
 
 environment:
   PROJECT_BASE: "C:/projects/morebin"
-  PATH: '%PROJECT_BASE%/Release;%PATH%'
   BOOST_ROOT: C:\Libraries\boost_1_60_0
   BOOST_LIBRARYDIR: C:\Libraries\boost_1_60_0\lib64-msvc-14.0
 
 platform: x64
 
-before_build:
+build_script:
   - md build
   - cd build
   - cmake -G"Visual Studio 12 2013 Win64" ..
-
-build_script:
-  - cmake -C Release --build .
+  - cmake --build . --config Release
 
 test_script:
   - dir Release
