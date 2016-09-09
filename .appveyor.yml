@@ -18,4 +18,10 @@ build_script:
   - md build
   - cd build
   - cmake -G"Visual Studio 12 2013 Win64" ..
+  - echo "***hi there***"
   - cmake --build . --config Release
+
+test_script:
+  - dir Release
+  - "morebin.exe --version"
+  - "ctest --build-config Release --output-on-failure"
