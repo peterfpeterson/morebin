@@ -71,10 +71,8 @@ else()
   # The gtest/gmock targets carry header search path dependencies
   # automatically when using CMake 2.8.11 or later. Otherwise we have
   # to add them here ourselves.
-  #if (CMAKE_VERSION VERSION_LESS 2.8.11)
   include_directories("${gtest_SOURCE_DIR}/include"
     "${gmock_SOURCE_DIR}/include")
-  #endif()
 endif()
 
 ######################################################################
@@ -162,8 +160,10 @@ target_link_libraries ( runUnitTests
 
 enable_testing()
 add_test(morebin_version ${MOREBIN_EXECUTABLE} --version)
+set_tests_properties(morebin_version PROPERTIES LABELS "morebin")
 add_test(AllowedTypes runUnitTests --gtest_filter=AllowedTypes.*)
 add_test(string_util runUnitTests --gtest_filter=string_util.*)
+set_tests_properties(AllowedTypes string_util PROPERTIES LABELS "unit")
 
 INSTALL(TARGETS morebin
     BUNDLE DESTINATION . COMPONENT Runtime
