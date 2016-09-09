@@ -21,4 +21,5 @@ build_script:
 
 test_script:
   - dir Release
-  - ctest -C Release --output-on-failure
+  - morebin --version
+  - "ctest --build-config Release --output-on-failure"
