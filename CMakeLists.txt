@@ -146,6 +146,8 @@ target_link_libraries ( morebin ${Boost_LIBRARIES} )
 
 if(APPLE)
  set(MOREBIN_EXECUTABLE "morebin.app/Contents/MacOS/morebin")
+elseif(WIN32)
+ set(MOREBIN_EXECUTABLE "Release/morebin.exe")
 else()
  set(MOREBIN_EXECUTABLE morebin)
 endif()
