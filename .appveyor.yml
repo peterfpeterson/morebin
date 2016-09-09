@@ -13,3 +13,18 @@ environment:
   BOOST_LIBRARYDIR: C:\Libraries\boost_1_60_0\lib64-msvc-14.0
 
 platform: x64
+
+before_build:
+  - md build
+  - cd build
+  - cmake -G"Visual Studio 12 2013 Win64" ..
+
+build:
+  project: C:\projects\morebin\build\morebin.sln
+  parallel: true
+  verbosity: normal
+
+test_script:
+  - dir Release
+  - "morebin.exe --version"
+  - "ctest --build-config Release --output-on-failure"
