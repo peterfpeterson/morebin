@@ -39,3 +39,5 @@ Extra information
 [![Build status](https://ci.appveyor.com/api/projects/status/aah5p1hjasigwes6?svg=true)](https://ci.appveyor.com/project/peterfpeterson/morebin)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/2832/badge.svg)](https://scan.coverity.com/projects/2832)
 [![Coverage Status](https://coveralls.io/repos/peterfpeterson/morebin/badge.svg?branch=master)](https://coveralls.io/r/peterfpeterson/morebin?branch=master)
+[![Code Climate](https://codeclimate.com/github/peterfpeterson/morebin/badges/gpa.svg)](https://codeclimate.com/github/peterfpeterson/morebin)
+[![Issue Count](https://codeclimate.com/github/peterfpeterson/morebin/badges/issue_count.svg)](https://codeclimate.com/github/peterfpeterson/morebin)
