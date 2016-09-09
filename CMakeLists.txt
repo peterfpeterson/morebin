@@ -147,7 +147,7 @@ target_link_libraries ( morebin ${Boost_LIBRARIES} )
 if(APPLE)
  set(MOREBIN_EXECUTABLE "morebin.app/Contents/MacOS/morebin")
 else()
- set(MOREBIN_EXECUTABLE "morebin")
+ set(MOREBIN_EXECUTABLE morebin)
 endif()
 
 add_executable( runUnitTests ${TEST_FILES} ${SRC_FILES_NO_MAIN})
