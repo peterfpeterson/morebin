@@ -10,6 +10,7 @@ environment:
   PROJECT_BASE: "C:/projects/morebin"
   BOOST_ROOT: C:\Libraries\boost_1_60_0
   BOOST_LIBRARYDIR: C:\Libraries\boost_1_60_0\lib64-msvc-14.0
+  PATH: '%BOOST_LIBRARYDIR%;%PATH%'
 
 platform: x64
 
