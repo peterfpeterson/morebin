@@ -14,6 +14,7 @@ if ( NOT stdint )
 endif ( NOT stdint )
 
 # boost
+set(Boost_USE_STATIC_LIBS ON)
 find_package ( Boost REQUIRED program_options date_time )
 message ( STATUS "Boost_INCLUDE_DIR ${Boost_INCLUDE_DIR}")
 message ( STATUS "Boost_LIBRARY_DIR ${Boost_LIBRARY_DIR}")
@@ -134,7 +135,6 @@ endif()
 
 ######################################################################
 if (WIN32)
-  add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK )
   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4" )
 endif()
 
