@@ -14,7 +14,7 @@ if ( NOT stdint )
 endif ( NOT stdint )
 
 # boost
-set(Boost_USE_STATIC_LIBS ON)
+option(Boost_USE_STATIC_LIBS "Statically link boost" ON)
 find_package ( Boost REQUIRED program_options date_time )
 message ( STATUS "Boost_INCLUDE_DIR ${Boost_INCLUDE_DIR}")
 message ( STATUS "Boost_LIBRARY_DIR ${Boost_LIBRARY_DIR}")
@@ -200,7 +200,7 @@ endif ()
 find_program ( RPMBUILD_CMD rpmbuild )
 if ( RPMBUILD_CMD )
   set ( CPACK_RPM_PACKAGE_URL "${CPACK_PACKAGE_URL}" )
-  set ( CPACK_RPM_PACKAGE_REQUIRES "boost-devel cmake >= 2.6 gcc-c++" )
+  set ( CPACK_RPM_PACKAGE_BUILD_REQUIRES "boost-devel boost-static cmake >= 2.6 gcc-c++" )
 
   # TODO CPACK_PACKAGE_DESCRIPTION_FILE
   configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/morebin.spec.in

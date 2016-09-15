@@ -11,7 +11,7 @@ URL:            @CPACK_RPM_PACKAGE_URL@
 #Source0:        %{name}-%{version}.tar.gz
 Source0:        @CPACK_RPM_PACKAGE_URL@/releases/download/v%{version}/morebin-%{version}.tar.gz
 
-BuildRequires:  @CPACK_RPM_PACKAGE_REQUIRES@
+BuildRequires:  @CPACK_RPM_PACKAGE_BUILD_REQUIRES@
 Prefix:         @CPACK_PACKAGING_INSTALL_PREFIX@
 
 %description
