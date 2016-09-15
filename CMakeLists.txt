@@ -14,6 +14,7 @@ if ( NOT stdint )
 endif ( NOT stdint )
 
 # boost
+set(Boost_USE_STATIC_LIBS ON)
 find_package ( Boost REQUIRED program_options date_time )
 message ( STATUS "Boost_INCLUDE_DIR ${Boost_INCLUDE_DIR}")
 message ( STATUS "Boost_LIBRARY_DIR ${Boost_LIBRARY_DIR}")
