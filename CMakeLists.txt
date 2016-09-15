@@ -158,9 +158,9 @@ target_link_libraries ( runUnitTests
 
 enable_testing()
 add_test(NAME morebin_version
-         COMMAND ${MOREBIN_EXECUTABLE} "--version")
+         COMMAND ${MOREBIN_EXECUTABLE} "--version" -E environment)
 set_tests_properties(morebin_version PROPERTIES LABELS "morebin")
-set_tests_properties(morebin_version PROPERTIES ENVIRONMENT "PATH=${Boost_LIBRARY_DIR}\;$ENV{PATH}" )
+set_property(TEST morebin_version PROPERTY ENVIRONMENT "PATH=${Boost_LIBRARY_DIR}\;$ENV{PATH}" )
 add_test(NAME allowed_types
          COMMAND runUnitTests "--gtest_filter=AllowedTypes.*")
 add_test(NAME string_util
