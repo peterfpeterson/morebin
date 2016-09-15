@@ -135,7 +135,6 @@ endif()
 
 ######################################################################
 if (WIN32)
-  #add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK )
   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4" )
 endif()
 
@@ -159,9 +158,8 @@ target_link_libraries ( runUnitTests
 
 enable_testing()
 add_test(NAME morebin_version
-         COMMAND ${MOREBIN_EXECUTABLE} "--version" -E environment)
+         COMMAND ${MOREBIN_EXECUTABLE} "--version")
 set_tests_properties(morebin_version PROPERTIES LABELS "morebin")
-set_property(TEST morebin_version PROPERTY ENVIRONMENT "PATH=${Boost_LIBRARY_DIR}\;$ENV{PATH}" )
 add_test(NAME allowed_types
          COMMAND runUnitTests "--gtest_filter=AllowedTypes.*")
 add_test(NAME string_util
