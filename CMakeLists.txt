@@ -135,7 +135,7 @@ endif()
 
 ######################################################################
 if (WIN32)
-  add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK )
+  #add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK )
   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4" )
 endif()
 
