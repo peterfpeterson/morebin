@@ -17,6 +17,7 @@ endif ( NOT stdint )
 find_package ( Boost REQUIRED program_options date_time )
 message ( STATUS "Boost_INCLUDE_DIR ${Boost_INCLUDE_DIR}")
 message ( STATUS "Boost_LIBRARY_DIR ${Boost_LIBRARY_DIR}")
+message ( STATUS "Boost_LIBRARIES ${Boost_LIBRARIES}" )
 
 find_program ( DATE_CMD date )
 if (DATE_CMD)
@@ -134,7 +135,7 @@ endif()
 
 ######################################################################
 if (WIN32)
-  add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK )
+  #add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK )
   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4" )
 endif()
 
