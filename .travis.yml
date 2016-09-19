@@ -11,6 +11,17 @@ matrix:
     - os: linux
       compiler: gcc
       env: COVERALLS=true
+    - os: osx
+      osx_image: xcode8
+      compiler: clang
+
+before_install:
+  - if [ "$TRAVIS_OS_NAME" == "osx" ];
+    then
+      brew update > /dev/null 2>&1;
+      brew install --quite cmake;
+      brew install --quite boost --c++11;
+    fi
 
 before_script:
 #ALWAYS analyze a project in its "debug" configuration
