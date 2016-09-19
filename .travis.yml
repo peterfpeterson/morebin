@@ -15,25 +15,20 @@ matrix:
       osx_image: xcode8
       compiler: clang
 
-before_install:
-  - if [ "$TRAVIS_OS_NAME" == "osx" ];
-    then
-      brew update > /dev/null 2>&1;
-      brew install --quite cmake;
-      brew install --quite boost --c++11;
-    fi
-
 before_script:
 #ALWAYS analyze a project in its "debug" configuration
-  - if [ "$CXX" == "clang++" ];
+  - if [ "$TRAVIS_OS_NAME" == "linux" ];
     then
-      CC=clang-3.6 CXX=clang++-3.6 scan-build-3.6 cmake -DCMAKE_BUILD_TYPE=Debug .;
-    elif [ "$COVERALLS" == "true" ];
-    then
-      echo "CHECKING CODE COVERAGE, $COVERALLS";
-      cmake -Ccoveralls.cmake .;
-    else
-      cmake .;
+      if [ "$CXX" == "clang++" ];
+      then
+        CC=clang-3.6 CXX=clang++-3.6 scan-build-3.6 cmake -DCMAKE_BUILD_TYPE=Debug .;
+      elif [ "$COVERALLS" == "true" ];
+      then
+        echo "CHECKING CODE COVERAGE, $COVERALLS";
+        cmake -Ccoveralls.cmake .;
+      else
+        cmake .;
+      fi
     fi
 
 script:
