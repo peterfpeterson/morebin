@@ -33,12 +33,7 @@ before_script:
 
 script:
 #Run the clang static analyzer.
-  - if [ "$CXX" == "clang++" ];
-    then
-      CC=clang-3.6 CXX=clang++-3.6 scan-build-3.6 cmake --build .;
-    else
-      cmake --build . -- -j 2;
-    fi
+  - cmake --build . -- -j 2;
   - if [ "$COVERALLS" == "true" ];
     then
       make coveralls -j 2;
