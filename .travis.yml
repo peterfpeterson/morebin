@@ -17,18 +17,18 @@ matrix:
 
 before_script:
 #ALWAYS analyze a project in its "debug" configuration
-  - if [ "$TRAVIS_OS_NAME" == "linux" ];
+  - if [ "$TRAVIS_OS_NAME" == "osx" ];
     then
-      if [ "$CXX" == "clang++" ];
-      then
-        CC=clang-3.6 CXX=clang++-3.6 scan-build-3.6 cmake -DCMAKE_BUILD_TYPE=Debug .;
-      elif [ "$COVERALLS" == "true" ];
-      then
-        echo "CHECKING CODE COVERAGE, $COVERALLS";
-        cmake -Ccoveralls.cmake .;
-      else
-        cmake .;
-      fi
+      cmake  -DCMAKE_BUILD_TYPE=Debug .;
+    elif [ "$CXX" == "clang++" ];
+    then
+      CC=clang-3.6 CXX=clang++-3.6 scan-build-3.6 cmake -DCMAKE_BUILD_TYPE=Debug .;
+    elif [ "$COVERALLS" == "true" ];
+    then
+      echo "CHECKING CODE COVERAGE, $COVERALLS";
+      cmake -Ccoveralls.cmake .;
+    else
+      cmake .;
     fi
 
 script:
