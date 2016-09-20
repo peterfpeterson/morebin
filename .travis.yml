@@ -37,9 +37,6 @@ script:
   - if [ "$COVERALLS" == "true" ];
     then
       make coveralls -j 2;
-    elif [ "$TRAVIS_OS_NAME" == "osx" ];
-    then
-      echo "not drunning tests"
     else
       ctest --output-on-failure;
     fi
