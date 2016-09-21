@@ -6,6 +6,7 @@
 #include <boost/program_options/value_semantic.hpp>
 #include <boost/program_options/variables_map.hpp>
 #include <ctype.h>
+#include <execinfo.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -161,11 +162,25 @@ string pixid_str(const size_t pixid, const vector<size_t> &bounds) {
   return thing_to_str(indices);
 }
 
+void handler() {
+  void *trace_elems[20];
+  int trace_elem_count(backtrace(trace_elems, 20));
+  char **stack_syms(backtrace_symbols(trace_elems, trace_elem_count));
+  for (int i = 0; i < trace_elem_count; ++i) {
+    std::cout << stack_syms[i] << "\n";
+  }
+  free(stack_syms);
+
+  exit(1);
+}
+
 /**
  * The main entry point for the program.
  */
 int main(int argc, char** argv)
 {
+  std::set_terminate(handler);
+
   // ---------- Declare the supported options.
   po::options_description generic_options("Generic options");
   generic_options.add_options()
