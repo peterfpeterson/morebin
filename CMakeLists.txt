@@ -12,12 +12,12 @@ check_include_files ( stdint.h stdint )
 if ( NOT stdint )
   MESSAGE ( FATAL_ERROR "stdint.h required to build" )
 endif ( NOT stdint )
-# tclap - needs to go
-#find_path ( TCLAP_INCLUDE_DIR tclap/CmdLine.h )
-#include_directories ( ${TCLAP_INCLUDE_DIR} )
-#message ( STATUS "TCLAP: ${TCLAP_INCLUDE_DIR}" )
+
 # boost
+option(Boost_USE_STATIC_LIBS "Statically link boost" ON)
 find_package ( Boost REQUIRED program_options date_time )
+message ( STATUS "Boost_INCLUDE_DIR ${Boost_INCLUDE_DIR}")
+message ( STATUS "Boost_LIBRARY_DIR ${Boost_LIBRARY_DIR}")
 
 find_program ( DATE_CMD date )
 if (DATE_CMD)
@@ -52,6 +52,10 @@ if(USE_SYSTEM_GTEST)
 else()
   message(STATUS "Using gtest in ExternalProject")
 
+  # Prevent GoogleTest from overriding our compiler/linker options
+  # when building with Visual Studio
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
   # Download and unpack googletest at configure time
   configure_file(cmake/CMakeLists.txt.gtest.in
     googletest-download/CMakeLists.txt)
@@ -59,10 +63,6 @@ else()
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
   execute_process(COMMAND ${CMAKE_COMMAND} --build .
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
-
-  # Prevent GoogleTest from overriding our compiler/linker options
-  # when building with Visual Studio
-  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
   # Add googletest directly to our build. This adds the following
   # targets: gtest, gtest_main, gmock and gmock_main
@@ -72,10 +72,8 @@ else()
   # The gtest/gmock targets carry header search path dependencies
   # automatically when using CMake 2.8.11 or later. Otherwise we have
   # to add them here ourselves.
-  #if (CMAKE_VERSION VERSION_LESS 2.8.11)
   include_directories("${gtest_SOURCE_DIR}/include"
     "${gmock_SOURCE_DIR}/include")
-  #endif()
 endif()
 
 ######################################################################
@@ -137,7 +135,6 @@ endif()
 
 ######################################################################
 if (WIN32)
-  add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK )
   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4" )
 endif()
 
@@ -150,6 +147,7 @@ if(APPLE)
 else()
  set(MOREBIN_EXECUTABLE "morebin")
 endif()
+message( STATUS "MOREBIN_EXECUTABLE ${MOREBIN_EXECUTABLE}")
 
 add_executable( runUnitTests ${TEST_FILES} ${SRC_FILES_NO_MAIN})
 target_link_libraries ( runUnitTests
@@ -159,9 +157,14 @@ target_link_libraries ( runUnitTests
                         )
 
 enable_testing()
-add_test(morebin_version ${MOREBIN_EXECUTABLE} --version)
-add_test(AllowedTypes runUnitTests --gtest_filter=AllowedTypes.*)
-add_test(string_util runUnitTests --gtest_filter=string_util.*)
+add_test(NAME morebin_version
+         COMMAND ${MOREBIN_EXECUTABLE} "--version")
+set_tests_properties(morebin_version PROPERTIES LABELS "morebin")
+add_test(NAME allowed_types
+         COMMAND runUnitTests "--gtest_filter=AllowedTypes.*")
+add_test(NAME string_util
+         COMMAND runUnitTests "--gtest_filter=string_util.*")
+set_tests_properties(allowed_types string_util PROPERTIES LABELS "unit")
 
 INSTALL(TARGETS morebin
     BUNDLE DESTINATION . COMPONENT Runtime
@@ -197,7 +200,7 @@ endif ()
 find_program ( RPMBUILD_CMD rpmbuild )
 if ( RPMBUILD_CMD )
   set ( CPACK_RPM_PACKAGE_URL "${CPACK_PACKAGE_URL}" )
-  set ( CPACK_RPM_PACKAGE_REQUIRES "boost-devel cmake >= 2.6 gcc-c++" )
+  set ( CPACK_RPM_PACKAGE_BUILD_REQUIRES "boost-devel boost-static cmake >= 2.6 gcc-c++" )
 
   # TODO CPACK_PACKAGE_DESCRIPTION_FILE
   configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/morebin.spec.in

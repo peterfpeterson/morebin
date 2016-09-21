@@ -7,7 +7,10 @@ compiler:
 
 before_script:
 #ALWAYS analyze a project in its "debug" configuration
-  - if [ "$CXX" == "clang++" ];
+  - if [ "$TRAVIS_OS_NAME" == "osx" ];
+    then
+      cmake  -DCMAKE_BUILD_TYPE=Debug .;
+    elif [ "$CXX" == "clang++" ];
     then
       CC=clang-3.6 CXX=clang++-3.6 scan-build-3.6 cmake -DCMAKE_BUILD_TYPE=Debug .;
     elif [ "$COVERALLS" == "true" ];
@@ -20,12 +23,7 @@ before_script:
 
 script:
 #Run the clang static analyzer.
-  - if [ "$CXX" == "clang++" ];
-    then
-      CC=clang-3.6 CXX=clang++-3.6 scan-build-3.6 cmake --build .;
-    else
-      cmake --build . -- -j 2;
-    fi
+  - cmake --build . -- -j 2;
   - if [ "$COVERALLS" == "true" ];
     then
       make coveralls -j 2;

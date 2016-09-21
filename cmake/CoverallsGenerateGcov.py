@@ -1,3 +1,4 @@
+from __future__ import (absolute_import, division, print_function)
 import json
 import os
 import sys
@@ -43,7 +44,7 @@ def getAllFilesWithExtension(directory,extension):
 
 def getSourcePathFromGcovFile(gcovFilename):
     """Return the source path corresponding to a .gcov file"""
-    print "filename: " +gcovFilename
+    print("filename: " +gcovFilename)
     gcovPath,gcovFilenameWithExtension = os.path.split(gcovFilename)
     srcFilename = re.sub(".gcov$","",gcovFilenameWithExtension)
     return re.sub("#","/",srcFilename)
@@ -94,11 +95,11 @@ def main(argv):
     for gcovFile in gcovAllFiles:
         sourceWithPath = getSourcePathFromGcovFile(gcovFile)
         if sourceWithPath in sourcesToCheck:
-            print "YES: ",sourceWithPath.strip()," WAS FOUND"
+            print("YES: ",sourceWithPath.strip()," WAS FOUND")
             gcovCheckedFiles.append(gcovFile)
             uncheckedSources.remove(sourceWithPath)
         else:
-            print "NO: ",sourceWithPath.strip()," WAS NOT FOUND"
+            print("NO: ",sourceWithPath.strip()," WAS NOT FOUND")
 
     coverageList = []
     for gcovFilename in gcovCheckedFiles:
@@ -106,7 +107,7 @@ def main(argv):
         #get name for json file
         sourceWithPath = getSourcePathFromGcovFile(gcovFilename)
         fileCoverage['name'] = os.path.relpath(sourceWithPath,PROJECT_ROOT)
-        print "Generating JSON file for "+fileCoverage['name']
+        print("Generating JSON file for "+fileCoverage['name'])
         fileCoverage['source_digest'] = hashlib.md5(open(sourceWithPath, 'rb').read()).hexdigest()
         lineCoverage = []
         gcovFile = open(gcovFilename,'r')
@@ -147,11 +148,11 @@ def main(argv):
     coverallsOutput['source_files'] = coverageList
 
     if parseCmakeBoolean(TRAVISCI):
-        print "Generating for travis-ci"
+        print("Generating for travis-ci")
         coverallsOutput['service_name'] = 'travis-ci'
         coverallsOutput['service_job_id'] = os.environ.get('TRAVIS_JOB_ID')
     else:
-        print "Generating for other"
+        print("Generating for other")
         coverallsOutput['repo_token'] = os.environ.get('COVERALLS_REPO_TOKEN')
 
         head = {'id':gitLogValue('H',PROJECT_ROOT),'author_name':gitLogValue('an',PROJECT_ROOT), \
