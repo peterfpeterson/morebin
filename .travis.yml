@@ -46,3 +46,12 @@ addons:
       - clang-3.6
       - libboost-program-options-dev
       - libboost-date-time-dev
+
+  coverity_scan:
+    project:
+      name: "peterfpeterson/morebin"
+      description: "Build submitted via Travis CI"
+    notification_email: peterfpeterson@gmail.com
+    build_command_prepend: "make clean"
+    build_command:   "make -j 4"
+    branch_pattern: coverity_scan
