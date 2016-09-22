@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include <exception>
+#ifdef __linux__
 #include <execinfo.h>
 
 void handler() {
@@ -13,10 +14,13 @@ void handler() {
 
   exit(1);
 }
+#endif
 
 int main(int argc, char **argv)
 {
+#ifdef __linux__
   std::set_terminate(handler);
+#endif
 
   try {
     ::testing::InitGoogleTest(&argc, argv);
