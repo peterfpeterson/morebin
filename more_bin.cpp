@@ -6,7 +6,9 @@
 #include <boost/program_options/value_semantic.hpp>
 #include <boost/program_options/variables_map.hpp>
 #include <ctype.h>
+#ifdef __linux__
 #include <execinfo.h>
+#endif
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -162,6 +164,7 @@ string pixid_str(const size_t pixid, const vector<size_t> &bounds) {
   return thing_to_str(indices);
 }
 
+#ifdef __linux__
 void handler() {
   void *trace_elems[20];
   int trace_elem_count(backtrace(trace_elems, 20));
@@ -173,13 +176,16 @@ void handler() {
 
   exit(1);
 }
+#endif
 
 /**
  * The main entry point for the program.
  */
 int main(int argc, char** argv)
 {
+#ifdef __linux__
   std::set_terminate(handler);
+#endif
 
   // ---------- Declare the supported options.
   po::options_description generic_options("Generic options");
@@ -283,8 +289,13 @@ int main(int argc, char** argv)
   bool byteswap = (vm.count("byteswap") > 0);
   bool quiet = (vm.count("quiet") > 0);
   string dataType = DEFAULT_TYPE;
-  if (vm.count("type"))
-    dataType = vm["type"].as<string>();
+  try {
+    if (vm.count("type"))
+      dataType = vm["type"].as<string>();
+  } catch (boost::bad_any_cast &e) {
+    cerr << "While parsing command line options (type): " << e.what() << endl;
+    return -1;
+  }
   bool showLines = (vm.count("lines") > 0);
 
   // hidden options
@@ -294,7 +305,8 @@ int main(int argc, char** argv)
     try {
       files = vm["filename"].as<vector<string> >();
     } catch (boost::bad_any_cast &e) {
-      cerr << "While parsing command line options: " << e.what() << endl;
+      cerr << "While parsing command line options (filename): " << e.what()
+           << endl;
       return -1;
     }
   }
