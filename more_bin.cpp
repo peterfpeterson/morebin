@@ -289,26 +289,15 @@ int main(int argc, char** argv)
   bool byteswap = (vm.count("byteswap") > 0);
   bool quiet = (vm.count("quiet") > 0);
   string dataType = DEFAULT_TYPE;
-  try {
-    if (vm.count("type"))
-      dataType = vm["type"].as<string>();
-  } catch (boost::bad_any_cast &e) {
-    cerr << "While parsing command line options (type): " << e.what() << endl;
-    return -1;
-  }
+  if (vm.count("type"))
+    dataType = vm["type"].as<string>();
   bool showLines = (vm.count("lines") > 0);
 
   // hidden options
   vector<string> files;
   if (vm.count("filename"))
   {
-    try {
-      files = vm["filename"].as<vector<string> >();
-    } catch (boost::bad_any_cast &e) {
-      cerr << "While parsing command line options (filename): " << e.what()
-           << endl;
-      return -1;
-    }
+    files = vm["filename"].as<vector<string> >();
   }
   else
   {
@@ -352,6 +341,10 @@ int main(int argc, char** argv)
   } catch(std::runtime_error &e) {
     cerr << "RUNTIME ERROR:" << e.what() << endl;
     return -1;
+  } catch (boost::bad_any_cast &e) {
+      cerr << "While parsing command line options: " << e.what()
+           << endl;
+      return -1;
   }
 
   return 0;
