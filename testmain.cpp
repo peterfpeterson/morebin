@@ -18,7 +18,11 @@ int main(int argc, char **argv)
 {
   std::set_terminate(handler);
 
-  ::testing::InitGoogleTest(&argc, argv);
-  int ret = RUN_ALL_TESTS();
-  return ret;
+  try {
+    ::testing::InitGoogleTest(&argc, argv);
+    int ret = RUN_ALL_TESTS();
+    return ret;
+  } catch (...) {
+    return -1;
+  }
 }

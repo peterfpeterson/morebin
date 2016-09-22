@@ -191,6 +191,7 @@ int main(int argc, char** argv)
   stringstream typesHelp;
   typesHelp << "Set the type of the data. Allowed values are: " << render::getKnownDataDescr() << ", " << prenexus::getKnownDataDescr();
   po::options_description config_options("Configuration");
+  try {
   config_options.add_options()
     ("type,t", po::value<string>()->default_value(DEFAULT_TYPE), typesHelp.str().c_str())
     ("offset", po::value<size_t>()->default_value(0), "Skip to this position (in bytes) in the file.")
@@ -200,6 +201,10 @@ int main(int argc, char** argv)
     ("quiet,q", "Do not print out values")
     ("lines", "show line numbers")
     ;
+  } catch (boost::bad_lexical_cast &e) {
+    cerr << "Failed to initialize command line parser: " << e.what() << endl;
+    return -1;
+  }
 
   po::options_description hidden_options;
   hidden_options.add_options()
@@ -286,7 +291,12 @@ int main(int argc, char** argv)
   vector<string> files;
   if (vm.count("filename"))
   {
-    files = vm["filename"].as< vector<string> >();
+    try {
+      files = vm["filename"].as<vector<string> >();
+    } catch (boost::bad_any_cast &e) {
+      cerr << "While parsing command line options: " << e.what() << endl;
+      return -1;
+    }
   }
   else
   {
