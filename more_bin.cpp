@@ -302,13 +302,7 @@ int main(int argc, char** argv)
   vector<string> files;
   if (vm.count("filename"))
   {
-    try {
-      files = vm["filename"].as<vector<string> >();
-    } catch (boost::bad_any_cast &e) {
-      cerr << "While parsing command line options (filename): " << e.what()
-           << endl;
-      return -1;
-    }
+    files = vm["filename"].as<vector<string> >();
   }
   else
   {
@@ -352,6 +346,10 @@ int main(int argc, char** argv)
   } catch(std::runtime_error &e) {
     cerr << "RUNTIME ERROR:" << e.what() << endl;
     return -1;
+  } catch (boost::bad_any_cast &e) {
+      cerr << "While parsing command line options: " << e.what()
+           << endl;
+      return -1;
   }
 
   return 0;
