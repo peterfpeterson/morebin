@@ -292,7 +292,7 @@ int main(int argc, char** argv)
   if (vm.count("filename"))
   {
     try {
-      files = vm["filename"].as<vector<string>>();
+      files = vm["filename"].as<vector<string> >();
     } catch (boost::bad_any_cast &e) {
       cerr << "While parsing command line options: " << e.what() << endl;
       return -1;
