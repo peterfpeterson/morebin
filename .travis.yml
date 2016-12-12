@@ -25,10 +25,10 @@ before_script:
 #ALWAYS analyze a project in its "debug" configuration
   - if [ "$TRAVIS_OS_NAME" == "osx" ];
     then
-      cmake  -DCMAKE_BUILD_TYPE=Debug .;
+      cmake -DCMAKE_BUILD_TYPE=Debug .;
     elif [ "$CXX" == "clang++" ];
     then
-      scan-build cmake -DCMAKE_BUILD_TYPE=Debug .;
+      cmake -DCMAKE_BUILD_TYPE=Debug .;
     elif [ "$COVERALLS" == "true" ];
     then
       echo "CHECKING CODE COVERAGE, $COVERALLS";
