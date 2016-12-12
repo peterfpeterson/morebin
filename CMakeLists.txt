@@ -30,8 +30,8 @@ endif (DATE_CMD)
 
 ######################################################################
 set ( CPACK_PACKAGE_VERSION_MAJOR 2 )
-set ( CPACK_PACKAGE_VERSION_MINOR 4 )
-set ( CPACK_PACKAGE_VERSION_PATCH 0 )
+set ( CPACK_PACKAGE_VERSION_MINOR 3 )
+set ( CPACK_PACKAGE_VERSION_PATCH 4 )
 set ( CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
@@ -185,7 +185,7 @@ if (NOT APPLE)
   set ( CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} )
 endif ()
 set ( CPACK_RPM_PACKAGE_LICENSE "The MIT License" )
-set ( CPACK_RPM_PACKAGE_RELEASE 1 )
+set ( CPACK_RPM_PACKAGE_RELEASE 2 )
 set ( CPACK_RPM_PACKAGE_GROUP "Development/Tools" )
 
 if (APPLE)
@@ -200,7 +200,7 @@ endif ()
 find_program ( RPMBUILD_CMD rpmbuild )
 if ( RPMBUILD_CMD )
   set ( CPACK_RPM_PACKAGE_URL "${CPACK_PACKAGE_URL}" )
-  set ( CPACK_RPM_PACKAGE_BUILD_REQUIRES "boost-devel boost-static cmake >= 2.6 gcc-c++" )
+  set ( CPACK_RPM_PACKAGE_BUILD_REQUIRES "boost-devel boost-static cmake >= 2.8.7 gcc-c++ git" )
 
   # TODO CPACK_PACKAGE_DESCRIPTION_FILE
   configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/morebin.spec.in
