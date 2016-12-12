@@ -28,7 +28,7 @@ before_script:
       cmake  -DCMAKE_BUILD_TYPE=Debug .;
     elif [ "$CXX" == "clang++" ];
     then
-      scan-build-3.5 cmake -DCMAKE_BUILD_TYPE=Debug .;
+      scan-build cmake -DCMAKE_BUILD_TYPE=Debug .;
     elif [ "$COVERALLS" == "true" ];
     then
       echo "CHECKING CODE COVERAGE, $COVERALLS";
