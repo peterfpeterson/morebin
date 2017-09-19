@@ -31,7 +31,7 @@ endif (DATE_CMD)
 ######################################################################
 set ( CPACK_PACKAGE_VERSION_MAJOR 2 )
 set ( CPACK_PACKAGE_VERSION_MINOR 4 )
-set ( CPACK_PACKAGE_VERSION_PATCH 0 )
+set ( CPACK_PACKAGE_VERSION_PATCH 1 )
 set ( CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
@@ -42,7 +42,7 @@ include(ExternalProject)
 
 ######################################################################
 # configure gtest to use the right version
-set(gtest_version "1.7.0")
+set(gtest_version "1.8.0")
 
 option(USE_SYSTEM_GTEST "Use the system installed GTest - v${gtest_version}?" OFF)
 
@@ -161,9 +161,9 @@ add_test(NAME morebin_version
          COMMAND ${MOREBIN_EXECUTABLE} "--version")
 set_tests_properties(morebin_version PROPERTIES LABELS "morebin")
 add_test(NAME allowed_types
-         COMMAND runUnitTests "--gtest_filter=AllowedTypes.*")
+         COMMAND runUnitTests --gtest_filter=AllowedTypes.* --gtest_output=xml:test_allowed_types.xml)
 add_test(NAME string_util
-         COMMAND runUnitTests "--gtest_filter=string_util.*")
+         COMMAND runUnitTests --gtest_filter=string_util.* --gtest_output=xml:test_string_util.xml)
 set_tests_properties(allowed_types string_util PROPERTIES LABELS "unit")
 
 INSTALL(TARGETS morebin
