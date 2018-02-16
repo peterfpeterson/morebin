@@ -1,5 +1,5 @@
 # minimum version necessary for cmake to work
-cmake_minimum_required ( VERSION 2.8.7 )
+cmake_minimum_required ( VERSION 2.8.12 )
 project ( morebin )
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
@@ -51,6 +51,7 @@ if(USE_SYSTEM_GTEST)
   find_package(GTest ${gtest_version} EXACT REQUIRED)
 else()
   message(STATUS "Using gtest in ExternalProject")
+  find_package(Git)
 
   # Prevent GoogleTest from overriding our compiler/linker options
   # when building with Visual Studio
@@ -58,16 +59,31 @@ else()
 
   # Download and unpack googletest at configure time
   configure_file(cmake/CMakeLists.txt.gtest.in
-    googletest-download/CMakeLists.txt)
+                 googletest-download/CMakeLists.txt )
   execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+                  RESULT_VARIABLE result
+                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+  #if(result)
+  #  message(FATAL_ERROR "CMake step for googletest failed: ${result}")
+  #endif()
   execute_process(COMMAND ${CMAKE_COMMAND} --build .
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+                  RESULT_VARIABLE result
+                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+  #if(result)
+  #  message(FATAL_ERROR "CMake step for googletest failed: ${result}")
+  #endif()
 
   # Add googletest directly to our build. This adds the following
   # targets: gtest, gtest_main, gmock and gmock_main
   add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
-    ${CMAKE_BINARY_DIR}/googletest-build)
+                   ${CMAKE_BINARY_DIR}/googletest-build)
+
+  # Hide targets from "all" and put them in the UnitTests folder in MSVS
+  foreach( target_var gmock gtest gmock_main gtest_main )
+    set_target_properties( ${target_var}
+                           PROPERTIES EXCLUDE_FROM_ALL TRUE
+                           FOLDER "UnitTests/gmock" )
+  endforeach()
 
   # The gtest/gmock targets carry header search path dependencies
   # automatically when using CMake 2.8.11 or later. Otherwise we have
@@ -212,7 +228,7 @@ if ( RPMBUILD_CMD )
   add_custom_target( package_rpm
                     DEPENDS morebin-${CPACK_PACKAGE_VERSION}.tar.gz
                             ${CMAKE_CURRENT_BINARY_DIR}/morebin.spec
-                    COMMAND rpmbuild -ba morebin.spec --define "_sourcedir ${CMAKE_CURRENT_BINARY_DIR}" --define "_topdir ${CMAKE_CURRENT_BINARY_DIR}/rpmbuild")
+                    COMMAND rpmbuild -ba morebin.spec --define "_sourcedir ${CMAKE_CURRENT_BINARY_DIR}" )  # --define "_topdir ${CMAKE_CURRENT_BINARY_DIR}/rpmbuild")
 endif ( RPMBUILD_CMD )
 
 ######################################################################
